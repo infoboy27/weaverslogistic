@@ -1,0 +1,754 @@
+"""FBA Trends — panel de tendencias, rentabilidad y presupuesto.
+
+Ejecutar:  .venv/Scripts/streamlit run app.py
+"""
+import math
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
+import json
+from datetime import date
+
+from fba_trends import (alerts, brand, charts, collect, competition, criteria, decision, discovery, keepa,
+                        patterns)
+from fba_trends import calendar as cal
+from fba_trends.budget import Candidate, allocate
+from fba_trends.config import DATA_DIR, estimated_assumptions, load_config
+from fba_trends.profit import Product, compute, max_landed_cost
+from fba_trends.scoring import WEIGHTS, overall
+from fba_trends.trends import adjust_for_market, analyze, anomalous_weeks, lead_days
+
+CANDIDATES_PATH = DATA_DIR / "candidates.csv"
+
+st.set_page_config(page_title="Weavers · FBA Trends", page_icon=str(brand.ICON_PATH), layout="wide")
+brand.register_plotly_template()
+st.markdown(brand.css(), unsafe_allow_html=True)
+cfg = load_config()
+
+
+def num(v, default=None):
+    try:
+        f = float(v)
+        return default if math.isnan(f) else f
+    except (TypeError, ValueError):
+        return default
+
+
+@st.cache_data(show_spinner=False, ttl=600)
+def trend_table(keywords: tuple[str, ...]) -> pd.DataFrame:
+    rows = []
+    glitch = anomalous_weeks(collect.load, collect.cached_keywords())
+    for k in keywords:
+        s = collect.load(k)
+        if s is not None:
+            rows.append({"keyword": k, **analyze(s, cfg, exclude=glitch)})
+    return adjust_for_market(pd.DataFrame(rows)) if rows else pd.DataFrame(rows)
+
+
+@st.cache_data(show_spinner=False, ttl=600)
+def pattern_table(keywords: tuple[str, ...]):
+    glitch = anomalous_weeks(collect.load, list(keywords))
+    rows = [{"keyword": k, **patterns.classify(collect.load(k), glitch, collect.load(k, long=True))}
+            for k in keywords if collect.load(k) is not None]
+    return pd.DataFrame(rows), glitch
+
+
+st.markdown(
+    brand.header(
+        f"Mercado {cfg['marketplace']} · Entrega asumida {lead_days(cfg)} días (fábrica → Amazon → rampa) · "
+        "Los valores estimados están en la pestaña Supuestos"
+    ),
+    unsafe_allow_html=True,
+)
+
+(tab_decision, tab_funnel, tab_alerts, tab_next, tab_pat, tab_disc, tab_trends, tab_comp, tab_keepa, tab_products, tab_budget,
+ tab_assumptions) = st.tabs(
+    ["Decisión", "Embudo", "Alertas", "Lo que viene", "Patrones", "Descubrimientos", "Tendencias", "Competencia", "Amazon · Keepa", "Productos y rentabilidad", "Presupuesto", "Supuestos"]
+)
+
+
+def editor_labels(columns, **overrides) -> dict:
+    """Readable headers for st.data_editor without renaming the columns saved to CSV."""
+    cfg_ = {c: st.column_config.Column(brand.LABELS.get(c, c)) for c in columns}
+    cfg_.update(overrides)
+    return cfg_
+
+
+def split_asins(v) -> list[str]:
+    return [a for a in str(v or "").replace(",", " ").replace(";", " ").upper().split() if a and a != "NAN"]
+
+# ---------------------------------------------------------------- Tendencias
+with tab_trends:
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        kw_text = st.text_input("Keywords (en inglés, separadas por coma)", placeholder="heated vest, pool float")
+        geo = st.selectbox("País", ["US", "", "MX", "ES", "GB", "CA"], format_func=lambda g: g or "Mundial")
+        if st.button("Consultar Google Trends (5 años)", type="primary") and kw_text.strip():
+            for kw in [k.strip() for k in kw_text.split(",") if k.strip()]:
+                with st.spinner(f"Consultando '{kw}'..."):
+                    try:
+                        collect.fetch_google_trends(kw, geo=geo)
+                        st.success(f"'{kw}' guardado.")
+                    except collect.TrendsFetchError as e:
+                        st.error(f"{kw}: {e}")
+            trend_table.clear()
+    with c2:
+        up = st.file_uploader("…o sube el CSV descargado de trends.google.com", type="csv")
+        if up is not None:
+            try:
+                for kw, s in collect.parse_trends_csv(up.getvalue().decode("utf-8")).items():
+                    collect.save(kw, s)
+                    st.success(f"'{kw}' importado ({len(s)} puntos).")
+                trend_table.clear()
+            except ValueError as e:
+                st.error(str(e))
+
+    keywords = tuple(collect.cached_keywords())
+    if not keywords:
+        st.info("Todavía no hay keywords. Consulta o sube un CSV.")
+    else:
+        table = trend_table(keywords)
+        ranking = DATA_DIR / "ranking.csv"  # written by scripts/rank_keywords.py --volume
+        if ranking.exists():
+            vol = pd.read_csv(ranking)
+            if "volumen_vs_yoga_mat_pct" in vol:
+                table = table.merge(vol[["keyword", "volumen_vs_yoga_mat_pct"]], on="keyword", how="left")
+        st.markdown(brand.pill("Clasificación"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(table.sort_values("trend_score", ascending=False)), hide_index=True, width="stretch")
+        st.caption(
+            "Google Trends es interés RELATIVO (0-100), no volumen. Una keyword puede crecer mucho y vender poco: "
+            "confirma la demanda en Amazon (Brand Analytics / Keepa) antes de comprar. "
+            "Momentum = últimas 8 semanas vs 8 anteriores · YoY = vs mismo periodo del año pasado · "
+            "crec_vs_mercado = crecimiento anual dividido por el de keywords de control estables "
+            "(yoga mat, backpack, umbrella, water bottle), para descontar cambios generales de Google. "
+            "Las semanas donde todas las keywords de control saltan a la vez (error de datos de Google, "
+            "p. ej. mar-jun 2026) se excluyen automáticamente."
+        )
+        pick = st.multiselect("Graficar", keywords, default=list(keywords[:3]))
+        if pick:
+            df = pd.concat({k: collect.load(k) for k in pick}, axis=1)
+            st.plotly_chart(px.line(df, labels={"value": "Interés", "fecha": "", "variable": ""}), width="stretch")
+
+PATTERN_HELP = """
+- **Estacional**: sube cada año en la misma época (se indica temporada y fecha comercial del pico).
+- **Todo el año**: demanda pareja, sin picos ni temporada. Inventario predecible.
+- **Viral**: subió durante semanas (redes sociales, cultura pop) y después cayó a menos de la mitad.
+- **Shock de mercado**: saltó de golpe en 1-2 semanas por un evento externo (pánico, huelga, clima,
+  estreno) y volvió a la normalidad. Riesgoso: si llegas tarde, te quedas con el inventario.
+- **Creciente**: crece más de 30% al año de forma sostenida, sin pico y caída.
+- **Subiendo rápido**: los últimos 3 meses duplican el semestre anterior y siguen arriba. Todavía no se
+  sabe si se queda (creciente) o se apaga (viral).
+
+Reglas heurísticas, no validadas con ventas. Las semanas con error de datos de Google (feb-jul 2026)
+se excluyen; aparecen sombreadas en las mini gráficas.
+"""
+
+# ---------------------------------------------------------------- shared: patterns, trends, sectors
+today = date.today()
+pt, glitch = pattern_table(tuple(collect.cached_keywords()))
+_kw_meta = pd.read_csv(DATA_DIR / "keywords.csv")
+SECTOR_OF = {r.keyword: str(r.categoria).replace("descubierto: ", "") for r in _kw_meta.itertuples()}
+_tt = trend_table(tuple(collect.cached_keywords()))
+PRODUCTS = pt.merge(_tt[["keyword", "clasificacion", "crec_vs_mercado_pct"]], on="keyword", how="left")
+SECTORS = alerts.sector_table(PRODUCTS, SECTOR_OF)
+SECTORS = SECTORS[SECTORS["sector"] != "control"]
+
+# ---------------------------------------------------------------- Lo que viene
+with tab_next:
+    st.markdown(brand.pill("Próximas fechas de venta en EE.UU."), unsafe_allow_html=True)
+    moments = cal.upcoming_moments(cfg, today)
+    st.dataframe(brand.pretty(moments), hide_index=True, width="stretch")
+    st.caption(
+        f"'Vender desde' = cuándo el producto ya debe estar disponible en Amazon. 'Pedir antes de' resta "
+        f"{lead_days(cfg)} días (producción + flete marítimo + recepción en Amazon + rampa). Si ya pasó, esa fecha "
+        "solo se alcanza con envío aéreo (mucho más caro) o queda para el año siguiente."
+    )
+
+    st.markdown(brand.pill("Tus productos estacionales: cuándo pedir"), unsafe_allow_html=True)
+    windows = cal.seasonal_windows(pt, cfg, today)
+    if windows.empty:
+        st.info("No hay productos estacionales escaneados todavía.")
+    else:
+        st.plotly_chart(charts.season_timeline(windows, today), width="stretch")
+        st.dataframe(brand.pretty(windows), hide_index=True, width="stretch")
+
+    st.markdown(brand.pill("Tendencias crecientes"), unsafe_allow_html=True)
+    tt = trend_table(tuple(collect.cached_keywords()))
+    rising = tt.merge(pt[["keyword", "patron"]], on="keyword", how="left")
+    rising = rising[(rising["crec_vs_mercado_pct"] > 15)
+                    & (rising["patron"].isin(["Subiendo rápido", "Creciente", "Estacional", "Todo el año"])
+                       | rising["clasificacion"].isin(["Emergente", "Estacional en crecimiento"]))]
+    rising = rising.nlargest(15, "crec_vs_mercado_pct")
+    if rising.empty:
+        st.info("Ninguna keyword crece más de 15% por encima del mercado.")
+    else:
+        st.plotly_chart(charts.growth_bars(rising, "crec_vs_mercado_pct", "Crecimiento anual vs mercado"),
+                        width="stretch")
+        top = rising.head(6)["keyword"].tolist()
+        st.plotly_chart(charts.small_multiples({k: collect.load(k).iloc[-104:] for k in top}, glitch),
+                        width="stretch")
+        st.caption(
+            "Crecimiento de los últimos 12 meses contra los 12 anteriores, descontando el crecimiento de las "
+            "keywords de control. Las modas de cultura pop (series, TikTok) aparecen como 'Subiendo rápido' en "
+            "Patrones y las encuentra la pestaña Descubrimientos."
+        )
+
+    st.markdown(brand.pill("Sectores que crecen más que el mercado"), unsafe_allow_html=True)
+    if SECTORS.empty:
+        st.info("Sin datos de sectores todavía.")
+    else:
+        st.plotly_chart(charts.sector_treemap(PRODUCTS, SECTORS, SECTOR_OF), width="stretch")
+        st.caption(
+            "Cada bloque es un sector (tamaño = productos analizados, color = crecimiento mediano vs mercado: "
+            "cian crece, magenta cae). Haz clic en un sector para ver sus productos; los ganadores aparecen "
+            "más claros. Los sectores con 1-2 productos son poco representativos: la pestaña Descubrimientos "
+            "los va llenando."
+        )
+        st.dataframe(brand.pretty(SECTORS), hide_index=True, width="stretch")
+
+
+# ---------------------------------------------------------------- shared: funnel evaluation
+UNIVERSE = pd.read_csv(criteria.UNIVERSE_PATH) if criteria.UNIVERSE_PATH.exists() else pd.DataFrame()
+UCOUNTS = pd.read_csv(criteria.COUNTS_PATH) if criteria.COUNTS_PATH.exists() else pd.DataFrame()
+COMP_SUM = competition.summary_table()
+EV = None
+if not UNIVERSE.empty:
+    _types = criteria.product_types(UNIVERSE)
+    # Candidates that came from the Google side (e.g. dog cooling mat) join the funnel too
+    _extra = []
+    for _kw in pd.read_csv(CANDIDATES_PATH)["keyword"].dropna().unique():
+        if _kw not in set(_types["tipo"]):
+            _price = COMP_SUM.set_index("keyword").loc[_kw, "precio_mediana"] if (
+                not COMP_SUM.empty and _kw in set(COMP_SUM["keyword"])) else float("nan")
+            _extra.append({"tipo": _kw, "sector": SECTOR_OF.get(_kw, "otros"), "listados": 0, "lanzamientos_nuevos": 0,
+                           "precio_mediana": _price, "resenas_min": None, "mejor_puesto": None,
+                           "ejemplo": "candidato (Google Trends)", "senal": ""})
+    _types = pd.concat([_types, pd.DataFrame(_extra)], ignore_index=True).dropna(subset=["precio_mediana"])
+    EV = criteria.with_manual(criteria.evaluate(_types, cfg, _tt, pt, COMP_SUM), criteria.load_pipeline(), cfg)
+
+# ---------------------------------------------------------------- Decisión
+with tab_decision:
+    if EV is None:
+        st.info("Primero hace falta el universo de Amazon (pestaña Embudo).")
+    else:
+        d1, d2, d3 = st.columns(3)
+        dec_budget = d1.number_input("Presupuesto total (USD)", min_value=1000, max_value=50_000, value=3500, step=250,
+                                     key="dec_budget")
+        dec_max = d2.slider("Máximo de productos a considerar", 1, 5, 3, key="dec_max")
+        dec_esc = d3.select_slider("Escenario de ventas", ["Pesimista", "Base", "Optimista"], value="Base",
+                                   key="dec_esc")
+        mult = {"Pesimista": 0.5, "Base": 1.0, "Optimista": 1.5}[dec_esc]
+
+        best = criteria.shortlist(EV)
+        cands = pd.read_csv(CANDIDATES_PATH)
+        real_cost = {}
+        for _, r in cands.iterrows():
+            f, fl = pd.to_numeric(r.get("costo_fabrica"), errors="coerce"), pd.to_numeric(r.get("flete_unidad"), errors="coerce")
+            if pd.notna(f):
+                real_cost[r["keyword"]] = float(f) + (0.0 if pd.isna(fl) else float(fl))
+        comp_rows = competition.load()
+        econ = pd.DataFrame([decision.economics(r, comp_rows[comp_rows["keyword"] == r["tipo"]], cfg, mult,
+                                                real_cost.get(r["tipo"]))
+                             for _, r in best.iterrows()])
+        win = cal.seasonal_windows(pt, cfg, today)
+        timing = {} if win.empty else {r["keyword"]: (int(r["dias_para_pedir"]), str(r["buscar_proveedor_desde"]))
+                                       for _, r in win.iterrows()}
+        rec = decision.recommend(econ, float(dec_budget), cfg, dec_max, timing) if not econ.empty else {
+            "veredicto": ("ninguno", "No compren nada este mes", "Todavía no hay candidatos que pasen el embudo."),
+            "preliminar": True, "opciones": pd.DataFrame(), "asignacion": pd.DataFrame(), "esperar": [],
+            "descartados": []}
+
+        kind, title, text = rec["veredicto"]
+        badge = ('<span class="wv-badge">Preliminar · costos estimados (sin cotización)</span>'
+                 if rec["preliminar"] else '<span class="wv-badge ok">Con costos reales</span>')
+        st.markdown(f'<div class="wv-verdict {kind}"><div class="wv-v-label">Recomendación {badge}</div>'
+                    f'<div class="wv-v-title">{title}</div><div class="wv-v-text">{text}</div></div>',
+                    unsafe_allow_html=True)
+
+        alloc = rec["asignacion"]
+        if not alloc.empty:
+            invested = float((alloc["inversion_inventario"] + alloc["costo_lanzamiento"]).sum())
+            k1, k2, k3, k4 = st.columns(4)
+            k1.metric("Invertido", f"${invested:,.0f}")
+            k2.metric("Reserva", f"${dec_budget - invested:,.0f}")
+            k3.metric(f"Ganancia esperada {cfg['decision']['horizonte_meses']['valor']} meses",
+                      f"${alloc['ganancia_horizonte'].sum():,.0f}")
+            k4.metric("Ganancia mensual proyectada", f"${alloc['ganancia_mes_proy'].sum():,.0f}")
+            c1, c2 = st.columns([1, 1])
+            with c1:
+                st.markdown(brand.pill("Cómo dividir el presupuesto"), unsafe_allow_html=True)
+                st.plotly_chart(charts.allocation_bar(alloc, dec_budget - invested), width="stretch")
+            with c2:
+                st.markdown(brand.pill("Opciones comparadas"), unsafe_allow_html=True)
+                chosen = len(alloc)
+                st.plotly_chart(charts.options_bar(rec["opciones"], chosen), width="stretch")
+            st.markdown(brand.pill("Plan de compra"), unsafe_allow_html=True)
+            st.dataframe(brand.pretty(alloc[["producto", "precio_sugerido", "unidades", "inversion_inventario",
+                                             "costo_lanzamiento", "ventas_mes_proy", "meses_de_stock_est",
+                                             "ganancia_mes_proy", "ganancia_horizonte", "ganancia_esperada_si_vende_todo",
+                                             "recupera_inversion_meses", "confianza"]]),
+                         hide_index=True, width="stretch")
+
+        if rec["esperar"]:
+            st.markdown(brand.pill("Todavía no (estacionales)"), unsafe_allow_html=True)
+            st.dataframe(brand.pretty(pd.DataFrame(rec["esperar"], columns=["producto", "motivo"])),
+                         hide_index=True, width="stretch")
+
+        st.markdown(brand.pill("Todos los candidatos evaluados"), unsafe_allow_html=True)
+        if not econ.empty:
+            st.dataframe(brand.pretty(econ.sort_values("ganancia_mes_proy", ascending=False)),
+                         hide_index=True, width="stretch")
+        if rec["descartados"]:
+            with st.expander(f"Descartados por el cerebro ({len(rec['descartados'])})"):
+                st.dataframe(brand.pretty(pd.DataFrame(rec["descartados"], columns=["producto", "motivo"])),
+                             hide_index=True, width="stretch")
+        d = cfg["decision"]
+        st.caption(
+            f"Cómo decide: precio sugerido = mediana del top 10 de Amazon (terminado en .99). Costo = cotización real si "
+            f"la cargaste en Productos y rentabilidad; si no, {d['costo_pct_precio']['valor']:.0%} del precio (estimado). "
+            f"Ventas/mes = lo que venden hoy los listados nuevos (<500 reseñas) del top 10 × "
+            f"{d['captura_nuevo_vendedor']['valor']:.0%} × escenario. Confianza baja por cada dato sin verificar "
+            f"(tendencia, peso, costo). Prueba 1 a {dec_max} productos con las reglas del presupuesto (reserva, "
+            f"lanzamiento, MOQ {d['moq_por_defecto']['valor']} u., máximo de meses de stock) y elige la mayor ganancia "
+            f"ajustada por confianza; solo suma productos si mejora al menos {d['mejora_minima_para_diversificar']['valor']:.0%}. "
+            "Es una guía para decidir, no una garantía: valida con cotizaciones y muestras."
+        )
+
+# ---------------------------------------------------------------- Embudo
+with tab_funnel:
+    universe, ucounts, comp_sum, ev = UNIVERSE, UCOUNTS, COMP_SUM, EV
+    if ev is None:
+        st.info("Todavía no hay universo de Amazon capturado.")
+    else:
+
+        e = ev["estado"].value_counts()
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("Listados revisados", f"{int(ucounts['total'].sum()):,}" if not ucounts.empty else "-")
+        m2.metric("Tipos de producto", len(ev))
+        m3.metric("Aptos", int(e.get("Apto", 0)))
+        m4.metric("Falta dato", int(e.get("Falta dato", 0)))
+        m5.metric("No aptos", int(e.get("No apto", 0)))
+
+        st.markdown(brand.pill("Mejores candidatos"), unsafe_allow_html=True)
+        best = criteria.shortlist(ev)
+        if best.empty:
+            st.info("Ningún tipo pasa todavía precio, competencia y demanda.")
+        else:
+            st.dataframe(brand.pretty(best[["tipo", "sector", "estado", "precio_ref", "precio", "competencia",
+                                            "demanda", "tendencia", "peso", "peso_kg", "competencia_detalle",
+                                            "tendencia_detalle", "notas"]]),
+                         hide_index=True, width="stretch")
+            st.caption("Pasan precio ($20-50), competencia (3+ del top 10 con <500 reseñas) y demanda (1,000+ "
+                       "vendidos/mes). Primero los que ya tienen tendencia y peso verificados. "
+                       "Peso: se carga en 'Tu pipeline' (kg).")
+
+        specials = criteria.special_opportunities(comp_sum, competition.load(), cfg)
+        if not specials.empty:
+            st.markdown(brand.pill("Oportunidades especiales"), unsafe_allow_html=True)
+            st.dataframe(brand.pretty(specials), hide_index=True, width="stretch")
+            st.caption("Casos que las reglas normales no muestran: un líder con clientes insatisfechos, o una ola "
+                       "fuerte donde solo una versión premium cumple el precio mínimo.")
+
+        c1, c2 = st.columns([1, 1])
+        with c1:
+            st.markdown(brand.pill("Embudo"), unsafe_allow_html=True)
+            st.plotly_chart(charts.funnel_chart(criteria.funnel_counts(ev, ucounts, universe)), width="stretch")
+        with c2:
+            st.markdown(brand.pill("Por qué se descartan"), unsafe_allow_html=True)
+            if not ucounts.empty:
+                st.plotly_chart(charts.rejection_bars(ucounts), width="stretch")
+                st.caption("Best Sellers + New Releases de las subcategorías elegidas (top 30 de cada lista). "
+                           "El precio es el filtro más duro: la mayoría de lo que más se vende cuesta menos de $20.")
+
+        st.markdown(brand.pill("Tipos de producto"), unsafe_allow_html=True)
+        order = {"Apto": 0, "Falta dato": 1, "No apto": 2}
+        view = ev.assign(_o=ev["estado"].map(order)).sort_values(
+            ["_o", "lanzamientos_nuevos", "listados"], ascending=[True, False, False])
+        cols = ["tipo", "sector", "estado", "etapa", "senal", "listados", "lanzamientos_nuevos", "precio_ref",
+                "precio", "tendencia", "competencia", "demanda", "peso", "tendencia_detalle", "competencia_detalle",
+                "ejemplo"]
+        st.dataframe(brand.pretty(view[cols]), hide_index=True, width="stretch", height=420)
+        st.caption(
+            "✓ pasa · ✗ no pasa · ? falta dato. Tendencia: se completa sola con el escaneo diario de Google Trends "
+            "(~10 tipos por día). Competencia y demanda: se completan con la captura del top 10 de Amazon "
+            "(pestaña Competencia). Peso: siempre manual, con la ficha del proveedor. Criterios en config.yaml."
+        )
+
+        st.markdown(brand.pill("Tu pipeline"), unsafe_allow_html=True)
+        st.caption("Marca a mano cuando un producto pasa a cotización, muestra o pedido (o lo descartas).")
+        editable = ev[["tipo", "etapa_auto", "etapa_manual", "peso_kg", "notas"]].sort_values("etapa_auto", key=lambda s: s.map(
+            {x: i for i, x in enumerate(criteria.STAGES)}), ascending=False)
+        edited_pipe = st.data_editor(
+            editable, hide_index=True, width="stretch", key="pipe_editor",
+            disabled=["tipo", "etapa_auto"],
+            column_config={
+                "tipo": st.column_config.Column("Producto"),
+                "etapa_auto": st.column_config.Column("Etapa automática"),
+                "etapa_manual": st.column_config.SelectboxColumn("Etapa manual", options=criteria.MANUAL_STAGES),
+                "peso_kg": st.column_config.TextColumn("Peso (kg)"),
+                "notas": st.column_config.TextColumn("Notas"),
+            },
+        )
+        if st.button("Guardar pipeline"):
+            filled = edited_pipe[["etapa_manual", "notas", "peso_kg"]].fillna("").astype(str).ne("").any(axis=1)
+            edited_pipe[filled][criteria.PIPELINE_COLUMNS].to_csv(criteria.PIPELINE_PATH, index=False)
+            st.success("Guardado.")
+
+# ---------------------------------------------------------------- Alertas
+with tab_alerts:
+    _disc = discovery.load()
+    _rank_path = DATA_DIR / "ranking.csv"
+    if not _disc.empty and _rank_path.exists():
+        _disc = _disc.merge(pd.read_csv(_rank_path)[["keyword", "finalista"]], left_on="termino",
+                            right_on="keyword", how="left")
+    ALERTS = alerts.build(PRODUCTS, cal.seasonal_windows(pt, cfg, today), cal.upcoming_moments(cfg, today),
+                          SECTORS, _disc, today)
+    by_type = ALERTS["tipo"].value_counts() if not ALERTS.empty else pd.Series(dtype=int)
+    a1, a2, a3, a4, a5 = st.columns(5)
+    a1.metric("Prioridad alta", int((ALERTS["prioridad"] == "Alta").sum()) if not ALERTS.empty else 0)
+    a2.metric("Plazos", int(by_type.get("Plazo", 0)))
+    a3.metric("Oportunidades", int(by_type.get("Oportunidad", 0)))
+    a4.metric("Descartar", int(by_type.get("Descartar", 0)))
+    a5.metric("Sectores", int(by_type.get("Sector", 0)))
+    sections = [
+        ("Plazo", "Plazos que se acercan",
+         "Fechas límite para buscar proveedor o pedir a fábrica (próximos 6 meses)."),
+        ("Oportunidad", "Oportunidades con momentum",
+         "Productos subiendo rápido, crecimiento sostenido, estacionales en alza y descubrimientos nuevos."),
+        ("Descartar", "Descartar",
+         "Bajando, ya pasaron su pico, sin volumen o temporada perdida este año."),
+        ("Sector", "Sectores", "Sectores que crecen o caen frente al mercado, con sus productos ganadores."),
+    ]
+    for tipo, title, desc in sections:
+        st.markdown(brand.pill(title), unsafe_allow_html=True)
+        st.caption(desc)
+        part = ALERTS[ALERTS["tipo"] == tipo].drop(columns="tipo") if not ALERTS.empty else pd.DataFrame()
+        if part.empty:
+            st.caption("Nada por ahora.")
+        else:
+            st.dataframe(brand.pretty(part), hide_index=True, width="stretch")
+    st.caption("Reglas heurísticas, no validadas con ventas. Se recalculan con cada actualización de datos "
+               "(el descubrimiento diario corre a las 10:00).")
+
+# ---------------------------------------------------------------- Patrones
+with tab_pat:
+    pt_ok = pt[pt["patron"] != "Volumen insuficiente"]
+    counts = pt_ok["patron"].value_counts()
+    cols = st.columns(6)
+    for col, name in zip(cols, ["Estacional", "Todo el año", "Viral", "Shock de mercado", "Creciente",
+                                "Subiendo rápido"]):
+        col.metric("Shock" if name == "Shock de mercado" else name, int(counts.get(name, 0)))
+    with st.expander("Cómo se define cada patrón"):
+        st.markdown(PATTERN_HELP)
+
+    st.markdown(brand.pill("Calendario estacional"), unsafe_allow_html=True)
+    seasonal = pt_ok[pt_ok["patron"] == "Estacional"]
+    if not seasonal.empty:
+        heat = pd.DataFrame({k: patterns.month_heat(collect.load(k), glitch) for k in seasonal["keyword"]}).T
+        heat = heat.iloc[heat.values.argmax(axis=1).argsort(kind="stable")]
+        labels = seasonal.set_index("keyword")["festividad"].fillna("").to_dict()
+        heat.index = [f"{k} · {labels[k]}" if labels.get(k) else k for k in heat.index]
+        st.plotly_chart(charts.season_heatmap(heat), width="stretch")
+        st.caption("Cada fila es un producto; cada celda, cuánto se busca ese mes comparado con un mes promedio "
+                   "(más claro = temporada alta). Ordenado por mes pico.")
+
+    st.markdown(brand.pill("Mapa de patrones"), unsafe_allow_html=True)
+    st.plotly_chart(charts.pattern_map(pt_ok), width="stretch")
+    st.caption("Derecha = se repite cada año. Arriba = picos y caídas fuertes. Abajo a la izquierda = demanda pareja.")
+
+    st.markdown(brand.pill("Ejemplos por patrón"), unsafe_allow_html=True)
+    available = [p for p in patterns.PATTERNS if p in set(pt_ok["patron"])]
+    sel = st.segmented_control("Patrón", available, default=available[0] if available else None,
+                               label_visibility="collapsed")
+    if sel:
+        ks = pt_ok[pt_ok["patron"] == sel].sort_values("crec_anual_pct", ascending=False)["keyword"].head(9).tolist()
+        st.plotly_chart(charts.small_multiples({k: collect.load(k) for k in ks}, glitch), width="stretch")
+        longs = {k: s for k in ks if (s := collect.load(k, long=True)) is not None}
+        if longs:
+            st.caption("Historial largo (mensual desde 2004):")
+            st.plotly_chart(charts.small_multiples(longs, pd.DatetimeIndex([])), width="stretch")
+        st.caption("Zona sombreada = semanas con error de datos de Google, excluidas del análisis.")
+
+    st.markdown(brand.pill("Todos los productos"), unsafe_allow_html=True)
+    st.dataframe(brand.pretty(pt.sort_values(["patron", "keyword"])), hide_index=True, width="stretch")
+
+# ---------------------------------------------------------------- Descubrimientos
+with tab_disc:
+    disc = discovery.load()
+    seeds = pd.read_csv(discovery.SEEDS_PATH)
+    state_path = DATA_DIR / "discovery_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {"seed_log": {}, "runs": []}
+    counts = disc["estado"].value_counts() if not disc.empty else pd.Series(dtype=int)
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Semillas exploradas", f"{len(state['seed_log'])} / {len(seeds)}")
+    m2.metric("Términos útiles", int(counts.get("pendiente", 0) + counts.get("escaneado", 0)))
+    m3.metric("Escaneados", int(counts.get("escaneado", 0)))
+    m4.metric("Pendientes", int(counts.get("pendiente", 0)))
+    if state["runs"]:
+        last = state["runs"][-1]
+        st.caption(
+            f"Última corrida: {last['fecha']} · {last['semillas']} semillas · {last['nuevos']} términos nuevos · "
+            f"{last['escaneados']} escaneados" + (" · Google bloqueó, sigue mañana" if last["bloqueado"] else "")
+        )
+    st.caption(
+        "Cada día se consultan las búsquedas 'en aumento' (últimos 12 meses, EE.UU.) de unas pocas categorías semilla "
+        "y se escanean los términos nuevos con el mismo análisis de Tendencias. Google limita las consultas, por eso "
+        "avanza de a poco. Semillas en data/seeds.csv. Corrida manual: .venv/Scripts/python -m scripts.discover"
+    )
+    if disc.empty:
+        st.info("Todavía no hay descubrimientos. Se llenará con la primera corrida.")
+    else:
+        ranking_path = DATA_DIR / "ranking.csv"
+        if ranking_path.exists():
+            rk = pd.read_csv(ranking_path)[["keyword", "clasificacion", "trend_score", "crec_vs_mercado_pct",
+                                            "volumen_vs_yoga_mat_pct", "finalista"]]
+            disc = disc.merge(rk, left_on="termino", right_on="keyword", how="left").drop(columns="keyword")
+        useful = disc[disc["estado"] != "filtrado"].sort_values(
+            ["finalista", "trend_score", "subida_pct"], ascending=False, na_position="last")
+        st.markdown(brand.pill("Términos descubiertos"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(useful), hide_index=True, width="stretch")
+        with st.expander(f"Filtrados automáticamente ({int(counts.get('filtrado', 0))})"):
+            st.dataframe(brand.pretty(disc[disc["estado"] == "filtrado"][["termino", "seed", "motivo"]]),
+                         hide_index=True, width="stretch")
+
+# ---------------------------------------------------------------- Competencia
+with tab_comp:
+    with st.expander("Qué revisar en los primeros 10 resultados de Amazon", expanded=False):
+        st.markdown("""
+Busca la keyword en amazon.com y mira los **10 primeros resultados orgánicos** (sin 'Sponsored'):
+
+1. **Reseñas**: tu listado empieza en 0. Si casi todos tienen miles, es muy difícil entrar.
+   Que haya **3 o más con menos de 500** significa que los nuevos sí llegan a la primera página.
+2. **'X+ bought in past month'**: es el dato de ventas de Amazon (un mínimo). Súmalo para ver el tamaño del nicho.
+3. **Concentración**: si el top 3 se lleva más del 70% de esas ventas, o una marca ocupa varios puestos,
+   el nicho está dominado.
+4. **Precio**: la mediana es el precio de mercado. Si es muy bajo (<$12), las tarifas de FBA se comen el margen.
+5. **Rating**: un promedio bajo (<4.2) es una **oportunidad**: lee las reseñas de 1-3 estrellas,
+   ahí está lo que tu producto debe mejorar.
+6. **Anuncios**: muchos 'Sponsored' en la página = el PPC va a ser caro.
+
+El veredicto (Accesible / Media / Difícil) es una regla heurística, no validada.
+La 'marca' se toma de la primera palabra del título y puede fallar en productos genéricos.
+""")
+    comp = competition.load()
+    if comp.empty:
+        st.info("Todavía no hay datos de competencia. Agrégalos abajo o con `scripts/ingest_search.py`.")
+    else:
+        st.markdown(brand.pill("Resumen por keyword"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(competition.summary_table(comp)), hide_index=True, width="stretch")
+        st.caption("Vendidos/mes top 10 suma los 'X+ bought in past month' (mínimos); los listados sin ese dato cuentan 0.")
+    st.markdown(brand.pill("Top 10 orgánico (editable)"), unsafe_allow_html=True)
+    edited_comp = st.data_editor(
+        comp if not comp.empty else pd.DataFrame(columns=competition.COLUMNS),
+        num_rows="dynamic", width="stretch", key="comp_editor",
+        column_config=editor_labels(competition.COLUMNS),
+    )
+    if st.button("Guardar competencia"):
+        edited_comp.to_csv(competition.COMPETITION_PATH, index=False)
+        st.success("Guardado.")
+
+# ---------------------------------------------------------------- Keepa
+with tab_keepa:
+    if keepa.api_key():
+        st.success("Clave de Keepa configurada.")
+    else:
+        st.warning(
+            "Falta la clave de Keepa. Copia `.env.example` como `.env` en la carpeta del proyecto, "
+            "pon `KEEPA_API_KEY=tu_clave` y reinicia el panel. Clave en keepa.com → API (suscripción de pago)."
+        )
+    st.write(
+        "Pega ASINs (los 10 primeros resultados de Amazon para tu keyword) o búscalos por término. "
+        "Cada ASIN consume tokens de Keepa; los datos se guardan y solo se vuelven a pedir pasadas 24 h."
+    )
+    term = st.text_input("Buscar top 10 en Amazon US por término (consume tokens extra)")
+    if st.button("Buscar ASINs") and term.strip():
+        try:
+            st.session_state["asin_text"] = " ".join(keepa.search_asins(term.strip()))
+        except keepa.KeepaError as e:
+            st.error(str(e))
+    asin_text = st.text_area("ASINs", key="asin_text", placeholder="B0XXXXXXXX B0YYYYYYYY ...")
+    if st.button("Traer historial de Keepa", type="primary") and split_asins(asin_text):
+        with st.spinner("Consultando Keepa..."):
+            try:
+                res = keepa.fetch_products(split_asins(asin_text))
+                left = res["tokens_left"]
+                st.success(f"{len(res['products'])} productos ({res['consultados']} consultados a la API)"
+                           + (f" · tokens restantes: {left}" if left is not None else ""))
+            except keepa.KeepaError as e:
+                st.error(str(e))
+
+    asins = keepa.cached_asins()
+    if asins:
+        st.markdown(brand.pill("Productos consultados"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(pd.DataFrame([keepa.metrics(keepa.load_cached(a)) for a in asins])),
+                     hide_index=True, width="stretch")
+        st.caption(
+            "BSR: menor = vende más. Cambio BSR % negativo = está vendiendo MÁS que en los 60 días previos. "
+            "Vendidos/mes es el dato de Amazon 'comprado el mes pasado'; muchos productos no lo tienen."
+        )
+        pick = st.selectbox("Ver historial", asins)
+        hist = keepa.product_history(keepa.load_cached(pick))
+        c1, c2 = st.columns(2)
+        if hist["bsr"].notna().any():
+            fig = px.line(hist["bsr"].dropna(), title="BSR (más abajo en la gráfica = mejor)",
+                          labels={"value": "BSR", "index": ""})
+            fig.update_yaxes(autorange="reversed")
+            fig.update_layout(showlegend=False)
+            c1.plotly_chart(fig, width="stretch")
+        prices = pd.concat([hist["precio_nuevo"], hist["precio_amazon"]], axis=1).dropna(how="all")
+        if not prices.empty:
+            c2.plotly_chart(px.line(prices, title="Precio (USD)", labels={"value": "USD", "index": "", "variable": ""}),
+                            width="stretch")
+
+# ---------------------------------------------------------------- Productos
+with tab_products:
+    st.write(
+        "Edita los candidatos. Deja la tarifa FBA vacía para usar la estimación por tamaño (se marcará como estimado). "
+        "Reseñas top 10 = reseñas típicas de los 10 primeros resultados de Amazon; si lo dejas vacío se toma "
+        "de la pestaña Competencia (por keyword) o de los ASINs competidores consultados en Keepa."
+    )
+    raw = pd.read_csv(CANDIDATES_PATH)
+    edited = st.data_editor(
+        raw,
+        num_rows="dynamic",
+        width="stretch",
+        column_config=editor_labels(
+            raw.columns,
+            size_tier=st.column_config.SelectboxColumn(
+                brand.LABELS["size_tier"], options=list(cfg["fees"]["fba_fee_por_tier"]["valores"].keys())
+            ),
+        ),
+    )
+    if st.button("Guardar candidatos"):
+        edited.to_csv(CANDIDATES_PATH, index=False)
+        st.success("Guardado.")
+
+    trends_by_kw = trend_table(tuple(collect.cached_keywords())).set_index("keyword") if collect.cached_keywords() else None
+    comp_by_kw = competition.summary_table()
+    comp_by_kw = comp_by_kw.set_index("keyword") if not comp_by_kw.empty else None
+    rows, pending = [], []
+    for _, r in edited.iterrows():
+        price, cost = num(r.get("precio_venta")), num(r.get("costo_fabrica"))
+        if not r.get("nombre"):
+            continue
+        if price is None or cost is None:
+            if price is not None:
+                cap = max_landed_cost(Product(sale_price=price, unit_cost=0, freight_per_unit=0,
+                                              fba_fee=num(r.get("fba_fee")),
+                                              size_tier=r.get("size_tier") or "large_standard_1lb",
+                                              cuft_per_unit=num(r.get("cuft_unidad"), 0.1)), cfg)
+                pending.append({"producto": r["nombre"], "precio_venta": price,
+                                "costo_max_puesto_en_amazon": cap})
+            else:
+                pending.append({"producto": r["nombre"], "precio_venta": None, "costo_max_puesto_en_amazon": None})
+            continue
+        econ = compute(
+            Product(
+                sale_price=price,
+                unit_cost=cost,
+                freight_per_unit=num(r.get("flete_unidad"), 0.0),
+                fba_fee=num(r.get("fba_fee")),
+                size_tier=r.get("size_tier") or "large_standard_1lb",
+                cuft_per_unit=num(r.get("cuft_unidad"), 0.1),
+            ),
+            cfg,
+        )
+        kw = r.get("keyword") if isinstance(r.get("keyword"), str) else None
+        trend = trends_by_kw.loc[kw] if trends_by_kw is not None and kw in trends_by_kw.index else None
+        t_score = num(trend["trend_score"]) if trend is not None else None
+        reviews, reviews_src = num(r.get("resenas_top10")), "manual"
+        market = keepa.market_summary(split_asins(r.get("asins_competidores")))
+        comp_row = comp_by_kw.loc[kw] if comp_by_kw is not None and kw in comp_by_kw.index else None
+        if reviews is None and market and market["resenas_prom"] is not None:
+            reviews, reviews_src = market["resenas_prom"], f"Keepa ({market['n']} ASINs)"
+        if reviews is None and comp_row is not None and pd.notna(comp_row["resenas_mediana"]):
+            reviews, reviews_src = comp_row["resenas_mediana"], "Competencia (mediana top 10)"
+        sc = overall(t_score, econ["margen_pct"], reviews)
+        rows.append({
+            "nombre": r["nombre"],
+            "score": sc["score"],
+            "tendencia": trend["clasificacion"] if trend is not None else "sin datos",
+            "resenas_competencia": None if reviews is None else round(reviews),
+            "fuente_resenas": reviews_src if reviews is not None else "",
+            "precio_mediana_mercado": market["precio_mediana"] if market
+            else (comp_row["precio_mediana"] if comp_row is not None else None),
+            "vendidos_mes_mercado": market["vendidos_mes_total"] if market
+            else (comp_row["vendidos_mes_top10"] if comp_row is not None else None),
+            "competencia": comp_row["veredicto"] if comp_row is not None else "sin datos",
+            "bsr_cambio_mercado_pct": market["bsr_cambio_mediana_pct"] if market else None,
+            **{k: v for k, v in econ.items() if k != "campos_estimados"},
+            "datos_estimados": ", ".join(econ["campos_estimados"]),
+            "datos_faltantes_score": ", ".join(sc["faltantes"]),
+            "_moq": int(num(r.get("moq"), 1)),
+            "_ventas_mes": num(r.get("ventas_mes_est"), 0.0),
+        })
+    results = pd.DataFrame(rows)
+    st.session_state["results"] = results
+    if pending:
+        st.markdown(brand.pill("Pendientes de cotización"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(pd.DataFrame(pending)), hide_index=True, width="stretch")
+        st.caption(
+            f"Costo máximo (fábrica + flete + aranceles, por unidad) para llegar a "
+            f"{int(cfg['supuestos']['margen_neto_minimo']['valor']*100)}% de margen neto con las tarifas estimadas. "
+            "Úsalo como tope al pedir cotizaciones."
+        )
+    if not results.empty:
+        st.markdown(brand.pill("Rentabilidad por unidad y score"), unsafe_allow_html=True)
+        st.dataframe(
+            brand.pretty(results.drop(columns=["_moq", "_ventas_mes"]).sort_values("score", ascending=False)),
+            hide_index=True,
+            width="stretch",
+        )
+        st.caption(
+            f"Score = {int(WEIGHTS['tendencia']*100)}% tendencia + {int(WEIGHTS['margen']*100)}% margen + "
+            f"{int(WEIGHTS['competencia']*100)}% competencia. Pesos heurísticos, no validados. "
+            "Si falta un componente se usa 50 (neutral) y aparece en `datos_faltantes_score`."
+        )
+
+# ---------------------------------------------------------------- Presupuesto
+with tab_budget:
+    budget = st.number_input("Presupuesto total (USD)", min_value=500, max_value=100_000, value=3500, step=250)
+    results = st.session_state.get("results", pd.DataFrame())
+    if results.empty:
+        st.info("Agrega candidatos en la pestaña de Productos.")
+    else:
+        cands = [
+            Candidate(
+                name=r["nombre"],
+                score=r["score"],
+                landed_cost=r["costo_puesto"],
+                net_profit=r["ganancia_neta"],
+                moq=r["_moq"],
+                est_monthly_units=r["_ventas_mes"],
+            )
+            for _, r in results.iterrows()
+        ]
+        plan = allocate(cands, float(budget), cfg)
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Invertido (inventario + lanzamiento)", f"${plan['gastado']:,.0f}")
+        m2.metric("Reserva (PPC, imprevistos, recompra)", f"${plan['reserva']:,.0f}")
+        m3.metric("Productos seleccionados", len(plan["asignacion"]))
+        if plan["asignacion"]:
+            st.dataframe(brand.pretty(pd.DataFrame(plan["asignacion"])), hide_index=True, width="stretch")
+        if plan["rechazados"]:
+            st.markdown(brand.pill("No seleccionados"), unsafe_allow_html=True)
+            st.dataframe(brand.pretty(pd.DataFrame(plan["rechazados"])), hide_index=True, width="stretch")
+        b = cfg["presupuesto"]
+        st.caption(
+            f"Reglas: reserva {int(b['reserva_pct']['valor']*100)}%, máx. {b['max_productos']['valor']} productos, "
+            f"máx. {b['meses_de_prueba']['valor']} meses de ventas estimadas en la primera orden, "
+            f"${b['costo_lanzamiento_por_producto']['valor']} de lanzamiento por producto. Editable en config.yaml. "
+            "'Ganancia esperada' asume que se vende todo al precio indicado."
+        )
+
+# ---------------------------------------------------------------- Supuestos
+with tab_assumptions:
+    st.write("Estos valores son **aproximaciones** y deben verificarse antes de comprar inventario:")
+    st.dataframe(brand.pretty(pd.DataFrame(estimated_assumptions(cfg))), hide_index=True, width="stretch")
+    st.write(
+        "- Las filas de candidatos marcadas *EJEMPLO FICTICIO* no son datos reales.\n"
+        "- La tarifa FBA exacta por producto sale del **FBA Revenue Calculator** de Amazon.\n"
+        "- El costo de fábrica y el flete deben venir de cotizaciones reales (proveedor + forwarder)."
+    )

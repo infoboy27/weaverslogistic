@@ -1,0 +1,47 @@
+sector,subcategoria,lista,total,precio_fuera,sin_precio,restringido,voluminoso,pasan_filtro_pagina
+mascotas,Dog Toys,Best Sellers,50,43,2,1,1,3
+mascotas,Dog Apparel & Accessories,Best Sellers,30,23,0,0,0,7
+mascotas,Dog Carriers & Travel,Best Sellers,30,16,0,0,1,13
+mascotas,Dog Collars Harnesses & Leashes,Best Sellers,30,23,0,1,0,6
+mascotas,Dog Feeding & Watering,Best Sellers,30,29,0,1,0,0
+mascotas,Dog Grooming,Best Sellers,30,24,0,5,0,1
+mascotas,Dog Training & Behavior,Best Sellers,30,25,0,2,0,3
+mascotas,Cat Toys,Best Sellers,30,27,0,3,0,0
+mascotas,Cat Feeding & Watering,Best Sellers,30,27,0,3,0,0
+mascotas,Cat Grooming,Best Sellers,30,26,0,2,1,1
+mascotas,Dog Apparel & Accessories,New Releases,30,21,1,0,0,8
+mascotas,Dog Carriers & Travel,New Releases,30,20,0,0,2,8
+mascotas,Dog Collars Harnesses & Leashes,New Releases,30,14,0,10,0,6
+mascotas,Dog Feeding & Watering,New Releases,30,26,0,4,0,0
+mascotas,Dog Grooming,New Releases,30,15,0,7,0,8
+mascotas,Dog Toys,New Releases,30,16,1,6,0,7
+mascotas,Dog Training & Behavior,New Releases,30,18,0,8,0,4
+mascotas,Cat Toys,New Releases,30,17,2,6,0,5
+mascotas,Cat Feeding & Watering,New Releases,30,25,0,5,0,0
+mascotas,Cat Grooming,New Releases,30,19,2,0,1,8
+hobby,Needlework,Best Sellers,30,24,1,1,0,4
+hobby,Knitting & Crochet,Best Sellers,30,23,0,0,0,7
+hobby,Craft Supplies,Best Sellers,30,28,0,0,0,2
+hobby,Crafts Organization & Storage,Best Sellers,30,23,0,0,0,7
+hobby,Beading & Jewelry Making,Best Sellers,30,29,0,0,0,1
+hobby,Scrapbooking & Stamping,Best Sellers,30,30,0,0,0,0
+hobby,Needlework,New Releases,30,28,0,0,0,2
+hobby,Knitting & Crochet,New Releases,30,20,1,3,0,6
+hobby,Craft Supplies,New Releases,30,29,0,1,0,0
+hobby,Crafts Organization & Storage,New Releases,30,15,2,0,0,13
+hobby,Beading & Jewelry Making,New Releases,30,27,0,0,0,3
+hobby,Scrapbooking & Stamping,New Releases,30,26,1,2,0,1
+hogar,Bathroom Storage,Best Sellers,30,23,0,2,0,5
+hogar,Clothing & Closet Storage,Best Sellers,30,17,1,4,0,8
+hogar,Baskets Bins & Containers,Best Sellers,30,17,1,0,0,12
+hogar,Office Storage,Best Sellers,30,14,0,1,0,15
+hogar,Laundry Storage,Best Sellers,30,23,0,0,1,6
+hogar,Home Storage Hooks,Best Sellers,30,28,2,0,0,0
+hogar,Racks Shelves & Drawers,Best Sellers,30,14,0,2,5,9
+hogar,Bathroom Storage,New Releases,30,15,2,1,0,12
+hogar,Clothing & Closet Storage,New Releases,30,11,6,5,3,5
+hogar,Baskets Bins & Containers,New Releases,30,10,10,0,0,10
+hogar,Office Storage,New Releases,30,7,0,3,0,20
+hogar,Laundry Storage,New Releases,30,17,0,0,2,11
+hogar,Home Storage Hooks,New Releases,30,24,3,0,0,3
+hogar,Racks Shelves & Drawers,New Releases,30,16,1,1,2,10

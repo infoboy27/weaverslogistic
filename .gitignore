@@ -1,0 +1,13 @@
+# Entorno y caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secretos
+.env
+
+# Datos de máquina / logs (se regeneran)
+data/keepa/
+data/discovery_log.txt
+data/examples_log.txt

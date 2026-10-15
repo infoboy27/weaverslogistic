@@ -1,0 +1,6 @@
+nombre,keyword,precio_venta,costo_fabrica,flete_unidad,fba_fee,size_tier,cuft_unidad,moq,ventas_mes_est,resenas_top10,asins_competidores,fuente
+EJEMPLO chaleco térmico,heated vest,59.99,18.0,3.5,,large_standard_2lb,0.25,100.0,150.0,,,EJEMPLO FICTICIO - reemplazar con cotización y datos reales
+EJEMPLO producto 2,,24.99,4.2,1.1,,small_standard,0.05,300.0,300.0,,,EJEMPLO FICTICIO - reemplazar con cotización y datos reales
+Cooling towel,cooling towel,10.99,,,,small_standard,0.03,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
+Embroidery kit,embroidery kit,14.99,,,,large_standard_1lb,0.08,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
+Dog cooling mat,dog cooling mat,26.99,,,,large_standard_2lb,0.25,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO

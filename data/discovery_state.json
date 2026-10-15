@@ -1,0 +1,22 @@
+{
+ "seed_log": {
+  "baby essentials": "2026-10-15",
+  "bathroom organizer": "2026-10-15"
+ },
+ "runs": [
+  {
+   "fecha": "2026-10-15",
+   "semillas": 2,
+   "nuevos": 11,
+   "escaneados": 0,
+   "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-15",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 10,
+   "bloqueado": true
+  }
+ ]
+}

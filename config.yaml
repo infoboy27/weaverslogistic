@@ -1,0 +1,103 @@
+# Configuración de supuestos.
+# IMPORTANTE: todo valor marcado "estimado: true" es una APROXIMACIÓN, no un dato verificado.
+# Verifícalo en el Amazon FBA Revenue Calculator / Seller Central antes de decidir con dinero real.
+
+marketplace: US
+
+fees:
+  referral_pct:
+    valor: 0.15
+    estimado: true
+    nota: "15% aplica a la mayoría de categorías en Amazon US; algunas categorías difieren. Verificar por categoría."
+  # Tarifa FBA por unidad según tamaño. Cambia cada año; estos valores son aproximados.
+  fba_fee_por_tier:
+    estimado: true
+    nota: "Aproximación gruesa. Usa la tarifa exacta del Revenue Calculator por producto (columna fba_fee)."
+    valores:
+      small_standard: 3.50        # <= 1 lb, pequeño y plano
+      large_standard_1lb: 4.75
+      large_standard_2lb: 5.75
+      large_standard_3lb: 6.50
+      large_bulky: 10.00
+  storage_por_cuft_mes:
+    estimado: true
+    nota: "Almacenaje mensual por pie cúbico; Oct-Dic es mucho más caro. Verificar tarifas vigentes."
+    ene_sep: 0.80
+    oct_dic: 2.40
+
+supuestos:
+  ppc_pct_del_precio:
+    valor: 0.15
+    estimado: true
+    nota: "Gasto en publicidad como % del precio (TACoS). En lanzamiento suele ser mayor."
+  tasa_devolucion:
+    valor: 0.05
+    estimado: true
+    nota: "Depende mucho de la categoría (ropa >> accesorios). Se asume que la unidad devuelta se pierde."
+  margen_neto_minimo:
+    valor: 0.25
+    estimado: true
+    nota: "Regla general de la industria, no validada para tu caso."
+  roi_minimo:
+    valor: 1.0
+    estimado: true
+    nota: "Ganancia neta / costo puesto en Amazon. 1.0 = 100%."
+
+tiempos_entrega_dias:
+  estimado: true
+  nota: "Típico para fabricar en China y enviar por mar a EE.UU. Confirmar con tu proveedor/forwarder."
+  produccion: 35
+  flete_maritimo: 35
+  recepcion_amazon: 14
+  margen_rampa: 30   # días antes del pico para tener stock vendiendo y rankeando
+
+presupuesto:
+  reserva_pct:
+    valor: 0.30
+    nota: "Parte del presupuesto que NO va a inventario: PPC de lanzamiento, imprevistos, recompra."
+  costo_lanzamiento_por_producto:
+    valor: 300
+    estimado: true
+    nota: "Muestras, fotos, etiquetas/códigos, inspección. Ajustar con cotizaciones reales."
+  max_productos:
+    valor: 2
+    nota: "Con 2,000-5,000 USD, más de 1-2 productos diluye demasiado el capital."
+  max_pct_por_producto:
+    valor: 0.70
+  meses_de_prueba:
+    valor: 2
+    nota: "No comprar más de N meses de ventas estimadas en la primera orden."
+  score_minimo:
+    valor: 50
+
+# Criterios para elegir producto (acordados 2026-10-15). Reglas de negocio, no datos estimados.
+criterios:
+  precio_min: 20
+  precio_max: 50
+  peso_max_kg: 1.0            # se verifica a mano con la ficha del producto / proveedor
+  min_listados_bajo_500_resenas: 3
+  min_vendidos_mes_top10: 1000
+  tendencias_descartadas: ["En declive", "Moda pasajera (pico y caída)", "Volumen insuficiente"]
+  patrones_descartados: ["Volumen insuficiente"]
+  nota: "Sin electrónica/baterías, sin frágiles, sin comestibles o tópicos, sin productos para niños (CPSC), sin licencias de marca."
+
+# Supuestos del cerebro de decisión (pestaña Decisión). Todo es estimado hasta tener cotizaciones reales.
+decision:
+  costo_pct_precio:
+    valor: 0.25
+    estimado: true
+    nota: "Costo puesto en Amazon (fábrica + flete + aranceles) como % del precio de venta, mientras no haya cotización real."
+  moq_por_defecto:
+    valor: 100
+    estimado: true
+    nota: "Pedido mínimo típico de proveedores en Alibaba para productos pequeños; confirmar con cada proveedor."
+  captura_nuevo_vendedor:
+    valor: 0.5
+    estimado: true
+    nota: "Fracción de lo que venden hoy los listados nuevos (<500 reseñas) del top 10 que esperamos vender en los primeros meses."
+  horizonte_meses:
+    valor: 3
+    nota: "Ventana para comparar opciones (ganancia esperada en los primeros N meses)."
+  mejora_minima_para_diversificar:
+    valor: 0.10
+    nota: "Solo se recomienda sumar otro producto si la ganancia ajustada por riesgo mejora al menos este %."

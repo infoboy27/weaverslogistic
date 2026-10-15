@@ -1,0 +1,13 @@
+# Weavers brand theme (see fba_trends/brand.py)
+[theme]
+base = "dark"
+primaryColor = "#57C3FF"
+backgroundColor = "#010236"
+secondaryBackgroundColor = "#080A4A"
+textColor = "#F3F3F5"
+borderColor = "#1B2070"
+dataframeHeaderBackgroundColor = "#11145C"
+baseRadius = "12px"
+
+[server]
+enableStaticServing = true
