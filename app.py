@@ -15,17 +15,20 @@ from fba_trends import (alerts, brand, charts, collect, competition, criteria, d
                         patterns)
 from fba_trends import calendar as cal
 from fba_trends.budget import Candidate, allocate
-from fba_trends.config import DATA_DIR, estimated_assumptions, load_config
+from fba_trends.config import (DATA_DIR, estimated_assumptions, load_config, load_settings, save_settings,
+                               settings_from_config)
 from fba_trends.profit import Product, compute, max_landed_cost
 from fba_trends.scoring import WEIGHTS, overall
 from fba_trends.trends import adjust_for_market, analyze, anomalous_weeks, lead_days
 
 CANDIDATES_PATH = DATA_DIR / "candidates.csv"
 
-st.set_page_config(page_title="Weavers · FBA Trends", page_icon=str(brand.ICON_PATH), layout="wide")
+st.set_page_config(page_title="Weavers · FBA Trends", page_icon=str(brand.ICON_PATH), layout="wide",
+                   initial_sidebar_state="expanded")
 brand.register_plotly_template()
 st.markdown(brand.css(), unsafe_allow_html=True)
-cfg = load_config()
+cfg = load_config(with_settings=True)
+SETTINGS = load_settings()
 
 
 def num(v, default=None):
@@ -55,18 +58,8 @@ def pattern_table(keywords: tuple[str, ...]):
     return pd.DataFrame(rows), glitch
 
 
-st.markdown(
-    brand.header(
-        f"Mercado {cfg['marketplace']} · Entrega asumida {lead_days(cfg)} días (fábrica → Amazon → rampa) · "
-        "Los valores estimados están en la pestaña Supuestos"
-    ),
-    unsafe_allow_html=True,
-)
-
-(tab_decision, tab_funnel, tab_alerts, tab_next, tab_pat, tab_disc, tab_trends, tab_comp, tab_keepa, tab_products, tab_budget,
- tab_assumptions) = st.tabs(
-    ["Decisión", "Embudo", "Alertas", "Lo que viene", "Patrones", "Descubrimientos", "Tendencias", "Competencia", "Amazon · Keepa", "Productos y rentabilidad", "Presupuesto", "Supuestos"]
-)
+def page_title(title: str, subtitle: str = "") -> None:
+    st.markdown(brand.page_title(title, subtitle), unsafe_allow_html=True)
 
 
 def editor_labels(columns, **overrides) -> dict:
@@ -80,7 +73,8 @@ def split_asins(v) -> list[str]:
     return [a for a in str(v or "").replace(",", " ").replace(";", " ").upper().split() if a and a != "NAN"]
 
 # ---------------------------------------------------------------- Tendencias
-with tab_trends:
+def page_trends():
+    page_title("Tendencias", "Google Trends: crecimiento real frente al mercado")
     c1, c2 = st.columns([2, 1])
     with c1:
         kw_text = st.text_input("Keywords (en inglés, separadas por coma)", placeholder="heated vest, pool float")
@@ -156,7 +150,8 @@ SECTORS = alerts.sector_table(PRODUCTS, SECTOR_OF)
 SECTORS = SECTORS[SECTORS["sector"] != "control"]
 
 # ---------------------------------------------------------------- Lo que viene
-with tab_next:
+def page_next():
+    page_title("Lo que viene", "Fechas de venta, temporadas y tendencias en alza")
     st.markdown(brand.pill("Próximas fechas de venta en EE.UU."), unsafe_allow_html=True)
     moments = cal.upcoming_moments(cfg, today)
     st.dataframe(brand.pretty(moments), hide_index=True, width="stretch")
@@ -228,44 +223,55 @@ if not UNIVERSE.empty:
     _types = pd.concat([_types, pd.DataFrame(_extra)], ignore_index=True).dropna(subset=["precio_mediana"])
     EV = criteria.with_manual(criteria.evaluate(_types, cfg, _tt, pt, COMP_SUM), criteria.load_pipeline(), cfg)
 
+def run_decision(budget: float, max_products: int, mult: float = 1.0):
+    """Shortlist -> economics -> recommendation (used by Decisión and Inicio)."""
+    best = criteria.shortlist(EV)
+    cands = pd.read_csv(CANDIDATES_PATH)
+    real_cost = {}
+    for _, r in cands.iterrows():
+        f, fl = pd.to_numeric(r.get("costo_fabrica"), errors="coerce"), pd.to_numeric(r.get("flete_unidad"), errors="coerce")
+        if pd.notna(f):
+            real_cost[r["keyword"]] = float(f) + (0.0 if pd.isna(fl) else float(fl))
+    comp_rows = competition.load()
+    econ = pd.DataFrame([decision.economics(r, comp_rows[comp_rows["keyword"] == r["tipo"]], cfg, mult,
+                                            real_cost.get(r["tipo"]))
+                         for _, r in best.iterrows()])
+    win = cal.seasonal_windows(pt, cfg, today)
+    timing = {} if win.empty else {r["keyword"]: (int(r["dias_para_pedir"]), str(r["buscar_proveedor_desde"]))
+                                   for _, r in win.iterrows()}
+    if econ.empty:
+        return {"veredicto": ("ninguno", "No compren nada este mes", "Todavía no hay candidatos que pasen el embudo."),
+                "preliminar": True, "opciones": pd.DataFrame(), "asignacion": pd.DataFrame(), "esperar": [],
+                "descartados": []}, econ
+    return decision.recommend(econ, budget, cfg, max_products, timing), econ
+
+
+def verdict_card(rec: dict) -> None:
+    kind, title, text = rec["veredicto"]
+    badge = ('<span class="wv-badge">Preliminar · costos estimados (sin cotización)</span>'
+             if rec["preliminar"] else '<span class="wv-badge ok">Con costos reales</span>')
+    st.markdown(f'<div class="wv-verdict {kind}"><div class="wv-v-label">Recomendación {badge}</div>'
+                f'<div class="wv-v-title">{title}</div><div class="wv-v-text">{text}</div></div>',
+                unsafe_allow_html=True)
+
+
 # ---------------------------------------------------------------- Decisión
-with tab_decision:
+def page_decision():
+    page_title("Decisión", "Qué comprar este mes y cómo dividir el presupuesto")
     if EV is None:
         st.info("Primero hace falta el universo de Amazon (pestaña Embudo).")
     else:
         d1, d2, d3 = st.columns(3)
-        dec_budget = d1.number_input("Presupuesto total (USD)", min_value=1000, max_value=50_000, value=3500, step=250,
-                                     key="dec_budget")
+        dec_budget = d1.number_input("Presupuesto total (USD)", min_value=1000, max_value=50_000, value=int(SETTINGS["presupuesto_usd"]),
+                                     step=250, key="dec_budget")
         dec_max = d2.slider("Máximo de productos a considerar", 1, 5, 3, key="dec_max")
         dec_esc = d3.select_slider("Escenario de ventas", ["Pesimista", "Base", "Optimista"], value="Base",
                                    key="dec_esc")
         mult = {"Pesimista": 0.5, "Base": 1.0, "Optimista": 1.5}[dec_esc]
 
-        best = criteria.shortlist(EV)
-        cands = pd.read_csv(CANDIDATES_PATH)
-        real_cost = {}
-        for _, r in cands.iterrows():
-            f, fl = pd.to_numeric(r.get("costo_fabrica"), errors="coerce"), pd.to_numeric(r.get("flete_unidad"), errors="coerce")
-            if pd.notna(f):
-                real_cost[r["keyword"]] = float(f) + (0.0 if pd.isna(fl) else float(fl))
-        comp_rows = competition.load()
-        econ = pd.DataFrame([decision.economics(r, comp_rows[comp_rows["keyword"] == r["tipo"]], cfg, mult,
-                                                real_cost.get(r["tipo"]))
-                             for _, r in best.iterrows()])
-        win = cal.seasonal_windows(pt, cfg, today)
-        timing = {} if win.empty else {r["keyword"]: (int(r["dias_para_pedir"]), str(r["buscar_proveedor_desde"]))
-                                       for _, r in win.iterrows()}
-        rec = decision.recommend(econ, float(dec_budget), cfg, dec_max, timing) if not econ.empty else {
-            "veredicto": ("ninguno", "No compren nada este mes", "Todavía no hay candidatos que pasen el embudo."),
-            "preliminar": True, "opciones": pd.DataFrame(), "asignacion": pd.DataFrame(), "esperar": [],
-            "descartados": []}
+        rec, econ = run_decision(float(dec_budget), dec_max, mult)
 
-        kind, title, text = rec["veredicto"]
-        badge = ('<span class="wv-badge">Preliminar · costos estimados (sin cotización)</span>'
-                 if rec["preliminar"] else '<span class="wv-badge ok">Con costos reales</span>')
-        st.markdown(f'<div class="wv-verdict {kind}"><div class="wv-v-label">Recomendación {badge}</div>'
-                    f'<div class="wv-v-title">{title}</div><div class="wv-v-text">{text}</div></div>',
-                    unsafe_allow_html=True)
+        verdict_card(rec)
 
         alloc = rec["asignacion"]
         if not alloc.empty:
@@ -317,7 +323,8 @@ with tab_decision:
         )
 
 # ---------------------------------------------------------------- Embudo
-with tab_funnel:
+def page_funnel():
+    page_title("Embudo", "De miles de productos de Amazon a tus mejores candidatos")
     universe, ucounts, comp_sum, ev = UNIVERSE, UCOUNTS, COMP_SUM, EV
     if ev is None:
         st.info("Todavía no hay universo de Amazon capturado.")
@@ -397,7 +404,8 @@ with tab_funnel:
             st.success("Guardado.")
 
 # ---------------------------------------------------------------- Alertas
-with tab_alerts:
+def page_alerts():
+    page_title("Alertas", "Plazos, oportunidades y lo que conviene descartar")
     _disc = discovery.load()
     _rank_path = DATA_DIR / "ranking.csv"
     if not _disc.empty and _rank_path.exists():
@@ -433,7 +441,8 @@ with tab_alerts:
                "(el descubrimiento diario corre a las 10:00).")
 
 # ---------------------------------------------------------------- Patrones
-with tab_pat:
+def page_pat():
+    page_title("Patrones", "Estacional, todo el año, viral o shock de mercado")
     pt_ok = pt[pt["patron"] != "Volumen insuficiente"]
     counts = pt_ok["patron"].value_counts()
     cols = st.columns(6)
@@ -475,7 +484,8 @@ with tab_pat:
     st.dataframe(brand.pretty(pt.sort_values(["patron", "keyword"])), hide_index=True, width="stretch")
 
 # ---------------------------------------------------------------- Descubrimientos
-with tab_disc:
+def page_disc():
+    page_title("Descubrimientos", "Búsquedas en aumento detectadas cada día")
     disc = discovery.load()
     seeds = pd.read_csv(discovery.SEEDS_PATH)
     state_path = DATA_DIR / "discovery_state.json"
@@ -514,7 +524,8 @@ with tab_disc:
                          hide_index=True, width="stretch")
 
 # ---------------------------------------------------------------- Competencia
-with tab_comp:
+def page_comp():
+    page_title("Competencia", "Top 10 de Amazon por producto")
     with st.expander("Qué revisar en los primeros 10 resultados de Amazon", expanded=False):
         st.markdown("""
 Busca la keyword en amazon.com y mira los **10 primeros resultados orgánicos** (sin 'Sponsored'):
@@ -550,7 +561,8 @@ La 'marca' se toma de la primera palabra del título y puede fallar en productos
         st.success("Guardado.")
 
 # ---------------------------------------------------------------- Keepa
-with tab_keepa:
+def page_keepa():
+    page_title("Amazon · Keepa", "Historial de ventas y precio (requiere clave de Keepa)")
     if keepa.api_key():
         st.success("Clave de Keepa configurada.")
     else:
@@ -602,29 +614,8 @@ with tab_keepa:
             c2.plotly_chart(px.line(prices, title="Precio (USD)", labels={"value": "USD", "index": "", "variable": ""}),
                             width="stretch")
 
-# ---------------------------------------------------------------- Productos
-with tab_products:
-    st.write(
-        "Edita los candidatos. Deja la tarifa FBA vacía para usar la estimación por tamaño (se marcará como estimado). "
-        "Reseñas top 10 = reseñas típicas de los 10 primeros resultados de Amazon; si lo dejas vacío se toma "
-        "de la pestaña Competencia (por keyword) o de los ASINs competidores consultados en Keepa."
-    )
-    raw = pd.read_csv(CANDIDATES_PATH)
-    edited = st.data_editor(
-        raw,
-        num_rows="dynamic",
-        width="stretch",
-        column_config=editor_labels(
-            raw.columns,
-            size_tier=st.column_config.SelectboxColumn(
-                brand.LABELS["size_tier"], options=list(cfg["fees"]["fba_fee_por_tier"]["valores"].keys())
-            ),
-        ),
-    )
-    if st.button("Guardar candidatos"):
-        edited.to_csv(CANDIDATES_PATH, index=False)
-        st.success("Guardado.")
-
+def product_results(edited: pd.DataFrame):
+    """Unit economics + score for every candidate row (Productos and Presupuesto pages)."""
     trends_by_kw = trend_table(tuple(collect.cached_keywords())).set_index("keyword") if collect.cached_keywords() else None
     comp_by_kw = competition.summary_table()
     comp_by_kw = comp_by_kw.set_index("keyword") if not comp_by_kw.empty else None
@@ -685,7 +676,34 @@ with tab_products:
             "_ventas_mes": num(r.get("ventas_mes_est"), 0.0),
         })
     results = pd.DataFrame(rows)
-    st.session_state["results"] = results
+    return results, pending
+
+
+# ---------------------------------------------------------------- Productos
+def page_products():
+    page_title("Productos y rentabilidad", "Costos, márgenes y costo máximo por producto")
+    st.write(
+        "Edita los candidatos. Deja la tarifa FBA vacía para usar la estimación por tamaño (se marcará como estimado). "
+        "Reseñas top 10 = reseñas típicas de los 10 primeros resultados de Amazon; si lo dejas vacío se toma "
+        "de la pestaña Competencia (por keyword) o de los ASINs competidores consultados en Keepa."
+    )
+    raw = pd.read_csv(CANDIDATES_PATH)
+    edited = st.data_editor(
+        raw,
+        num_rows="dynamic",
+        width="stretch",
+        column_config=editor_labels(
+            raw.columns,
+            size_tier=st.column_config.SelectboxColumn(
+                brand.LABELS["size_tier"], options=list(cfg["fees"]["fba_fee_por_tier"]["valores"].keys())
+            ),
+        ),
+    )
+    if st.button("Guardar candidatos"):
+        edited.to_csv(CANDIDATES_PATH, index=False)
+        st.success("Guardado.")
+
+    results, pending = product_results(edited)
     if pending:
         st.markdown(brand.pill("Pendientes de cotización"), unsafe_allow_html=True)
         st.dataframe(brand.pretty(pd.DataFrame(pending)), hide_index=True, width="stretch")
@@ -708,11 +726,13 @@ with tab_products:
         )
 
 # ---------------------------------------------------------------- Presupuesto
-with tab_budget:
-    budget = st.number_input("Presupuesto total (USD)", min_value=500, max_value=100_000, value=3500, step=250)
-    results = st.session_state.get("results", pd.DataFrame())
+def page_budget():
+    page_title("Presupuesto", "Reparto del capital con reglas de riesgo")
+    budget = st.number_input("Presupuesto total (USD)", min_value=500, max_value=100_000,
+                             value=int(SETTINGS["presupuesto_usd"]), step=250)
+    results, _ = product_results(pd.read_csv(CANDIDATES_PATH))
     if results.empty:
-        st.info("Agrega candidatos en la pestaña de Productos.")
+        st.info("Agrega candidatos con costo en Productos y rentabilidad.")
     else:
         cands = [
             Candidate(
@@ -744,7 +764,8 @@ with tab_budget:
         )
 
 # ---------------------------------------------------------------- Supuestos
-with tab_assumptions:
+def page_assumptions():
+    page_title("Supuestos", "Valores estimados que conviene verificar")
     st.write("Estos valores son **aproximaciones** y deben verificarse antes de comprar inventario:")
     st.dataframe(brand.pretty(pd.DataFrame(estimated_assumptions(cfg))), hide_index=True, width="stretch")
     st.write(
@@ -752,3 +773,121 @@ with tab_assumptions:
         "- La tarifa FBA exacta por producto sale del **FBA Revenue Calculator** de Amazon.\n"
         "- El costo de fábrica y el flete deben venir de cotizaciones reales (proveedor + forwarder)."
     )
+
+
+# ---------------------------------------------------------------- Inicio
+def page_home():
+    name = SETTINGS.get("nombre_negocio") or ""
+    page_title(f"Hola{', ' + name if name else ''}", f"Resumen de hoy · {today:%d/%m/%Y}")
+    rec, _ = run_decision(float(SETTINGS["presupuesto_usd"]), int(cfg["presupuesto"]["max_productos"]["valor"]) + 1)
+    verdict_card(rec)
+    al = alerts.build(PRODUCTS, cal.seasonal_windows(pt, cfg, today), cal.upcoming_moments(cfg, today), SECTORS,
+                      discovery.load(), today)
+    best = criteria.shortlist(EV) if EV is not None else pd.DataFrame()
+    moments = cal.upcoming_moments(cfg, today)
+    nxt = moments[moments["dias_para_pedir"] >= 0].head(1)
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("Analizados", f"{len(EV) if EV is not None else 0}")
+    k2.metric("Candidatos", f"{len(best)}")
+    k3.metric("Alertas altas", f"{int((al['prioridad'] == 'Alta').sum()) if not al.empty else 0}")
+    k4.metric("Próximo pedido", nxt["pedir_antes_de"].iloc[0].strftime("%d/%m") if not nxt.empty else "-",
+              nxt["momento"].iloc[0] if not nxt.empty else None, delta_color="off")
+
+    c1, c2 = st.columns([1.15, 1])
+    with c1:
+        st.markdown(brand.pill("Mejores candidatos"), unsafe_allow_html=True)
+        if best.empty:
+            st.info("Todavía no hay candidatos.")
+        else:
+            st.dataframe(brand.pretty(best.head(6)[["tipo", "sector", "precio_ref", "tendencia", "peso",
+                                                     "competencia_detalle"]]), hide_index=True, width="stretch")
+        st.page_link(PAGES["funnel"], label="Ver el embudo completo", icon=":material/arrow_forward:")
+    with c2:
+        st.markdown(brand.pill("Alertas"), unsafe_allow_html=True)
+        if al.empty:
+            st.caption("Nada por ahora.")
+        else:
+            top = al[al["prioridad"].isin(["Alta", "Media"])].head(6)
+            for _, r in top.iterrows():
+                st.markdown(brand.alert_row(r["prioridad"], r["tipo"], r["elemento"], r["accion"]),
+                            unsafe_allow_html=True)
+        st.page_link(PAGES["alerts"], label="Ver todas las alertas", icon=":material/arrow_forward:")
+
+
+# ---------------------------------------------------------------- Ajustes
+def page_settings():
+    page_title("Ajustes", "Tu negocio, tu presupuesto y tus reglas para elegir productos")
+    eff = settings_from_config(load_config(), load_settings())
+    with st.form("settings"):
+        st.markdown(brand.pill("Tu negocio"), unsafe_allow_html=True)
+        a1, a2 = st.columns(2)
+        nombre = a1.text_input("Nombre del negocio", eff.get("nombre_negocio", ""))
+        budget = a2.number_input("Presupuesto para inventario (USD)", 500, 100_000, int(eff["presupuesto_usd"]), 250)
+        all_sectors = sorted(set(SECTOR_OF.values()) - {"control", "otros"})
+        sectores = st.multiselect("Sectores en los que te enfocas", all_sectors,
+                                  [x for x in eff.get("sectores", []) if x in all_sectors])
+
+        st.markdown(brand.pill("Criterios de producto"), unsafe_allow_html=True)
+        b1, b2, b3 = st.columns(3)
+        pmin = b1.number_input("Precio mínimo (USD)", 5, 200, int(eff["precio_min"]))
+        pmax = b2.number_input("Precio máximo (USD)", 10, 500, int(eff["precio_max"]))
+        peso = b3.number_input("Peso máximo (kg)", 0.1, 20.0, float(eff["peso_max_kg"]), 0.1)
+        b4, b5, b6 = st.columns(3)
+        low = b4.number_input("Mín. competidores con <500 reseñas (top 10)", 0, 10, int(eff["min_listados_bajo_500_resenas"]))
+        dem = b5.number_input("Mín. ventas/mes del top 10", 0, 100_000, int(eff["min_vendidos_mes_top10"]), 100)
+        marg = b6.number_input("Margen neto mínimo (%)", 0, 80, int(round(float(eff["margen_neto_minimo"]) * 100)))
+
+        st.markdown(brand.pill("Reglas de presupuesto"), unsafe_allow_html=True)
+        c1, c2, c3, c4 = st.columns(4)
+        res = c1.number_input("Reserva (%)", 0, 80, int(round(float(eff["reserva_pct"]) * 100)))
+        maxp = c2.number_input("Máx. productos a la vez", 1, 10, int(eff["max_productos"]))
+        months = c3.number_input("Meses de stock en la 1ª orden", 1, 12, int(eff["meses_de_prueba"]))
+        launch = c4.number_input("Costo de lanzamiento por producto (USD)", 0, 5000, int(eff["costo_lanzamiento_por_producto"]), 50)
+
+        st.markdown(brand.pill("Supuestos del cerebro"), unsafe_allow_html=True)
+        d1, d2, d3 = st.columns(3)
+        cost = d1.number_input("Costo estimado (% del precio) sin cotización", 5, 80, int(round(float(eff["costo_pct_precio"]) * 100)))
+        cap = d2.number_input("Captura de un vendedor nuevo (%)", 5, 200, int(round(float(eff["captura_nuevo_vendedor"]) * 100)))
+        moq = d3.number_input("MOQ típico del proveedor (unidades)", 1, 10_000, int(eff["moq_por_defecto"]), 10)
+
+        if st.form_submit_button("Guardar ajustes", type="primary"):
+            save_settings({
+                "nombre_negocio": nombre, "presupuesto_usd": int(budget), "sectores": sectores,
+                "precio_min": int(pmin), "precio_max": int(pmax), "peso_max_kg": float(peso),
+                "min_listados_bajo_500_resenas": int(low), "min_vendidos_mes_top10": int(dem),
+                "margen_neto_minimo": marg / 100, "reserva_pct": res / 100, "max_productos": int(maxp),
+                "meses_de_prueba": int(months), "costo_lanzamiento_por_producto": int(launch),
+                "costo_pct_precio": cost / 100, "captura_nuevo_vendedor": cap / 100, "moq_por_defecto": int(moq),
+            })
+            st.cache_data.clear()
+            st.success("Ajustes guardados. Toda la plataforma ya usa tus reglas.")
+            st.rerun()
+    st.caption("Se guardan en data/settings.yaml y se aplican encima de la configuración base (config.yaml).")
+
+
+# ---------------------------------------------------------------- navigation
+PAGES = {
+    "home": st.Page(page_home, url_path="inicio", title="Inicio", icon=":material/space_dashboard:", default=True),
+    "decision": st.Page(page_decision, url_path="decision", title="Decisión", icon=":material/psychology:"),
+    "funnel": st.Page(page_funnel, url_path="embudo", title="Embudo", icon=":material/filter_alt:"),
+    "next": st.Page(page_next, url_path="lo-que-viene", title="Lo que viene", icon=":material/event_upcoming:"),
+    "alerts": st.Page(page_alerts, url_path="alertas", title="Alertas", icon=":material/notifications:"),
+    "disc": st.Page(page_disc, url_path="descubrimientos", title="Descubrimientos", icon=":material/travel_explore:"),
+    "pat": st.Page(page_pat, url_path="patrones", title="Patrones", icon=":material/insights:"),
+    "trends": st.Page(page_trends, url_path="tendencias", title="Tendencias", icon=":material/trending_up:"),
+    "comp": st.Page(page_comp, url_path="competencia", title="Competencia", icon=":material/storefront:"),
+    "keepa": st.Page(page_keepa, url_path="keepa", title="Amazon · Keepa", icon=":material/query_stats:"),
+    "products": st.Page(page_products, url_path="productos", title="Productos y rentabilidad", icon=":material/payments:"),
+    "budget": st.Page(page_budget, url_path="presupuesto", title="Presupuesto", icon=":material/account_balance_wallet:"),
+    "settings": st.Page(page_settings, url_path="ajustes", title="Ajustes", icon=":material/tune:"),
+    "assumptions": st.Page(page_assumptions, url_path="supuestos", title="Supuestos", icon=":material/rule:"),
+}
+st.logo(str(brand.LOGO_PATH), size="large", icon_image=str(brand.ICON_PATH))
+nav = st.navigation({
+    "": [PAGES["home"], PAGES["decision"]],
+    "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
+    "Mercado": [PAGES["comp"], PAGES["keepa"]],
+    "Plan": [PAGES["products"], PAGES["budget"]],
+    "Configuración": [PAGES["settings"], PAGES["assumptions"]],
+})
+nav.run()

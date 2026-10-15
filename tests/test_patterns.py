@@ -74,3 +74,10 @@ def test_holiday_lookup():
     assert p.holiday_for_week(43) == "Halloween"
     assert p.holiday_for_week(6) == "San Valentín"
     assert p.holiday_for_week(38) is None
+
+
+def test_seasonal_ramp_is_not_rising_fast():
+    week = IDX.isocalendar().week.to_numpy().astype(int)
+    v = 10 + 80 * np.exp(-((week - 51) ** 2) / 20.0) + rng.normal(0, 1, len(IDX))
+    s = series(v)[:-8]  # cut in the middle of the pre-Christmas climb
+    assert p.classify(s)["patron"] == "Estacional"

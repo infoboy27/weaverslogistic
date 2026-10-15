@@ -9,5 +9,12 @@ borderColor = "#1B2070"
 dataframeHeaderBackgroundColor = "#11145C"
 baseRadius = "12px"
 
+[theme.sidebar]
+backgroundColor = "#010236"
+secondaryBackgroundColor = "#0A0C4E"
+
+[client]
+toolbarMode = "viewer"
+
 [server]
 enableStaticServing = true

@@ -17,7 +17,7 @@ VOLUME_PATH = DATA_DIR / "volume.csv"  # cache: volume never changes for the fix
 
 
 def main(with_volume: bool = False, max_volume_terms: int = 8, verbose: bool = True) -> pd.DataFrame:
-    cfg = load_config()
+    cfg = load_config(with_settings=True)
     meta = pd.read_csv(DATA_DIR / "keywords.csv").set_index("keyword")
     rows = []
     glitch = anomalous_weeks(collect.load, collect.cached_keywords())

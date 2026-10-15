@@ -26,6 +26,8 @@ COLORWAY = [CYAN_LOGO, PURPLE, "#B9A6F7", "#A8E1FF", "#3E8FD6", "#5B3BC4", "#E4E
 
 LOGO_URL = "app/static/brand/weavers_logo.png"
 ICON_PATH = ROOT / "static" / "brand" / "weavers_icon.png"
+LOGO_PATH = ROOT / "static" / "brand" / "weavers_logo.png"
+PURPLE_ALERT = "#D55181"
 
 
 def _fonts() -> tuple[str, str, str]:
@@ -48,85 +50,123 @@ def _css() -> str:
 <style>
 {face}
 html, body, .stMarkdown, p, label, li, input, textarea, button {{ font-family: {body}; }}
-h1, h2, h3, h4, [data-testid="stMetricLabel"], [data-testid="stTab"] {{ font-family: {head}; }}
+h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 [data-testid="stIconMaterial"], .material-symbols-rounded {{ font-family: "Material Symbols Rounded" !important; }}
 
-/* Background: flat brand navy with the logo's beam glow in the corners */
+/* Canvas */
 .stApp {{
   background:
-    radial-gradient(900px 420px at 100% 0%, rgba(120,81,236,.20), transparent 60%),
-    radial-gradient(700px 380px at 0% 100%, rgba(81,191,255,.10), transparent 60%),
+    radial-gradient(1000px 480px at 105% -5%, rgba(120,81,236,.16), transparent 60%),
+    radial-gradient(800px 420px at -5% 105%, rgba(81,191,255,.08), transparent 60%),
     {NAVY};
 }}
 [data-testid="stHeader"] {{ background: transparent; }}
-.block-container {{ padding-top: 2.2rem; max-width: 1280px; }}
+[data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu {{ display:none !important; }}
+.block-container {{ padding-top: 2.4rem; padding-bottom: 4rem; max-width: 1240px; }}
 
-/* Header */
-.wv-hero {{ display:flex; align-items:center; gap:28px; padding: 6px 0 4px 0; flex-wrap:wrap; }}
-.wv-hero img {{ height: 92px; width:auto; display:block; }}
-.wv-hero .div {{ width:1px; align-self:stretch; background: rgba(243,243,245,.14); }}
-.wv-title {{ font-family:{head}; font-weight:700; font-size:1.9rem; color:{TEXT}; letter-spacing:.01em; line-height:1.1; }}
-.wv-title span {{ background:{GRADIENT}; -webkit-background-clip:text; background-clip:text; color:transparent; }}
-.wv-sub {{ color:{MUTED}; font-size:.9rem; margin-top:6px; }}
-.wv-bar {{ height:3px; border-radius:3px; background:{GRADIENT}; margin:18px 0 22px 0; }}
+/* Sidebar */
+[data-testid="stSidebar"] {{ background: #010236; border-right: 1px solid rgba(87,195,255,.10); }}
+[data-testid="stSidebarLogo"] {{ height: 72px !important; max-height: 72px !important; width:auto !important;
+  max-width: 100% !important; margin: 8px 0 6px 2px; }}
+[data-testid="stSidebarHeader"] {{ height:auto !important; padding-top: 18px; }}
+[data-testid="stSidebarNav"] a {{ border-radius: 10px; margin: 1px 6px; padding: 6px 10px; }}
+[data-testid="stSidebarNav"] a span {{ font-family:{body}; font-weight:500; color:{TEXT}; opacity:.82; }}
+[data-testid="stSidebarNav"] a:hover {{ background: rgba(87,195,255,.08); }}
+[data-testid="stSidebarNav"] a[aria-current="page"] {{
+  background: linear-gradient(90deg, rgba(87,195,255,.18), rgba(120,81,236,.18));
+  box-shadow: inset 3px 0 0 {CYAN}; }}
+[data-testid="stSidebarNav"] a[aria-current="page"] span {{ opacity:1; font-weight:600; }}
+[data-testid="stNavSectionHeader"], [data-testid="stSidebarNav"] header {{
+  font-family:{head}; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:{MUTED};
+  margin-top: 12px; }}
 
-/* Brandbook pill labels ("CONCEPTO", "PANTONES") */
-.wv-pill {{ display:inline-block; font-family:{head}; font-weight:700; letter-spacing:.08em;
-  text-transform:uppercase; color:{MUTED}; font-size:.95rem; padding:5px 22px;
-  border:1px solid rgba(163,166,180,.55); border-radius:999px; margin:18px 0 12px 0; }}
+/* Page title */
+.wv-page {{ margin: 0 0 22px 0; }}
+.wv-page h1 {{ font-family:{head}; font-weight:800; font-size:2.05rem; color:{TEXT}; letter-spacing:-.01em;
+  margin:0; padding:0; line-height:1.15; }}
+.wv-page .sub {{ color:{MUTED}; font-size:.95rem; margin-top:6px; }}
+.wv-page .rule {{ width:56px; height:3px; border-radius:3px; background:{GRADIENT}; margin-top:14px; }}
 
-/* Tabs: uppercase pills, active one in brand gradient */
-.stTabs [role="tablist"] {{ gap:8px; flex-wrap:wrap; border:0; box-shadow:none; }}
-.stTabs [data-testid="stTab"] {{ height:auto; border-radius:999px; padding:7px 18px; background:transparent;
-  border:1px solid rgba(87,195,255,.28); color:{TEXT}; }}
-.stTabs [data-testid="stTab"] p {{ font-family:{head}; font-weight:600; font-size:.78rem;
-  letter-spacing:.07em; text-transform:uppercase; }}
-.stTabs [data-testid="stTab"]:hover {{ border-color:{CYAN}; }}
-.stTabs [data-testid="stTab"][aria-selected="true"] {{ background:linear-gradient(90deg, {CYAN}, {PURPLE});
-  border-color:transparent; }}
-.stTabs [data-testid="stTab"][aria-selected="true"] p {{ color:white; }}
+/* Section titles (was the brandbook pill) */
+.wv-pill {{ display:flex; align-items:center; gap:10px; font-family:{head}; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; color:{TEXT}; font-size:.78rem; margin:26px 0 12px 0; }}
+.wv-pill::before {{ content:""; width:4px; height:16px; border-radius:3px; background:linear-gradient({CYAN}, {PURPLE}); }}
+
+/* Tabs (sub-sections) */
+.stTabs [role="tablist"] {{ gap:6px; border:0; box-shadow:none; }}
+.stTabs [data-testid="stTab"] {{ height:auto; border-radius:10px; padding:6px 14px; background:transparent;
+  border:1px solid rgba(87,195,255,.18); }}
+.stTabs [data-testid="stTab"][aria-selected="true"] {{ background:rgba(87,195,255,.14); border-color:rgba(87,195,255,.45); }}
 .stTabs [data-baseweb="tab-highlight"], .stTabs [data-baseweb="tab-border"] {{ display:none; }}
+
 /* Decision verdict */
-.wv-verdict {{ border-radius:20px; padding:22px 26px; margin:6px 0 18px 0; background:{NAVY_2};
-  border:1px solid transparent; background-image:linear-gradient({NAVY_2},{NAVY_2}), {GRADIENT};
-  background-origin:border-box; background-clip:padding-box, border-box; }}
-.wv-v-label {{ font-family:{head}; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:{MUTED};
-  font-size:.8rem; }}
-.wv-v-title {{ font-family:{head}; font-weight:800; font-size:2rem; color:{TEXT}; margin:8px 0 6px 0; line-height:1.15; }}
-.wv-verdict.ninguno .wv-v-title {{ color:#E7A3BF; }}
-.wv-v-text {{ color:{TEXT}; font-size:1rem; opacity:.9; }}
-.wv-badge {{ margin-left:10px; padding:3px 10px; border-radius:999px; font-size:.72rem; letter-spacing:.04em;
-  background:rgba(213,81,129,.18); color:#F3B6CC; text-transform:none; }}
-.wv-badge.ok {{ background:rgba(47,150,224,.18); color:{CYAN}; }}
-/* Metrics as cards */
-[data-testid="stMetric"] {{ background:{NAVY_2}; border:1px solid rgba(87,195,255,.18); border-radius:16px; padding:14px 18px; }}
-[data-testid="stMetricValue"] {{ color:{CYAN_LOGO}; font-family:{head}; font-weight:700; }}
-[data-testid="stMetricLabel"] p {{ color:{MUTED}; text-transform:uppercase; letter-spacing:.06em; font-size:.75rem; }}
+.wv-verdict {{ border-radius:20px; padding:24px 28px; margin:4px 0 20px 0; background:{NAVY_2};
+  border:1px solid transparent; background-image:linear-gradient(#0A0C50,#070944), {GRADIENT};
+  background-origin:border-box; background-clip:padding-box, border-box;
+  box-shadow: 0 20px 60px -30px rgba(120,81,236,.55); }}
+.wv-v-label {{ font-family:{head}; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:{MUTED};
+  font-size:.72rem; }}
+.wv-v-title {{ font-family:{head}; font-weight:800; font-size:2rem; color:{TEXT}; margin:10px 0 8px 0; line-height:1.15; }}
+.wv-verdict.ninguno .wv-v-title {{ color:#F0B4CB; }}
+.wv-v-text {{ color:{TEXT}; font-size:1rem; opacity:.85; }}
+.wv-badge {{ margin-left:10px; padding:3px 10px; border-radius:999px; font-size:.7rem; letter-spacing:.02em;
+  background:rgba(213,81,129,.16); color:#F3B6CC; text-transform:none; font-weight:600; }}
+.wv-badge.ok {{ background:rgba(47,150,224,.16); color:{CYAN}; }}
 
-/* Buttons */
-.stButton button {{ border-radius:999px; border:1px solid {CYAN}; color:{TEXT};
-  font-family:{head}; font-weight:600; letter-spacing:.03em; background:transparent; }}
-.stButton button:hover {{ background:rgba(87,195,255,.12); border-color:{CYAN}; color:white; }}
-.stButton button[kind="primary"] {{ background:linear-gradient(90deg, {CYAN}, {PURPLE}); border:0; color:white; }}
+/* Metric cards */
+[data-testid="stMetric"] {{ background:linear-gradient(180deg, #0A0C4E, #07093F); border:1px solid rgba(87,195,255,.12);
+  border-radius:16px; padding:16px 18px; position:relative; overflow:hidden; }}
+[data-testid="stMetric"]::before {{ content:""; position:absolute; left:0; right:0; top:0; height:2px; background:{GRADIENT}; opacity:.8; }}
+[data-testid="stMetricValue"] {{ color:{TEXT}; font-family:{head}; font-weight:700;
+  font-size:clamp(1.15rem, 1.9vw, 1.7rem); }}
+[data-testid="stMetricValue"] > div {{ overflow:visible; text-overflow:clip; }}
+[data-testid="stMetricLabel"] p {{ color:{MUTED}; text-transform:uppercase; letter-spacing:.08em; font-size:.68rem;
+  white-space:normal; line-height:1.3; }}
+[data-testid="stMetricLabel"] > div {{ overflow:visible; }}
 
-/* Inputs, tables, expanders */
-[data-testid="stDataFrame"], [data-testid="stDataEditor"] {{ border:1px solid rgba(87,195,255,.16); border-radius:14px; overflow:hidden; }}
-[data-testid="stExpander"] details {{ border:1px solid rgba(87,195,255,.2); border-radius:14px; background:{NAVY_2}; }}
+/* Alert rows */
+.wv-alert {{ display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:12px;
+  background:#07093F; border:1px solid rgba(87,195,255,.10); margin-bottom:8px; }}
+.wv-alert .dot {{ width:9px; height:9px; border-radius:50%; margin-top:6px; flex:none; }}
+.wv-alert .dot.Alta {{ background:{PURPLE_ALERT}; box-shadow:0 0 0 4px rgba(213,81,129,.18); }}
+.wv-alert .dot.Media {{ background:{CYAN}; box-shadow:0 0 0 4px rgba(87,195,255,.16); }}
+.wv-alert .dot.Baja {{ background:{MUTED}; }}
+.wv-alert .t {{ font-weight:600; color:{TEXT}; font-size:.92rem; }}
+.wv-alert .k {{ color:{MUTED}; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; }}
+.wv-alert .a {{ color:{TEXT}; opacity:.8; font-size:.85rem; margin-top:2px; }}
+
+/* Buttons, links */
+.stButton button, [data-testid="stFormSubmitButton"] button {{ border-radius:10px; border:1px solid rgba(87,195,255,.45);
+  color:{TEXT}; font-family:{head}; font-weight:600; background:transparent; }}
+.stButton button:hover {{ background:rgba(87,195,255,.10); border-color:{CYAN}; color:white; }}
+.stButton button[kind="primary"], [data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"] {{
+  background:linear-gradient(90deg, {CYAN}, {PURPLE}); border:0; color:white; }}
+[data-testid="stPageLink"] a {{ border-radius:10px; }}
+[data-testid="stPageLink"] p {{ color:{CYAN}; font-weight:600; }}
+
+/* Inputs, tables, expanders, forms */
+[data-testid="stDataFrame"], [data-testid="stDataEditor"] {{ border:1px solid rgba(87,195,255,.12); border-radius:14px; overflow:hidden; }}
+[data-testid="stExpander"] details {{ border:1px solid rgba(87,195,255,.14); border-radius:14px; background:#07093F; }}
+[data-testid="stForm"] {{ border:1px solid rgba(87,195,255,.14); border-radius:18px; background:#06083C; padding:8px 20px 20px; }}
 [data-testid="stAlert"] {{ border-radius:14px; }}
-[data-testid="stFileUploaderDropzone"] {{ background:{NAVY_2}; border:1px dashed rgba(87,195,255,.35); border-radius:14px; }}
+[data-testid="stFileUploaderDropzone"] {{ background:#07093F; border:1px dashed rgba(87,195,255,.3); border-radius:14px; }}
 [data-testid="stCaptionContainer"] {{ color:{MUTED}; }}
 </style>
 """
 
 
-def header(subtitle: str) -> str:
-    return f"""
-<div class="wv-hero">
-  <img src="{LOGO_URL}" alt="weavers">
-  <div class="div"></div>
-  <div><div class="wv-title">FBA <span>Trends</span></div><div class="wv-sub">{subtitle}</div></div>
-</div><div class="wv-bar"></div>
-"""
+def page_title(title: str, subtitle: str = "") -> str:
+    sub = f'<div class="sub">{subtitle}</div>' if subtitle else ""
+    return f'<div class="wv-page"><h1>{title}</h1>{sub}<div class="rule"></div></div>'
+
+
+def alert_row(priority: str, kind: str, element: str, action: str) -> str:
+    return (f'<div class="wv-alert"><div class="dot {priority}"></div><div><div class="k">{kind} · {priority}</div>'
+            f'<div class="t">{element}</div><div class="a">{action}</div></div></div>')
+
+
+def header(subtitle: str) -> str:  # kept for compatibility; the app now uses page_title + sidebar logo
+    return page_title("FBA Trends", subtitle)
 
 
 def pill(text: str) -> str:

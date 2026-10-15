@@ -135,10 +135,10 @@ def classify(series: pd.Series, exclude: pd.DatetimeIndex | None = None,
         festividad = holiday_for_week(peak_week)
         season = SEASON_OF_MONTH[int(mprof.idxmax())]
 
-    if rising_fast:
-        patron = "Subiendo rápido"
-    elif is_seasonal:
+    if is_seasonal:  # a seasonal product climbing before its peak is not a new trend
         patron = "Estacional"
+    elif rising_fast:
+        patron = "Subiendo rápido"
     elif eps and eps[-1]["tipo"] == "Shock de mercado":
         patron = "Shock de mercado"
     elif eps:

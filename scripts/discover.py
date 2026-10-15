@@ -34,7 +34,7 @@ def competition_ready() -> list[str]:
     table = competition.summary_table()
     if table.empty:
         return []
-    c = load_config()["criterios"]
+    c = load_config(with_settings=True)["criterios"]
     ok = table[(table["precio_mediana"].between(c["precio_min"], c["precio_max"]))
                & (table["veredicto"] != "Difícil")
                & (table["vendidos_mes_top10"] >= c["min_vendidos_mes_top10"])]
