@@ -61,7 +61,13 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
     {NAVY};
 }}
 [data-testid="stHeader"] {{ background: transparent; }}
-[data-testid="stToolbar"], [data-testid="stDecoration"], #MainMenu {{ display:none !important; }}
+/* Hide only Streamlit's own actions (Deploy, main menu); the toolbar itself holds the
+   "expand sidebar" button when the menu is collapsed, so it must stay visible. */
+[data-testid="stToolbarActions"], [data-testid="stMainMenu"], [data-testid="stDecoration"], #MainMenu {{ display:none !important; }}
+[data-testid="stExpandSidebarButton"] {{ background:#0A0C4E; border:1px solid rgba(87,195,255,.35); border-radius:10px;
+  color:{CYAN}; }}
+[data-testid="stExpandSidebarButton"]:hover {{ background:rgba(87,195,255,.14); }}
+[data-testid="stHeaderLogo"] {{ height:28px; }}
 .block-container {{ padding-top: 2.4rem; padding-bottom: 4rem; max-width: 1240px; }}
 
 /* Sidebar */
