@@ -880,6 +880,17 @@ def page_spapi():
         with st.spinner("Consultando catálogo..."):
             try:
                 items = SPAPIClient().search_catalog(kw).get("items", [])
+                if items and __import__("os").getenv("DATABASE_URL"):
+                    try:
+                        from fba_trends.store import SnapshotStore
+                        store = SnapshotStore()
+                        store.initialize()
+                        store.save(organization_id="default", actor_email=str(getattr(st.user, "email", "local-test")),
+                                   source="amazon_spapi_catalog", query=kw,
+                                   payload={"items": items})
+                        st.caption("Consulta guardada en PostgreSQL para auditoría.")
+                    except Exception:
+                        st.warning("La búsqueda funcionó, pero no se pudo guardar el historial de auditoría.")
                 if items:
                     st.dataframe(pd.DataFrame([{
                         "ASIN": item.get("asin"),
