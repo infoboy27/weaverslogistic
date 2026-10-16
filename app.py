@@ -889,5 +889,27 @@ nav = st.navigation({
     "Mercado": [PAGES["comp"], PAGES["keepa"]],
     "Plan": [PAGES["products"], PAGES["budget"]],
     "Configuración": [PAGES["settings"], PAGES["assumptions"]],
-})
+}, expanded=True)  # show every section; otherwise Streamlit folds them behind "View N more"
+
+
+def last_data_update() -> str:
+    """Newest modification time among the data files the dashboard reads."""
+    files = [*(DATA_DIR / "trends").glob("*.csv"), DATA_DIR / "competition.csv", DATA_DIR / "discovery.csv",
+             DATA_DIR / "ranking.csv", DATA_DIR / "candidates.csv", DATA_DIR / "pipeline.csv"]
+    stamps = [f.stat().st_mtime for f in files if f.exists()]
+    if not stamps:
+        return "sin datos"
+    from datetime import datetime
+    return datetime.fromtimestamp(max(stamps)).strftime("%d/%m/%Y %H:%M")
+
+
+with st.sidebar:
+    st.markdown('<div class="wv-side-spacer"></div>', unsafe_allow_html=True)
+    if st.button("Actualizar datos", icon=":material/refresh:", width="stretch", key="refresh_data",
+                 help="Vuelve a leer todos los datos (escaneos, competencia, pipeline) sin reiniciar el servidor."):
+        st.cache_data.clear()
+        st.toast("Datos actualizados", icon=":material/check_circle:")
+        st.rerun()
+    st.caption(f"Datos al {last_data_update()}")
+
 nav.run()

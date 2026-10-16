@@ -86,6 +86,12 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
   font-family:{head}; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:{MUTED};
   margin-top: 12px; }}
 
+.wv-side-spacer {{ height: 8px; border-top: 1px solid rgba(87,195,255,.10); margin: 8px 0 6px 0; }}
+[data-testid="stSidebar"] .stButton button {{ border-radius:10px; border:1px solid rgba(87,195,255,.35);
+  background:rgba(87,195,255,.06); color:{TEXT}; }}
+[data-testid="stSidebar"] .stButton button:hover {{ background:rgba(87,195,255,.16); border-color:{CYAN}; }}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {{ text-align:center; font-size:.72rem; }}
+
 /* Page title */
 .wv-page {{ margin: 0 0 22px 0; }}
 .wv-page h1 {{ font-family:{head}; font-weight:800; font-size:2.05rem; color:{TEXT}; letter-spacing:-.01em;
