@@ -6,7 +6,9 @@ from streamlit.testing.v1 import AppTest
 APP = Path(__file__).resolve().parent.parent / "app.py"
 
 
-def test_home_page_renders():
+def test_home_page_renders(monkeypatch):
+    monkeypatch.setenv('WEAVERS_AUTH_MODE', 'disabled')
+    monkeypatch.setenv('WEAVERS_ALLOW_INSECURE_LOCAL', '1')
     at = AppTest.from_file(str(APP), default_timeout=180).run()
     assert not at.exception, [e.value for e in at.exception]
     labels = [m.label for m in at.metric]
