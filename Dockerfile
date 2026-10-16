@@ -14,7 +14,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Run as a non-root user
-RUN useradd --create-home appuser && chown -R appuser /app
+RUN useradd --create-home appuser && chown -R appuser /app && mkdir -p /app/data
 USER appuser
 
 EXPOSE 8501
