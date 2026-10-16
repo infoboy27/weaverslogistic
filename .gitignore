@@ -16,3 +16,7 @@ data/examples_log.txt
 .streamlit/secrets.toml
 .streamlit/secrets*.toml
 !.streamlit/secrets.toml.example
+
+.env.production
+.env.local
+.env.*.local
