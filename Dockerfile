@@ -5,6 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
+ENV WEAVERS_AUTH_MODE=required
+
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
