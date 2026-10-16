@@ -53,3 +53,8 @@ Log: `data/discovery_log.txt`. Google Shopping (gprop=froogle) se probó y no de
 - Los pesos del score y los umbrales de clasificación son heurísticos y no están validados con ventas reales.
 - La integración con Keepa está probada con datos sintéticos en el formato oficial; falta probarla con una clave real. La búsqueda por término (`/search`) es la parte menos verificada.
 - Siguiente fuente de datos: Amazon Brand Analytics (cuando haya Brand Registry).
+
+
+## Preparación para producción
+
+Consulta [IMPLEMENTACION_PRODUCCION.md](IMPLEMENTACION_PRODUCCION.md) para la instalación HTTPS, login OIDC, Amazon SP-API, PostgreSQL y la checklist de seguridad. Los cambios se revisan en [PR #1](https://github.com/infoboy27/weaverslogistic/pull/1).
