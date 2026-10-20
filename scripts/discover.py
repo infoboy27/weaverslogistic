@@ -11,7 +11,7 @@ from datetime import date
 
 import pandas as pd
 
-from fba_trends import collect, competition, discovery
+from fba_trends import collect, competition, criteria, discovery
 from fba_trends.config import DATA_DIR, load_config
 from scripts import rank_keywords
 
@@ -49,10 +49,19 @@ def main(n_seeds: int = 4, n_scans: int = 10) -> dict:
 
     # 1) Scan first: product types already selling on Amazon are worth more than new seed ideas.
     #    Within the queue, types that already passed price + competition go first.
+    discarded = set(criteria.load_pipeline().query("etapa_manual == 'Descartado'")["tipo"])
+    table.loc[table["termino"].isin(discarded) & (table["estado"] == "pendiente"), ["estado", "motivo"]] =         ["filtrado", "descartado en el pipeline"]
     for term in discovery.next_to_scan(table, n_scans, priority=competition_ready()):
         row = table.index[table["termino"] == term][0]
         try:
             collect.fetch_google_trends(term)
+        except collect.NoTrendsData:
+            # too little search volume: mark it and move on (stopping here froze the queue for days)
+            table.loc[row, ["estado", "motivo"]] = ["filtrado", "sin volumen en Google"]
+            discovery.save(table)
+            print(f"sin datos '{term}' (se marca y se sigue)")
+            wait()
+            continue
         except collect.TrendsFetchError as e:
             print(f"BLOQUEADO escaneando '{term}': {e}")
             run["bloqueado"] = True

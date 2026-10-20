@@ -22,6 +22,10 @@ class TrendsFetchError(RuntimeError):
     pass
 
 
+class NoTrendsData(TrendsFetchError):
+    """Google answered but has no data for the term (volume too low). Not a rate-limit block."""
+
+
 def slug(keyword: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", keyword.lower()).strip("-")
 
@@ -69,7 +73,7 @@ def fetch_google_trends(keyword: str, geo: str = "US", timeframe: str = "today 5
                 ) from e
             time.sleep(4 * (attempt + 1))
     if df.empty:
-        raise TrendsFetchError(f"Sin datos para '{keyword}'.")
+        raise NoTrendsData(f"Sin datos para '{keyword}'.")
     s = df[keyword].astype(float)
     save(keyword, s, long=long)
     return s

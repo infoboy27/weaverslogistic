@@ -17,6 +17,27 @@
    "nuevos": 0,
    "escaneados": 10,
    "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-17",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 9,
+   "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-18",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 0,
+   "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-19",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 0,
+   "bloqueado": true
   }
  ]
 }
