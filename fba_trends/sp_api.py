@@ -7,7 +7,8 @@ import os
 import time
 import requests
 
-LWA_TOKEN_URL = "https://api.amazon.com/auth/o2/token"
+# Public OAuth endpoint URL (not a secret); bandit B105 flags the word "token".
+LWA_TOKEN_URL = "https://api.amazon.com/auth/o2/token"  # nosec B105
 NA_ENDPOINT = "https://sellingpartnerapi-na.amazon.com"
 US_MARKETPLACE = "ATVPDKIKX0DER"
 
