@@ -25,6 +25,8 @@ CANDIDATES_PATH = DATA_DIR / "candidates.csv"
 
 st.set_page_config(page_title="Weavers · FBA Trends", page_icon=str(brand.ICON_PATH), layout="wide",
                    initial_sidebar_state="expanded")
+from fba_trends.auth import require_login
+require_login()
 brand.register_plotly_template()
 st.markdown(brand.css(), unsafe_allow_html=True)
 cfg = load_config(with_settings=True)
@@ -865,6 +867,44 @@ def page_settings():
     st.caption("Se guardan en data/settings.yaml y se aplican encima de la configuración base (config.yaml).")
 
 
+# ---------------------------------------------------------------- Amazon Selling Partner API
+def page_spapi():
+    page_title("Amazon Seller Central", "Catálogo oficial SP-API · datos de tu cuenta autorizada")
+    from fba_trends.sp_api import SPAPIClient, SPAPIError, configured
+    if not configured():
+        st.warning("Amazon SP-API todavía no está conectado. Configura las credenciales privadas del servidor.")
+        st.caption("Consulta PRODUCTION.md para el alta de la aplicación privada en Seller Central.")
+        return
+    kw = st.text_input("Buscar en el catálogo Amazon US", placeholder="dog cooling mat")
+    if st.button("Consultar catálogo oficial", type="primary") and kw.strip():
+        with st.spinner("Consultando catálogo..."):
+            try:
+                items = SPAPIClient().search_catalog(kw).get("items", [])
+                if items and __import__("os").getenv("DATABASE_URL"):
+                    try:
+                        from fba_trends.store import SnapshotStore
+                        store = SnapshotStore()
+                        store.initialize()
+                        store.save(organization_id="default", actor_email=str(getattr(st.user, "email", "local-test")),
+                                   source="amazon_spapi_catalog", query=kw,
+                                   payload={"items": items})
+                        st.caption("Consulta guardada en PostgreSQL para auditoría.")
+                    except Exception:
+                        st.warning("La búsqueda funcionó, pero no se pudo guardar el historial de auditoría.")
+                if items:
+                    st.dataframe(pd.DataFrame([{
+                        "ASIN": item.get("asin"),
+                        "Título": (item.get("summaries") or [{}])[0].get("itemName", ""),
+                        "Marca": (item.get("summaries") or [{}])[0].get("brand", ""),
+                    } for item in items]), hide_index=True, width="stretch")
+                else:
+                    st.info("No hay productos para esa búsqueda.")
+            except (SPAPIError, ValueError) as e:
+                st.error(str(e))
+    st.caption("El catálogo no incluye automáticamente ventas de competidores. Para evaluar demanda "
+               "se cruzan fuentes autorizadas y estimaciones etiquetadas con su nivel de confianza.")
+
+
 # ---------------------------------------------------------------- navigation
 PAGES = {
     "home": st.Page(page_home, url_path="inicio", title="Inicio", icon=":material/space_dashboard:", default=True),
@@ -876,6 +916,7 @@ PAGES = {
     "pat": st.Page(page_pat, url_path="patrones", title="Patrones", icon=":material/insights:"),
     "trends": st.Page(page_trends, url_path="tendencias", title="Tendencias", icon=":material/trending_up:"),
     "comp": st.Page(page_comp, url_path="competencia", title="Competencia", icon=":material/storefront:"),
+    "spapi": st.Page(page_spapi, url_path="amazon-seller", title="Amazon Seller Central", icon=":material/verified:"),
     "keepa": st.Page(page_keepa, url_path="keepa", title="Amazon · Keepa", icon=":material/query_stats:"),
     "products": st.Page(page_products, url_path="productos", title="Productos y rentabilidad", icon=":material/payments:"),
     "budget": st.Page(page_budget, url_path="presupuesto", title="Presupuesto", icon=":material/account_balance_wallet:"),
@@ -886,7 +927,7 @@ st.logo(str(brand.LOGO_PATH), size="large", icon_image=str(brand.ICON_PATH))
 nav = st.navigation({
     "": [PAGES["home"], PAGES["decision"]],
     "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
-    "Mercado": [PAGES["comp"], PAGES["keepa"]],
+    "Mercado": [PAGES["comp"], PAGES["keepa"], PAGES["spapi"]],
     "Plan": [PAGES["products"], PAGES["budget"]],
     "Configuración": [PAGES["settings"], PAGES["assumptions"]],
 }, expanded=True)  # show every section; otherwise Streamlit folds them behind "View N more"
