@@ -58,3 +58,14 @@ def test_refilter_after_reload(tmp_path, monkeypatch):
     d.save(table)
     out = d.refilter(d.load())  # empty "motivo" must not break re-filtering
     assert out.set_index("termino").loc["huggies skin essentials", "estado"] == "filtrado"
+
+
+def test_refilter_keeps_scan_and_user_decisions():
+    table = pd.DataFrame([
+        {"termino": "squeaky dog toys bulk", "seed": "amazon: mascotas", "categoria": "mascotas", "subida_pct": 0.0,
+         "breakout": False, "descubierto": "2026-10-15", "estado": "filtrado", "motivo": "sin volumen en Google"},
+        {"termino": "moving bags", "seed": "amazon: hogar", "categoria": "hogar", "subida_pct": 0.0,
+         "breakout": False, "descubierto": "2026-10-15", "estado": "filtrado", "motivo": "descartado en el pipeline"},
+    ], columns=d.COLUMNS)
+    out = d.refilter(table)
+    assert (out["estado"] == "filtrado").all()

@@ -13,25 +13,25 @@ bathroom storage,bathroom organizer,hogar,40.0,False,2026-10-15,pendiente,
 dog grooming hammock,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 cat nail file scratcher,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 herding ball for dogs,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
-personalized knitting bag,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-dog halloween costume,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+personalized knitting bag,amazon: hobby,hobby,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+dog halloween costume,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 dog sling carrier,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 pet wipes,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
-dog bandanas bulk,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
-squeaky dog toys bulk,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+dog bandanas bulk,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
+squeaky dog toys bulk,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 suction shower caddy,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
 chunky chenille yarn,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
-moving bags,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
+moving bags,amazon: hogar,hogar,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 craft organizer box,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
-adhesive shower caddy,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
-fabric storage cubes,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
-hanging shower caddy,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
-small woven baskets,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
-cat scratcher board,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+adhesive shower caddy,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
+fabric storage cubes,amazon: hogar,hogar,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+hanging shower caddy,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
+small woven baskets,amazon: hogar,hogar,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+cat scratcher board,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 chunky blanket loom,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
-pet pouch hoodie,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+pet pouch hoodie,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 no pull dog harness,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
-cat backpack carrier,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+cat backpack carrier,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 needlepoint kit,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
 acrylic purse organizer,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
 bathroom counter organizer,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
@@ -49,24 +49,24 @@ herb drying rack,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
 over faucet sink shelf,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
 retractable dog leash,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
 wooden yarn holder,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-dog car seat cover,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+dog car seat cover,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 dog raincoat,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
-dog rope toys,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
-sewing thread set,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-bulky yarn,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
+dog rope toys,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+sewing thread set,amazon: hobby,hobby,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+bulky yarn,amazon: hobby,hobby,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 closet shelf dividers,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,
-clothes storage bags,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
+clothes storage bags,amazon: hogar,hogar,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 crochet kit for beginners,amazon: hobby,hobby,0.0,False,2026-10-15,escaneado,
-dog cargo liner,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
-dog chew toys,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+dog cargo liner,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+dog chew toys,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 dog hoodie,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
 dog shoes,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 dog toe grips,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
-embroidery hoop set,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-floating shelves,amazon: hogar,hogar,0.0,False,2026-10-15,pendiente,
+embroidery hoop set,amazon: hobby,hobby,0.0,False,2026-10-15,filtrado,descartado en el pipeline
+floating shelves,amazon: hogar,hogar,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 hands free dog leash,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,tienda/intención no-producto
 photo storage box,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-prong collar,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+prong collar,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 rhinestone kit,amazon: hobby,hobby,0.0,False,2026-10-15,pendiente,
-soft pet carrier,amazon: mascotas,mascotas,0.0,False,2026-10-15,pendiente,
+soft pet carrier,amazon: mascotas,mascotas,0.0,False,2026-10-15,filtrado,descartado en el pipeline
 wood docking station,amazon: hogar,hogar,0.0,False,2026-10-15,escaneado,

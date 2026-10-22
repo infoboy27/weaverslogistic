@@ -38,6 +38,20 @@
    "nuevos": 0,
    "escaneados": 0,
    "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-20",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 4,
+   "bloqueado": true
+  },
+  {
+   "fecha": "2026-10-21",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 3,
+   "bloqueado": true
   }
  ]
 }

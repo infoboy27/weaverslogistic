@@ -154,10 +154,15 @@ def pause(seconds: float) -> None:
     time.sleep(seconds)
 
 
+STICKY_REASONS = {"sin volumen en Google", "descartado en el pipeline"}
+
+
 def refilter(df: pd.DataFrame) -> pd.DataFrame:
     """Re-apply the current junk filter to terms not scanned yet (after the filter changes)."""
     df = df.copy()
     for i, r in df[df["estado"].isin(["pendiente", "filtrado"])].iterrows():
+        if r["motivo"] in STICKY_REASONS:
+            continue  # decided by the scan or by the user, not by the junk filter: keep it
         reason = junk_reason(r["termino"], r["seed"])
         df.loc[i, "estado"] = "filtrado" if reason else "pendiente"
         df.loc[i, "motivo"] = reason or ""
