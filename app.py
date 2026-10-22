@@ -132,13 +132,13 @@ def page_trends():
             c1, c2 = st.columns(2)
             view = c1.segmented_control("Ver", ["Fechas especiales", "Estaciones"], default="Fechas especiales",
                                         key="season_view") or "Fechas especiales"
-            order = c2.segmented_control("Ordenar por", ["Crecimiento vs año anterior", "Peso de la fecha"],
-                                         default="Crecimiento vs año anterior", key="season_order")                 or "Crecimiento vs año anterior"
+            order = c2.segmented_control("Ordenar por", ["Cuánto sube en la fecha", "Crecimiento vs año anterior"],
+                                         default="Cuánto sube en la fecha", key="season_order")                 or "Cuánto sube en la fecha"
             holidays = view == "Fechas especiales"
             periods = seasons.HOLIDAYS if holidays else seasons.SEASONS
             min_weight = 1.2 if holidays else 1.1
             metric = "crec_vs_mercado_pct" if order.startswith("Crec") else "peso_temporada"
-            tops = seasons.top_by_season(stable, min_weight=min_weight, periods=periods)
+            tops = seasons.top_by_season(stable, min_weight=min_weight, periods=periods, by=metric)
             tabs = st.tabs(list(periods))
             for tab, (season, top) in zip(tabs, tops.items()):
                 with tab:
@@ -152,7 +152,7 @@ def page_trends():
                     top = top.sort_values(metric, ascending=False).reset_index(drop=True)
                     if metric == "peso_temporada":
                         bars = top.assign(peso_pct=(top["peso_temporada"] - 1) * 100)
-                        st.plotly_chart(charts.growth_bars(bars, "peso_pct", f"{season}: % sobre un periodo normal"),
+                        st.plotly_chart(charts.growth_bars(bars, "peso_pct", f"{season}: % sobre sus semanas normales"),
                                         width="stretch")
                     else:
                         st.plotly_chart(charts.growth_bars(top, metric, f"{season}: crecimiento vs año anterior"),
@@ -161,11 +161,13 @@ def page_trends():
                                  hide_index=True, width="stretch")
             st.caption(
                 "Son BÚSQUEDAS en Google, no ventas: no hay ventas históricas sin Keepa. Fechas especiales = las semanas "
-                "de compra antes de cada fecha (p. ej. Navidad 1-24 dic, San Valentín 24 ene-14 feb, Día de la Madre las "
-                "3 semanas previas). Peso = búsquedas en esa ventana / promedio de los 12 meses (1.2 = 20% más que lo "
-                f"normal; se muestran desde {1.2:.1f} en fechas y 1.1 en estaciones). Crecimiento = misma ventana del año "
-                "anterior, descontando el mercado (keywords de control). Las fechas tapadas por el error de Google de 2026 "
-                "se comparan un año antes. Precio y vendidos/mes son el top 10 de Amazon de hoy, solo como referencia."
+                "de compra antes de cada fecha (Navidad 1-24 dic, San Valentín 24 ene-14 feb, Día de la Madre las 3 "
+                "semanas previas...). 'Cuánto sube' compara esas semanas con las 6 semanas antes y después (estaciones: "
+                "con los 12 meses alrededor), así un producto que creció todo el año no sale en todas las fechas. Cada "
+                "producto aparece solo en la fecha donde más sube. Crecimiento = misma ventana del año anterior, "
+                "descontando el mercado. Las fechas tapadas por el error de Google de 2026 usan el año anterior. "
+                "Términos como 'mothers day gifts' miden la demanda de la fecha, no un producto concreto. Precio y "
+                "vendidos/mes son el top 10 de Amazon de hoy."
             )
 
         pick = st.multiselect("Graficar", keywords, default=list(keywords[:3]))

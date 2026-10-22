@@ -46,9 +46,15 @@ def seeds_first(today: date) -> bool:
     return today.toordinal() % 2 == 0
 
 
+def special_date_terms(table: pd.DataFrame) -> list[str]:
+    """Pending terms queued for the special-dates ranking (seed 'fecha: ...'), in queue order."""
+    pending = table[(table["estado"] == "pendiente") & table["seed"].astype(str).str.startswith("fecha:")]
+    return pending["termino"].tolist()
+
+
 def scan_phase(table: pd.DataFrame, run: dict, n_scans: int) -> pd.DataFrame:
-    """Google Trends for pending terms: competition-ready Amazon types first."""
-    for term in discovery.next_to_scan(table, n_scans, priority=competition_ready()):
+    """Google Trends for pending terms: special-date terms, then competition-ready Amazon types."""
+    for term in discovery.next_to_scan(table, n_scans, priority=special_date_terms(table) + competition_ready()):
         row = table.index[table["termino"] == term][0]
         try:
             collect.fetch_google_trends(term)

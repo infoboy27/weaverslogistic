@@ -55,3 +55,11 @@ def test_valentine_product_ranked_in_holidays():
     assert list(top["San Valentín"].keyword) == ["heart necklace"]
     assert top["San Valentín"].loc[0, "grupo"] == "Fecha especial"
     assert top["Halloween"].empty
+
+
+def test_product_growing_all_year_is_not_a_holiday_product():
+    flat = weekly(lambda d: 50)
+    growing = pd.Series(np.linspace(10, 100, len(flat)), index=flat.index)
+    t = seasons.season_table({"weighted vest": growing, "yoga mat": flat}, date(2026, 10, 21))
+    tops = seasons.top_by_season(t, min_weight=1.2, periods=seasons.HOLIDAYS)
+    assert all(d.empty for d in tops.values())
