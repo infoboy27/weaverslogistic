@@ -122,11 +122,13 @@ def growth_bars(t: pd.DataFrame, value: str, label: str) -> go.Figure:
     t = t.sort_values(value)
     fig = go.Figure(go.Bar(
         y=t["keyword"], x=t[value], orientation="h", marker=dict(color=C1, cornerradius=4),
-        text=[f"+{v:.0f}%" for v in t[value]], textposition="outside", textfont=dict(color=TEXT),
+        text=[f"{v:+.0f}%" for v in t[value]], textposition="outside", textfont=dict(color=TEXT),
         customdata=t[["patron"]].fillna(""),
         hovertemplate="<b>%{y}</b><br>" + label + ": %{x:.0f}%<br>%{customdata[0]}<extra></extra>",
     ))
-    fig.update_xaxes(title=label, gridcolor=GRID, zeroline=False)
+    lo, hi = min(0.0, float(t[value].min())), max(0.0, float(t[value].max()))
+    pad = (hi - lo) * 0.18 or 1  # room for the outside labels
+    fig.update_xaxes(title=label, gridcolor=GRID, zeroline=False, range=[lo - (pad if lo < 0 else 0), hi + pad])
     fig.update_yaxes(showgrid=False)
     fig.update_layout(bargap=0.35)
     return _base(fig, max(240, 30 * len(t) + 90))
