@@ -36,3 +36,22 @@ def test_glitch_season_steps_back_a_year():
     glitch = pd.DatetimeIndex([d for d in s.index if pd.Timestamp(2026, 3, 1) <= d <= pd.Timestamp(2026, 5, 31)])
     t = seasons.season_table({"x": s, "yoga mat": s}, date(2026, 10, 21), glitch)
     assert t[t.estacion == "Primavera"].periodo.iloc[0] == "Primavera 2025"
+
+
+def test_holiday_windows():
+    assert seasons.easter(2025) == date(2025, 4, 20)
+    start, end = seasons.window("Día de la Madre", 2026)
+    assert end == pd.Timestamp(2026, 5, 10) and (end - start).days == 21
+    start, end = seasons.window("Black Friday / Cyber Monday", 2025)
+    assert start <= pd.Timestamp(2025, 11, 28) <= end
+
+
+def test_valentine_product_ranked_in_holidays():
+    flat = weekly(lambda d: 50)
+    heart = weekly(lambda d: (90 if d.year >= 2025 else 45) if (d.month == 2 and d.day <= 14) or
+                   (d.month == 1 and d.day >= 24) else 20)
+    t = seasons.season_table({"heart necklace": heart, "yoga mat": flat}, date(2026, 10, 21))
+    top = seasons.top_by_season(t, min_weight=1.2, periods=seasons.HOLIDAYS)
+    assert list(top["San Valentín"].keyword) == ["heart necklace"]
+    assert top["San Valentín"].loc[0, "grupo"] == "Fecha especial"
+    assert top["Halloween"].empty

@@ -1,25 +1,65 @@
-"""Strongest products per season, last year vs the year before (Google Trends searches, not sales).
+"""Strongest products per season and per special date, last year vs the year before
+(Google Trends searches, not sales).
 
-For each US season (meteorological) we take the latest completed one and compare it with the same
-season a year earlier. Weeks flagged as a Google data glitch are dropped; when too few weeks remain
+Periods are the 4 US seasons (meteorological) and the shopping window of each retail date
+(Navidad, San Valentín, Día de la Madre...: the weeks before the date, when people buy).
+For each period we take the latest completed one and compare it with the same period a year earlier. Weeks flagged as a Google data glitch are dropped; when too few weeks remain
 the comparison steps back one year (e.g. spring 2026 falls inside the 2026 glitch -> 2025 vs 2024).
 
 - peso_temporada: season average / the keyword's 12-month average (1.0 = a normal season).
 - crec_vs_anio_anterior_pct: season average vs the same season one year earlier.
 - crec_vs_mercado_pct: the same growth divided by the control keywords' growth in that season.
 """
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 
+from .calendar import _nth_weekday
 from .trends import CONTROL_KEYWORDS
 
 SEASONS = {"Invierno": (12, 2), "Primavera": (3, 5), "Verano": (6, 8), "Otoño": (9, 11)}
 MIN_COVERAGE = 0.75
 
 
+def easter(year: int) -> date:
+    """Western Easter Sunday (anonymous Gregorian algorithm)."""
+    a, b, c = year % 19, year // 100, year % 100
+    d, e = divmod(b, 4)
+    g = (8 * b + 13) // 25
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    l_ = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l_) // 451
+    month, day = divmod(h + l_ - 7 * m + 114, 31)
+    return date(year, month, day + 1)
+
+
+def _before(day: date, days: int = 21) -> tuple[date, date]:
+    return day - timedelta(days=days), day
+
+
+# Shopping window of each US retail date (start, end), in calendar order.
+HOLIDAYS = {
+    "Año nuevo": lambda y: (date(y, 1, 1), date(y, 1, 31)),
+    "San Valentín": lambda y: (date(y, 1, 24), date(y, 2, 14)),
+    "Pascua": lambda y: _before(easter(y)),
+    "Día de la Madre": lambda y: _before(_nth_weekday(y, 5, 6, 2)),
+    "Día del Padre": lambda y: _before(_nth_weekday(y, 6, 6, 3)),
+    "4 de julio": lambda y: (date(y, 6, 20), date(y, 7, 4)),
+    "Regreso a clases": lambda y: (date(y, 7, 15), date(y, 8, 31)),
+    "Halloween": lambda y: (date(y, 10, 1), date(y, 10, 31)),
+    "Black Friday / Cyber Monday": lambda y: (_nth_weekday(y, 11, 3, 4) - timedelta(days=4),
+                                              _nth_weekday(y, 11, 3, 4) + timedelta(days=4)),
+    "Navidad": lambda y: (date(y, 12, 1), date(y, 12, 24)),
+}
+PERIODS = [*SEASONS, *HOLIDAYS]
+
+
 def window(season: str, year: int) -> tuple[pd.Timestamp, pd.Timestamp]:
-    """Season window labelled by the year it ends in (Invierno 2026 = Dec 2025 - Feb 2026)."""
+    """Period window labelled by the year it ends in (Invierno 2026 = Dec 2025 - Feb 2026)."""
+    if season in HOLIDAYS:
+        start, end = HOLIDAYS[season](year)
+        return pd.Timestamp(start), pd.Timestamp(end)
     start_m, end_m = SEASONS[season]
     start = pd.Timestamp(year - 1 if start_m > end_m else year, start_m, 1)
     end = pd.Timestamp(year, end_m, 1) + pd.offsets.MonthEnd(0)
@@ -60,7 +100,7 @@ def season_table(series: dict[str, pd.Series], today: date | None = None,
     today = today or date.today()
     exclude = exclude if exclude is not None else pd.DatetimeIndex([])
     rows = []
-    for season in SEASONS:
+    for season in PERIODS:
         year = comparable_year(series, season, today, exclude)
         if year is None:
             continue
@@ -71,7 +111,7 @@ def season_table(series: dict[str, pd.Series], today: date | None = None,
             base = _mean(s, end - pd.DateOffset(years=1), end, exclude)
             if cur is None or prev is None or not prev or not base:
                 continue
-            rows.append({"estacion": season, "periodo": label(season, year), "comparado_con": label(season, year - 1),
+            rows.append({"estacion": season, "grupo": "Fecha especial" if season in HOLIDAYS else "Estación", "periodo": label(season, year), "comparado_con": label(season, year - 1),
                          "keyword": kw, "peso_temporada": round(cur / base, 2),
                          "crec_vs_anio_anterior_pct": round((cur / prev - 1) * 100, 1)})
     df = pd.DataFrame(rows)
@@ -85,10 +125,11 @@ def season_table(series: dict[str, pd.Series], today: date | None = None,
     return df.drop(columns="mercado")[~df["keyword"].isin(CONTROL_KEYWORDS)].reset_index(drop=True)
 
 
-def top_by_season(table: pd.DataFrame, n: int = 10, min_weight: float = 1.1) -> dict[str, pd.DataFrame]:
-    """Per season: products whose demand concentrates in it (peso >= min_weight), most grown first."""
+def top_by_season(table: pd.DataFrame, n: int = 10, min_weight: float = 1.1,
+                  periods=SEASONS) -> dict[str, pd.DataFrame]:
+    """Per period: products whose demand concentrates in it (peso >= min_weight), most grown first."""
     out = {}
-    for season in SEASONS:
+    for season in periods:
         part = table[(table["estacion"] == season) & (table["peso_temporada"] >= min_weight)]
         out[season] = part.sort_values("crec_vs_mercado_pct", ascending=False).head(n).reset_index(drop=True)
     return out

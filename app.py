@@ -122,33 +122,50 @@ def page_trends():
             "Las semanas donde todas las keywords de control saltan a la vez (error de datos de Google, "
             "p. ej. mar-jun 2026) se excluyen automáticamente."
         )
-        st.markdown(brand.pill("Más fuertes por estación vs el año anterior"), unsafe_allow_html=True)
+        st.markdown(brand.pill("Más fuertes por estación y fecha especial vs el año anterior"), unsafe_allow_html=True)
         stable = seasons.season_table({k: collect.load(k) for k in keywords}, today, glitch)
         if stable.empty:
             st.info("Hace falta más historia de Google Trends para comparar estaciones.")
         else:
             comp_sum = competition.summary_table()
             extra = comp_sum[["keyword", "precio_mediana", "vendidos_mes_top10"]] if not comp_sum.empty else None
-            tabs = st.tabs(list(seasons.SEASONS))
-            for tab, (season, top) in zip(tabs, seasons.top_by_season(stable).items()):
+            c1, c2 = st.columns(2)
+            view = c1.segmented_control("Ver", ["Fechas especiales", "Estaciones"], default="Fechas especiales",
+                                        key="season_view") or "Fechas especiales"
+            order = c2.segmented_control("Ordenar por", ["Crecimiento vs año anterior", "Peso de la fecha"],
+                                         default="Crecimiento vs año anterior", key="season_order")                 or "Crecimiento vs año anterior"
+            holidays = view == "Fechas especiales"
+            periods = seasons.HOLIDAYS if holidays else seasons.SEASONS
+            min_weight = 1.2 if holidays else 1.1
+            metric = "crec_vs_mercado_pct" if order.startswith("Crec") else "peso_temporada"
+            tops = seasons.top_by_season(stable, min_weight=min_weight, periods=periods)
+            tabs = st.tabs(list(periods))
+            for tab, (season, top) in zip(tabs, tops.items()):
                 with tab:
                     if top.empty:
-                        st.info("Ningún producto escaneado se concentra en esta estación.")
+                        st.info("Ningún producto escaneado se concentra en esta fecha todavía.")
                         continue
                     st.caption(f"{top.loc[0, 'periodo']} comparado con {top.loc[0, 'comparado_con']}")
                     top = top.merge(pt[["keyword", "patron"]], on="keyword", how="left")
                     if extra is not None:
                         top = top.merge(extra, on="keyword", how="left")
-                    st.plotly_chart(charts.growth_bars(top, "crec_vs_mercado_pct", f"{season}: crecimiento vs año anterior"),
-                                    width="stretch")
-                    st.dataframe(brand.pretty(top.drop(columns=["estacion", "periodo", "comparado_con"])),
+                    top = top.sort_values(metric, ascending=False).reset_index(drop=True)
+                    if metric == "peso_temporada":
+                        bars = top.assign(peso_pct=(top["peso_temporada"] - 1) * 100)
+                        st.plotly_chart(charts.growth_bars(bars, "peso_pct", f"{season}: % sobre un periodo normal"),
+                                        width="stretch")
+                    else:
+                        st.plotly_chart(charts.growth_bars(top, metric, f"{season}: crecimiento vs año anterior"),
+                                        width="stretch")
+                    st.dataframe(brand.pretty(top.drop(columns=["estacion", "grupo", "periodo", "comparado_con"])),
                                  hide_index=True, width="stretch")
             st.caption(
-                "Son BÚSQUEDAS en Google, no ventas: no hay ventas históricas sin Keepa. Se muestran los productos cuya "
-                "demanda se concentra en esa estación (peso ≥ 1.1 = al menos 10% más que un trimestre normal), ordenados "
-                "por cuánto crecieron frente a la misma estación del año anterior, descontando el mercado (keywords de "
-                "control). Las estaciones tapadas por el error de Google de 2026 se comparan un año antes. "
-                "Precio y vendidos/mes son el top 10 de Amazon de hoy, solo como referencia de tamaño."
+                "Son BÚSQUEDAS en Google, no ventas: no hay ventas históricas sin Keepa. Fechas especiales = las semanas "
+                "de compra antes de cada fecha (p. ej. Navidad 1-24 dic, San Valentín 24 ene-14 feb, Día de la Madre las "
+                "3 semanas previas). Peso = búsquedas en esa ventana / promedio de los 12 meses (1.2 = 20% más que lo "
+                f"normal; se muestran desde {1.2:.1f} en fechas y 1.1 en estaciones). Crecimiento = misma ventana del año "
+                "anterior, descontando el mercado (keywords de control). Las fechas tapadas por el error de Google de 2026 "
+                "se comparan un año antes. Precio y vendidos/mes son el top 10 de Amazon de hoy, solo como referencia."
             )
 
         pick = st.multiselect("Graficar", keywords, default=list(keywords[:3]))
