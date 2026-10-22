@@ -120,11 +120,11 @@ def seeds_due(seed_log: dict[str, str], every_days: int = 30, today: date | None
     today = today or date.today()
     seeds = pd.read_csv(SEEDS_PATH)
     due = []
-    for _, s in seeds.iterrows():
+    for i, s in seeds.iterrows():
         last = seed_log.get(s["seed"])
         if last is None or date.fromisoformat(last) <= today - timedelta(days=every_days):
-            due.append((last or "", s["seed"], s["categoria"]))
-    return [(seed, cat) for _, seed, cat in sorted(due)]
+            due.append((last or "", i, s["seed"], s["categoria"]))  # never-run first, then file order
+    return [(seed, cat) for _, _, seed, cat in sorted(due)]
 
 
 def next_to_scan(df: pd.DataFrame, n: int, priority: list[str] | None = None) -> list[str]:

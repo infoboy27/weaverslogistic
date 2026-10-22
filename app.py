@@ -12,7 +12,7 @@ import json
 from datetime import date
 
 from fba_trends import (alerts, brand, charts, collect, competition, criteria, decision, discovery, keepa,
-                        patterns)
+                        navidad, patterns)
 from fba_trends import calendar as cal
 from fba_trends.budget import Candidate, allocate
 from fba_trends.config import (DATA_DIR, estimated_assumptions, load_config, load_settings, save_settings,
@@ -562,6 +562,62 @@ La 'marca' se toma de la primera palabra del título y puede fallar en productos
         edited_comp.to_csv(competition.COMPETITION_PATH, index=False)
         st.success("Guardado.")
 
+# ---------------------------------------------------------------- Navidad
+def page_xmas():
+    page_title("Navidad", "Qué productos de regalo pasan los criterios y cuándo hay que pedirlos")
+    summary = competition.summary_table()
+    pl = criteria.load_pipeline()
+    weights = dict(zip(pl["tipo"], pd.to_numeric(pl["peso_kg"], errors="coerce"))) if "peso_kg" in pl else {}
+    weights = {k: v for k, v in weights.items() if v == v}
+    rt = navidad.routes(cfg, today)
+    ev = navidad.evaluate(summary, cfg, weights)
+
+    st.markdown(brand.pill("Las dos rutas"), unsafe_allow_html=True)
+    st.dataframe(brand.pretty(rt), hide_index=True, width="stretch")
+    air = cfg["navidad"]["aereo"]
+    st.caption(
+        f"Aire = compra de stock listo {air['compra_y_preparacion']} d + flete {air['flete_aereo']} d + recepción de "
+        f"Amazon en Q4 {air['recepcion_amazon_q4']} d, a ~${air['costo_usd_kg']['valor']:.0f}/kg (todo estimado, ver "
+        "config.yaml `navidad`). Sin cuenta de vendedor activa la ruta aérea no es posible."
+    )
+    if ev.empty:
+        st.info("No hay búsquedas navideñas capturadas todavía.")
+        return
+
+    passing = ev[ev["pasa"]]
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Productos evaluados", len(ev))
+    c2.metric("Pasan los criterios", len(passing))
+    c3.metric("Viables por aire este año", int((passing["costo_max_aire"] >= 3).sum()),
+               help="Pasan los criterios y aún dejan al menos $3 por unidad para fábrica después del flete aéreo.")
+
+    heat = {}
+    for k in ev["keyword"]:
+        s = collect.load(k)
+        if s is not None:
+            heat[k] = round(float(patterns.month_heat(s, glitch)["dic"]), 2)
+    ev["diciembre_vs_mes_medio"] = ev["keyword"].map(heat)
+
+    st.markdown(brand.pill("Candidatos de Navidad"), unsafe_allow_html=True)
+    show = ev.drop(columns=["pasa"])
+    st.dataframe(brand.pretty(show), hide_index=True, width="stretch")
+    st.caption(
+        "Costo máx. = lo máximo que puedes pagar por unidad (fábrica + flete) y aún ganar "
+        f"{cfg['supuestos']['margen_neto_minimo']['valor']:.0%} neto al precio mediano. 'Aire' ya le resta el flete aéreo "
+        "(0.5 kg si no hay peso cargado en el Embudo → peso supuesto). Diciembre vs mes medio sale de Google Trends "
+        "(1.0 = un mes normal), solo para keywords escaneadas. Ventas = suma de 'bought in past month' del top 10 "
+        "en octubre; en diciembre suelen ser varias veces más."
+    )
+    with st.expander("Cómo leer esto"):
+        st.markdown("""
+- **Los productos navideños puros** (adornos, kits, mascotas) se venden casi todos a **$10-16**: después de tarifas
+  de Amazon no queda margen, y menos con flete aéreo.
+- **Los regalos que pasan los criterios** tienen precio de $20-50 y venden todo el año con pico en diciembre:
+  es mejor apuesta que un producto que solo vende 6 semanas (el sobrante no se queda en el almacén pagando Q1).
+- **Para este año**, solo tiene sentido si tu cuenta ya está activa y encuentras stock listo a un costo por
+  debajo de la columna 'costo máx. aire'. Si no, la Navidad del año que viene por mar es la ruta.
+""")
+
 # ---------------------------------------------------------------- Keepa
 def page_keepa():
     page_title("Amazon · Keepa", "Historial de ventas y precio (requiere clave de Keepa)")
@@ -911,6 +967,7 @@ PAGES = {
     "decision": st.Page(page_decision, url_path="decision", title="Decisión", icon=":material/psychology:"),
     "funnel": st.Page(page_funnel, url_path="embudo", title="Embudo", icon=":material/filter_alt:"),
     "next": st.Page(page_next, url_path="lo-que-viene", title="Lo que viene", icon=":material/event_upcoming:"),
+    "xmas": st.Page(page_xmas, url_path="navidad", title="Navidad", icon=":material/redeem:"),
     "alerts": st.Page(page_alerts, url_path="alertas", title="Alertas", icon=":material/notifications:"),
     "disc": st.Page(page_disc, url_path="descubrimientos", title="Descubrimientos", icon=":material/travel_explore:"),
     "pat": st.Page(page_pat, url_path="patrones", title="Patrones", icon=":material/insights:"),
@@ -926,7 +983,7 @@ PAGES = {
 st.logo(str(brand.LOGO_PATH), size="large", icon_image=str(brand.ICON_PATH))
 nav = st.navigation({
     "": [PAGES["home"], PAGES["decision"]],
-    "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
+    "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["xmas"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
     "Mercado": [PAGES["comp"], PAGES["keepa"], PAGES["spapi"]],
     "Plan": [PAGES["products"], PAGES["budget"]],
     "Configuración": [PAGES["settings"], PAGES["assumptions"]],

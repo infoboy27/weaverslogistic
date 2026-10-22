@@ -101,3 +101,22 @@ decision:
   mejora_minima_para_diversificar:
     valor: 0.10
     nota: "Solo se recomienda sumar otro producto si la ganancia ajustada por riesgo mejora al menos este %."
+
+# Navidad (pestaña Navidad). Ruta aérea con stock listo para enviar; todo estimado hasta cotizar con un forwarder.
+navidad:
+  vender_desde_mes_dia: [12, 1]   # el pico de regalos en Amazon va de Black Friday a ~20 de diciembre
+  ultimo_dia_util_mes_dia: [12, 15]
+  aereo:
+    estimado: true
+    nota: "Proveedor con stock listo (ready to ship) + courier/aéreo a un almacén FBA. En Q4 Amazon tarda más en recibir. Confirmar con proveedor y forwarder."
+    compra_y_preparacion: 7
+    flete_aereo: 8
+    recepcion_amazon_q4: 21
+    costo_usd_kg:
+      valor: 9.0
+      estimado: true
+      nota: "Aéreo/courier China→EE.UU. puerta a puerta, peso facturable. Varía mucho por temporada."
+  keywords_regalo:
+    nota: "Productos no navideños cuyo pico de ventas es diciembre (regalo). Se suman a las búsquedas 'christmas ...'."
+    lista: ["silk pillowcase", "sleep mask", "paint by numbers for adults", "acupressure mat", "pickleball bag",
+            "needlepoint kit", "crochet kit for beginners", "embroidery kit", "chunky blanket loom"]

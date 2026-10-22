@@ -69,3 +69,8 @@ def test_refilter_keeps_scan_and_user_decisions():
     ], columns=d.COLUMNS)
     out = d.refilter(table)
     assert (out["estado"] == "filtrado").all()
+
+
+def test_daily_order_alternates():
+    from scripts.discover import seeds_first
+    assert seeds_first(date(2026, 10, 22)) != seeds_first(date(2026, 10, 23))

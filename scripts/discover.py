@@ -1,8 +1,9 @@
-"""Daily discovery run: rising queries from a few seeds, scan a few pending terms, re-rank.
+"""Daily discovery run: scan pending terms and explore new seeds, then re-rank.
 
 Usage:  .venv/Scripts/python -m scripts.discover [--seeds 4] [--scans 10]
-Google blocks this connection after ~15-20 calls, so the run is budgeted and stops at the
-first block (the next day's run picks up where this one left off).
+Google blocks this connection after a handful of calls, so the run is budgeted and stops at the
+first block (the next day's run picks up where this one left off). To keep both queues moving,
+the order alternates by day: odd days scan the queue first, even days explore seeds first.
 """
 import argparse
 import json
@@ -41,16 +42,12 @@ def competition_ready() -> list[str]:
     return ok.sort_values("listados_bajo_500_resenas", ascending=False)["keyword"].tolist()
 
 
-def main(n_seeds: int = 4, n_scans: int = 10) -> dict:
-    state = load_state()
-    table = discovery.refilter(discovery.load())  # filter rules may have changed since the last run
-    known = set(pd.read_csv(KEYWORDS_PATH)["keyword"])
-    run = {"fecha": date.today().isoformat(), "semillas": 0, "nuevos": 0, "escaneados": 0, "bloqueado": False}
+def seeds_first(today: date) -> bool:
+    return today.toordinal() % 2 == 0
 
-    # 1) Scan first: product types already selling on Amazon are worth more than new seed ideas.
-    #    Within the queue, types that already passed price + competition go first.
-    discarded = set(criteria.load_pipeline().query("etapa_manual == 'Descartado'")["tipo"])
-    table.loc[table["termino"].isin(discarded) & (table["estado"] == "pendiente"), ["estado", "motivo"]] =         ["filtrado", "descartado en el pipeline"]
+
+def scan_phase(table: pd.DataFrame, run: dict, n_scans: int) -> pd.DataFrame:
+    """Google Trends for pending terms: competition-ready Amazon types first."""
     for term in discovery.next_to_scan(table, n_scans, priority=competition_ready()):
         row = table.index[table["termino"] == term][0]
         try:
@@ -76,25 +73,49 @@ def main(n_seeds: int = 4, n_scans: int = 10) -> dict:
         run["escaneados"] += 1
         print(f"escaneado '{term}'")
         wait()
+    return table
 
-    # 2) Discover: rising queries for the seeds that are due, with whatever budget is left
-    if not run["bloqueado"]:
-        for seed, cat in discovery.seeds_due(state["seed_log"])[:n_seeds]:
-            try:
-                rising = discovery.rising_queries(seed)
-            except collect.TrendsFetchError as e:
-                print(f"BLOQUEADO en semilla '{seed}': {e}")
-                run["bloqueado"] = True
-                break
-            table, new = discovery.add_rising(table, seed, cat, rising, known)
-            state["seed_log"][seed] = date.today().isoformat()
-            run["semillas"] += 1
-            run["nuevos"] += new
-            print(f"semilla '{seed}': {len(rising)} en aumento, {new} nuevos útiles")
-            discovery.save(table)
-            wait()
 
-    # 3) Re-rank; measure volume for at most 4 new finalists (one request) if not blocked
+def seed_phase(table: pd.DataFrame, state: dict, run: dict, known: set, n_seeds: int) -> pd.DataFrame:
+    """Rising related queries for the seeds that are due (new product ideas)."""
+    for seed, cat in discovery.seeds_due(state["seed_log"])[:n_seeds]:
+        try:
+            rising = discovery.rising_queries(seed)
+        except collect.TrendsFetchError as e:
+            print(f"BLOQUEADO en semilla '{seed}': {e}")
+            run["bloqueado"] = True
+            break
+        table, new = discovery.add_rising(table, seed, cat, rising, known)
+        state["seed_log"][seed] = date.today().isoformat()
+        run["semillas"] += 1
+        run["nuevos"] += new
+        print(f"semilla '{seed}': {len(rising)} en aumento, {new} nuevos útiles")
+        discovery.save(table)
+        wait()
+    return table
+
+
+def main(n_seeds: int = 4, n_scans: int = 10) -> dict:
+    state = load_state()
+    table = discovery.refilter(discovery.load())  # filter rules may have changed since the last run
+    known = set(pd.read_csv(KEYWORDS_PATH)["keyword"])
+    today = date.today()
+    run = {"fecha": today.isoformat(), "semillas": 0, "nuevos": 0, "escaneados": 0, "bloqueado": False,
+           "orden": "semillas primero" if seeds_first(today) else "cola primero"}
+
+    discarded = set(criteria.load_pipeline().query("etapa_manual == 'Descartado'")["tipo"])
+    table.loc[table["termino"].isin(discarded) & (table["estado"] == "pendiente"), ["estado", "motivo"]] = \
+        ["filtrado", "descartado en el pipeline"]
+
+    phases = [lambda t: seed_phase(t, state, run, known, n_seeds), lambda t: scan_phase(t, run, n_scans)]
+    if not seeds_first(today):
+        phases.reverse()
+    for phase in phases:
+        if run["bloqueado"]:
+            break
+        table = phase(table)
+
+    # Re-rank; measure volume for at most 4 new finalists (one request) if not blocked
     rank_keywords.main(with_volume=not run["bloqueado"], max_volume_terms=4, verbose=False)
     state["runs"].append(run)
     STATE_PATH.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf-8")
