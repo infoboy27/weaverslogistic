@@ -5,7 +5,11 @@
   "stocking stuffers": "2026-10-22",
   "dog christmas gifts": "2026-10-22",
   "christmas craft kit": "2026-10-22",
-  "gifts for knitters": "2026-10-22"
+  "gifts for knitters": "2026-10-22",
+  "cat christmas gifts": "2026-10-23",
+  "dog bed": "2026-10-23",
+  "dog toy": "2026-10-23",
+  "cat toy": "2026-10-23"
  },
  "runs": [
   {
@@ -64,6 +68,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-10-23",
+   "semillas": 4,
+   "nuevos": 47,
+   "escaneados": 10,
+   "bloqueado": false,
+   "orden": "semillas primero"
   }
  ]
 }
