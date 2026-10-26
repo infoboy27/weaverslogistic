@@ -88,6 +88,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-10-26",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 10,
+   "bloqueado": true,
+   "orden": "cola primero"
   }
  ]
 }
