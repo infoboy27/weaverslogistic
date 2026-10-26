@@ -13,7 +13,8 @@
   "dog harness": "2026-10-24",
   "pet grooming": "2026-10-24",
   "craft kit": "2026-10-24",
-  "knitting kit": "2026-10-24"
+  "knitting kit": "2026-10-24",
+  "diy kit": "2026-10-26"
  },
  "runs": [
   {
@@ -93,6 +94,14 @@
    "fecha": "2026-10-26",
    "semillas": 0,
    "nuevos": 0,
+   "escaneados": 10,
+   "bloqueado": true,
+   "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-10-26",
+   "semillas": 1,
+   "nuevos": 8,
    "escaneados": 10,
    "bloqueado": true,
    "orden": "cola primero"
