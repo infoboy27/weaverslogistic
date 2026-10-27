@@ -80,7 +80,7 @@ def test_junk_filter_drops_local_businesses_licenses_and_electronics():
     from fba_trends import discovery as d
     assert d.junk_reason("pet parlor pet grooming llc", "pet grooming") is not None
     assert d.junk_reason("perrys pet mobile grooming", "pet grooming") is not None
-    assert d.junk_reason("corner pet grooming greenville sc", "pet grooming") == "negocio local"
+    assert d.junk_reason("happy paws grooming greenville sc", "pet grooming") == "negocio local"
     assert d.junk_reason("toy story", "cat toy") == "licencia de marca"
     assert d.junk_reason("robot dog toy", "dog toy") == "electrónica"
     assert d.junk_reason("dog", "cat toy") == "demasiado genérico"
