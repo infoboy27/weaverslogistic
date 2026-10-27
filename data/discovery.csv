@@ -100,7 +100,7 @@ stocking stuffers,stocking stuffers,navidad,300.0,False,2026-10-22,filtrado,igua
 stocking stuffers for young adults,stocking stuffers,navidad,100.0,False,2026-10-22,pendiente,
 stocking stuffers for 1 year old boy,stocking stuffers,navidad,80.0,False,2026-10-22,filtrado,demasiado largo
 unique stocking stuffers for adults,stocking stuffers,navidad,80.0,False,2026-10-22,pendiente,
-ulta beauty,stocking stuffers,navidad,80.0,False,2026-10-22,pendiente,
+ulta beauty,stocking stuffers,navidad,80.0,False,2026-10-22,filtrado,tienda/intención no-producto
 stocking stuffers for 2 year old boy,stocking stuffers,navidad,70.0,False,2026-10-22,filtrado,demasiado largo
 small stocking stuffers for men,stocking stuffers,navidad,70.0,False,2026-10-22,pendiente,
 men's stocking stuffers,stocking stuffers,navidad,60.0,False,2026-10-22,pendiente,
@@ -122,11 +122,11 @@ xl dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
 cooling dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
 washable dog bed,dog bed,mascotas,110.0,False,2026-10-23,pendiente,
 dog couch bed,dog bed,mascotas,90.0,False,2026-10-23,pendiente,
-k9 ballistics dog bed,dog bed,mascotas,80.0,False,2026-10-23,pendiente,
+k9 ballistics dog bed,dog bed,mascotas,80.0,False,2026-10-23,filtrado,marca
 dog bed large,dog bed,mascotas,60.0,False,2026-10-23,pendiente,
 elevated dog bed,dog bed,mascotas,60.0,False,2026-10-23,pendiente,
 big dog bed,dog bed,mascotas,60.0,False,2026-10-23,pendiente,
-heated dog bed,dog bed,mascotas,50.0,False,2026-10-23,pendiente,
+heated dog bed,dog bed,mascotas,50.0,False,2026-10-23,filtrado,electrónica
 froplay dog toy,dog toy,mascotas,20750.0,True,2026-10-23,escaneado,
 kong jumbler ball dog toy,dog toy,mascotas,900.0,False,2026-10-23,filtrado,marca
 kong wild knots bear dog toy,dog toy,mascotas,650.0,False,2026-10-23,filtrado,marca
@@ -137,9 +137,9 @@ dog toy box,dog toy,mascotas,160.0,False,2026-10-23,pendiente,
 interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,pendiente,
 kong dog toy,dog toy,mascotas,90.0,False,2026-10-23,filtrado,marca
 dog chew toy,dog toy,mascotas,50.0,False,2026-10-23,pendiente,
-robot dog,dog toy,mascotas,50.0,False,2026-10-23,pendiente,
+robot dog,dog toy,mascotas,50.0,False,2026-10-23,filtrado,electrónica
 walking dog toy,dog toy,mascotas,40.0,False,2026-10-23,pendiente,
-robot dog toy,dog toy,mascotas,40.0,False,2026-10-23,pendiente,
+robot dog toy,dog toy,mascotas,40.0,False,2026-10-23,filtrado,electrónica
 dog rope toy,dog toy,mascotas,40.0,False,2026-10-23,pendiente,
 meowscles cat toy,cat toy,mascotas,9300.0,True,2026-10-23,escaneado,
 lizzie the lizard cat toy,cat toy,mascotas,7900.0,True,2026-10-23,escaneado,
@@ -147,19 +147,19 @@ bouncy tails cat toy,cat toy,mascotas,7750.0,True,2026-10-23,escaneado,
 giant q tip cat toy,cat toy,mascotas,6400.0,True,2026-10-23,escaneado,
 gecko rush cat toy,cat toy,mascotas,4900.0,False,2026-10-23,escaneado,
 cat wash toy,cat toy,mascotas,600.0,False,2026-10-23,escaneado,
-cat toy for kids,cat toy,mascotas,160.0,False,2026-10-23,pendiente,
+cat toy for kids,cat toy,mascotas,160.0,False,2026-10-23,filtrado,producto para niños
 cat toy box,cat toy,mascotas,150.0,False,2026-10-23,pendiente,
-automatic cat toy,cat toy,mascotas,110.0,False,2026-10-23,pendiente,
+automatic cat toy,cat toy,mascotas,110.0,False,2026-10-23,filtrado,electrónica
 cat plush toy,cat toy,mascotas,110.0,False,2026-10-23,pendiente,
-dog,cat toy,mascotas,100.0,False,2026-10-23,pendiente,
+dog,cat toy,mascotas,100.0,False,2026-10-23,filtrado,demasiado genérico
 interactive cat toy,cat toy,mascotas,90.0,False,2026-10-23,pendiente,
 cat chew toy,cat toy,mascotas,80.0,False,2026-10-23,pendiente,
-remote control cat toy,cat toy,mascotas,80.0,False,2026-10-23,pendiente,
-toy story,cat toy,mascotas,80.0,False,2026-10-23,pendiente,
+remote control cat toy,cat toy,mascotas,80.0,False,2026-10-23,filtrado,electrónica
+toy story,cat toy,mascotas,80.0,False,2026-10-23,filtrado,licencia de marca
 cat stick toy,cat toy,mascotas,70.0,False,2026-10-23,pendiente,
 diy cat toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
 cat kicker toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
-robot cat toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
+robot cat toy,cat toy,mascotas,60.0,False,2026-10-23,filtrado,electrónica
 cat spring toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
 dog friendly co,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
 dog friendly co harness,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
@@ -167,12 +167,12 @@ dog friendly harness,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
 leather dog harness,dog harness,mascotas,300.0,False,2026-10-24,pendiente,
 dog running harness,dog harness,mascotas,150.0,False,2026-10-24,pendiente,
 dog harness for car,dog harness,mascotas,110.0,False,2026-10-24,pendiente,
-ruffwear harness,dog harness,mascotas,100.0,False,2026-10-24,pendiente,
-ruffwear,dog harness,mascotas,100.0,False,2026-10-24,pendiente,
+ruffwear harness,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
+ruffwear,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
 dog car harness,dog harness,mascotas,80.0,False,2026-10-24,pendiente,
 front clip dog harness,dog harness,mascotas,80.0,False,2026-10-24,pendiente,
 dog vest harness,dog harness,mascotas,80.0,False,2026-10-24,pendiente,
-ruffwear dog harness,dog harness,mascotas,80.0,False,2026-10-24,pendiente,
+ruffwear dog harness,dog harness,mascotas,80.0,False,2026-10-24,filtrado,marca
 easy walk harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
 pink dog harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
 easy walk dog harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
@@ -181,23 +181,23 @@ large dog harness,dog harness,mascotas,50.0,False,2026-10-24,pendiente,
 harness for dog,dog harness,mascotas,50.0,False,2026-10-24,pendiente,
 tactical dog harness,dog harness,mascotas,40.0,False,2026-10-24,pendiente,
 bark and mane pet grooming,pet grooming,mascotas,24350.0,True,2026-10-24,escaneado,
-bark and mane mobile pet grooming,pet grooming,mascotas,17400.0,True,2026-10-24,filtrado,demasiado largo
+bark and mane mobile pet grooming,pet grooming,mascotas,17400.0,True,2026-10-24,filtrado,tienda/intención no-producto
 pet parlor pet grooming llc,pet grooming,mascotas,9200.0,True,2026-10-24,escaneado,
 pet pro grooming tool reviews,pet grooming,mascotas,8950.0,True,2026-10-24,filtrado,tienda/intención no-producto
 pet pro grooming tool,pet grooming,mascotas,3000.0,False,2026-10-24,escaneado,
 perrys pet mobile grooming,pet grooming,mascotas,2250.0,False,2026-10-24,escaneado,
 maxpower planet pet grooming brush,pet grooming,mascotas,550.0,False,2026-10-24,escaneado,
-corner pet grooming,pet grooming,mascotas,250.0,False,2026-10-24,pendiente,
+corner pet grooming,pet grooming,mascotas,250.0,False,2026-10-24,filtrado,tienda/intención no-producto
 pet grooming table,pet grooming,mascotas,250.0,False,2026-10-24,pendiente,
-dog grooming tips,pet grooming,mascotas,200.0,False,2026-10-24,pendiente,
-corner pet grooming greenville sc,pet grooming,mascotas,150.0,False,2026-10-24,pendiente,
+dog grooming tips,pet grooming,mascotas,200.0,False,2026-10-24,filtrado,tienda/intención no-producto
+corner pet grooming greenville sc,pet grooming,mascotas,150.0,False,2026-10-24,filtrado,tienda/intención no-producto
 pet grooming kit,pet grooming,mascotas,140.0,False,2026-10-24,pendiente,
 dyson pet grooming tool,pet grooming,mascotas,130.0,False,2026-10-24,filtrado,marca
-pet grooming vacuum kit,pet grooming,mascotas,120.0,False,2026-10-24,pendiente,
+pet grooming vacuum kit,pet grooming,mascotas,120.0,False,2026-10-24,filtrado,electrónica
 pet grooming near me,pet grooming,mascotas,110.0,False,2026-10-24,filtrado,tienda/intención no-producto
-pet grooming vacuum,pet grooming,mascotas,80.0,False,2026-10-24,pendiente,
-pet grooming insurance,pet grooming,mascotas,70.0,False,2026-10-24,pendiente,
-pet grooming service,pet grooming,mascotas,60.0,False,2026-10-24,pendiente,
+pet grooming vacuum,pet grooming,mascotas,80.0,False,2026-10-24,filtrado,electrónica
+pet grooming insurance,pet grooming,mascotas,70.0,False,2026-10-24,filtrado,tienda/intención no-producto
+pet grooming service,pet grooming,mascotas,60.0,False,2026-10-24,filtrado,tienda/intención no-producto
 cat grooming,pet grooming,mascotas,40.0,False,2026-10-24,pendiente,
 craft smart outdoor acrylic paint,craft kit,hobby,11850.0,True,2026-10-24,escaneado,
 diamond craft kit,craft kit,hobby,150.0,False,2026-10-24,pendiente,
@@ -208,6 +208,6 @@ diy watch kit,diy kit,hobby,500.0,False,2026-10-26,pendiente,
 diy squishy kit,diy kit,hobby,190.0,False,2026-10-26,pendiente,
 diy journal kit,diy kit,hobby,170.0,False,2026-10-26,pendiente,
 diy diamond art kit,diy kit,hobby,160.0,False,2026-10-26,pendiente,
-diy projects,diy kit,hobby,80.0,False,2026-10-26,pendiente,
+diy projects,diy kit,hobby,80.0,False,2026-10-26,filtrado,tienda/intención no-producto
 diy nail kit,diy kit,hobby,60.0,False,2026-10-26,pendiente,
 diy clock kit,diy kit,hobby,50.0,False,2026-10-26,pendiente,

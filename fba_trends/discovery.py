@@ -28,13 +28,29 @@ JUNK_WORDS = {
     "ikea", "depot", "lowes", "petco", "petsmart", "chewy", "dollar", "michaels", "lobby", "aldi",
     "kohls", "macys", "nordstrom", "sams", "ebay", "coupon", "sale", "stock", "recall", "free",
     "login", "app", "jobs", "store", "stores", "open", "hours", "review", "reviews", "vs", "versus",
-    "recipe", "recipes", "ideas", "list", "checklist", "registry",
+    "recipe", "recipes", "ideas", "list", "checklist", "registry", "ulta", "sephora",
+    # local businesses and services (pet groomers, salons...), not products
+    "llc", "inc", "co", "company", "salon", "spa", "mobile", "insurance", "tips", "school", "course", "class",
+    "classes", "academy", "services", "service", "appointment", "prices", "cost", "projects", "corner",
 }
+# US state abbreviations: "corner pet grooming greenville sc" is a local business search
+US_STATES = {
+    "al", "ak", "az", "ar", "ca", "ct", "de", "fl", "ga", "hi", "id", "il", "ia", "ks", "ky", "la", "md", "ma",
+    "mi", "mn", "ms", "mo", "mt", "ne", "nv", "nh", "nj", "nm", "ny", "nc", "nd", "oh", "ok", "pa", "ri", "sc",
+    "sd", "tn", "tx", "ut", "vt", "va", "wa", "wv", "wi", "wy",
+}
+# Licensed franchises (excluded by the criteria) and electronics / battery-powered products.
+LICENSED = re.compile(r"toy story|pokemon|marvel|star wars|harry potter|bluey|paw patrol|hello kitty|stitch|frozen")
+ELECTRONIC = {"robot", "remote", "automatic", "electric", "heated", "vacuum", "battery", "rechargeable", "usb",
+              "smart", "wireless", "bluetooth", "led", "camera", "gps"}
+# Single words that are a whole category, not a product
+TOO_BROAD = {"dog", "dogs", "cat", "cats", "pet", "pets", "puppy", "kitten", "baby", "toy", "toys", "gift", "gifts"}
 # Big consumer brands: a branded query means people want THAT brand, not a private-label product.
 BRANDS = {
     "huggies", "pampers", "nike", "adidas", "stanley", "owala", "yeti", "hydro", "apple", "samsung", "dyson",
     "lego", "disney", "barbie", "crocs", "lululemon", "kitchenaid", "ninja", "keurig", "nespresso", "cricut",
     "kong", "furbo", "graco", "chicco", "uppababy", "dove", "olaplex", "dyson", "shark", "bissell", "rubbermaid",
+    "ruffwear", "k9", "frontline", "seresto", "maxpower", "froplay", "meowscles", "craft smart", "bark",
 }
 GENERIC = {"best", "top", "good", "new", "cheap", "for", "the", "and", "with", "a", "of", "to", "in", "on"}
 YEAR = re.compile(r"\b20\d\d\b")
@@ -56,6 +72,16 @@ def junk_reason(term: str, seed: str) -> str | None:
         return "tienda/intención no-producto"
     if BRANDS & set(words):
         return "marca"
+    if US_STATES & set(words[1:]):
+        return "negocio local"
+    if LICENSED.search(term):
+        return "licencia de marca"
+    if ELECTRONIC & set(words):
+        return "electrónica"
+    if len(words) == 1 and words[0] in TOO_BROAD:
+        return "demasiado genérico"
+    if "for kids" in term or "kids" in words:
+        return "producto para niños"
     if len(words) > 5:
         return "demasiado largo"
     if term == clean(seed):

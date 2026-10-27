@@ -74,3 +74,17 @@ def test_refilter_keeps_scan_and_user_decisions():
 def test_daily_order_alternates():
     from scripts.discover import seeds_first
     assert seeds_first(date(2026, 10, 22)) != seeds_first(date(2026, 10, 23))
+
+
+def test_junk_filter_drops_local_businesses_licenses_and_electronics():
+    from fba_trends import discovery as d
+    assert d.junk_reason("pet parlor pet grooming llc", "pet grooming") is not None
+    assert d.junk_reason("perrys pet mobile grooming", "pet grooming") is not None
+    assert d.junk_reason("corner pet grooming greenville sc", "pet grooming") == "negocio local"
+    assert d.junk_reason("toy story", "cat toy") == "licencia de marca"
+    assert d.junk_reason("robot dog toy", "dog toy") == "electrónica"
+    assert d.junk_reason("dog", "cat toy") == "demasiado genérico"
+    assert d.junk_reason("ruffwear dog harness", "dog harness") == "marca"
+    assert d.junk_reason("cat toy for kids", "cat toy") == "producto para niños"
+    assert d.junk_reason("orthopedic dog bed", "dog bed") is None
+    assert d.junk_reason("small stocking stuffers for men", "stocking stuffers") is None
