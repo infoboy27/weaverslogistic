@@ -22,7 +22,11 @@
   "massage tool": "2026-10-29",
   "sleep aid": "2026-10-29",
   "kitchen gadget": "2026-10-29",
-  "kitchen organizer": "2026-10-29"
+  "kitchen organizer": "2026-10-29",
+  "coffee accessories": "2026-10-30",
+  "closet organizer": "2026-10-30",
+  "desk accessories": "2026-10-30",
+  "phone accessories": "2026-10-30"
  },
  "runs": [
   {
@@ -137,6 +141,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "semillas primero"
+  },
+  {
+   "fecha": "2026-10-30",
+   "semillas": 4,
+   "nuevos": 43,
+   "escaneados": 9,
+   "bloqueado": false,
+   "orden": "cola primero"
   }
  ]
 }

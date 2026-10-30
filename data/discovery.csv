@@ -110,14 +110,14 @@ good stocking stuffers for women,stocking stuffers,navidad,50.0,False,2026-10-22
 stocking stuffers for 2 year olds,stocking stuffers,navidad,50.0,False,2026-10-22,filtrado,demasiado largo
 women's stocking stuffers,stocking stuffers,navidad,50.0,False,2026-10-22,pendiente,
 practical stocking stuffers,stocking stuffers,navidad,40.0,False,2026-10-22,pendiente,
-unique gifts for knitters,gifts for knitters,navidad,180.0,False,2026-10-22,pendiente,
+unique gifts for knitters,gifts for knitters,navidad,180.0,False,2026-10-22,filtrado,sin volumen en Google
 waterproof dog bed,dog bed,mascotas,450.0,False,2026-10-23,escaneado,
 memory foam dog bed,dog bed,mascotas,300.0,False,2026-10-23,escaneado,
 dog bed with cover,dog bed,mascotas,300.0,False,2026-10-23,escaneado,
 orthopedic dog bed,dog bed,mascotas,250.0,False,2026-10-23,escaneado,
-donut dog bed,dog bed,mascotas,200.0,False,2026-10-23,pendiente,
-outdoor dog bed,dog bed,mascotas,190.0,False,2026-10-23,pendiente,
-small dog bed,dog bed,mascotas,180.0,False,2026-10-23,pendiente,
+donut dog bed,dog bed,mascotas,200.0,False,2026-10-23,escaneado,
+outdoor dog bed,dog bed,mascotas,190.0,False,2026-10-23,escaneado,
+small dog bed,dog bed,mascotas,180.0,False,2026-10-23,escaneado,
 xl dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
 cooling dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
 washable dog bed,dog bed,mascotas,110.0,False,2026-10-23,pendiente,
@@ -188,7 +188,7 @@ pet pro grooming tool,pet grooming,mascotas,3000.0,False,2026-10-24,escaneado,
 perrys pet mobile grooming,pet grooming,mascotas,2250.0,False,2026-10-24,escaneado,
 maxpower planet pet grooming brush,pet grooming,mascotas,550.0,False,2026-10-24,escaneado,
 corner pet grooming,pet grooming,mascotas,250.0,False,2026-10-24,filtrado,tienda/intención no-producto
-pet grooming table,pet grooming,mascotas,250.0,False,2026-10-24,pendiente,
+pet grooming table,pet grooming,mascotas,250.0,False,2026-10-24,escaneado,
 dog grooming tips,pet grooming,mascotas,200.0,False,2026-10-24,filtrado,tienda/intención no-producto
 corner pet grooming greenville sc,pet grooming,mascotas,150.0,False,2026-10-24,filtrado,tienda/intención no-producto
 pet grooming kit,pet grooming,mascotas,140.0,False,2026-10-24,pendiente,
@@ -205,7 +205,7 @@ resin craft kit,craft kit,hobby,80.0,False,2026-10-24,pendiente,
 knitting bag,knitting kit,hobby,450.0,False,2026-10-24,escaneado,
 diy beaded christmas tree kit,diy kit,hobby,12050.0,True,2026-10-26,escaneado,
 diy watch kit,diy kit,hobby,500.0,False,2026-10-26,escaneado,
-diy squishy kit,diy kit,hobby,190.0,False,2026-10-26,pendiente,
+diy squishy kit,diy kit,hobby,190.0,False,2026-10-26,escaneado,
 diy journal kit,diy kit,hobby,170.0,False,2026-10-26,pendiente,
 diy diamond art kit,diy kit,hobby,160.0,False,2026-10-26,pendiente,
 diy projects,diy kit,hobby,80.0,False,2026-10-26,filtrado,tienda/intención no-producto
@@ -247,10 +247,10 @@ medium resistance bands,resistance bands,fitness,1300.0,False,2026-10-27,escanea
 resistance bands set,resistance bands,fitness,900.0,False,2026-10-27,escaneado,
 mini resistance bands,resistance bands,fitness,850.0,False,2026-10-27,escaneado,
 fitness resistance bands,resistance bands,fitness,300.0,False,2026-10-27,escaneado,
-rubber resistance bands,resistance bands,fitness,250.0,False,2026-10-27,pendiente,
-long resistance bands,resistance bands,fitness,250.0,False,2026-10-27,pendiente,
-strength resistance bands,resistance bands,fitness,190.0,False,2026-10-27,pendiente,
-booty resistance bands,resistance bands,fitness,190.0,False,2026-10-27,pendiente,
+rubber resistance bands,resistance bands,fitness,250.0,False,2026-10-27,escaneado,
+long resistance bands,resistance bands,fitness,250.0,False,2026-10-27,escaneado,
+strength resistance bands,resistance bands,fitness,190.0,False,2026-10-27,escaneado,
+booty resistance bands,resistance bands,fitness,190.0,False,2026-10-27,escaneado,
 theraband resistance bands,resistance bands,fitness,160.0,False,2026-10-27,pendiente,
 pull up resistance bands,resistance bands,fitness,110.0,False,2026-10-27,pendiente,
 target resistance bands,resistance bands,fitness,60.0,False,2026-10-27,filtrado,tienda/intención no-producto
@@ -285,3 +285,63 @@ kitchen storage,kitchen organizer,cocina,70.0,False,2026-10-29,pendiente,
 kitchen storage organizer,kitchen organizer,cocina,60.0,False,2026-10-29,pendiente,
 countertop organizer kitchen,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
 countertop organizer,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
+coffee shops nearby,coffee accessories,cocina,30450.0,True,2026-10-30,pendiente,
+gopro hero13 black accessories bundle,coffee accessories,cocina,18050.0,True,2026-10-30,pendiente,
+cuisinart 14 cup programmable coffee maker,coffee accessories,cocina,11050.0,True,2026-10-30,filtrado,demasiado largo
+coffee table accessories,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
+coffee table,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
+travel,coffee accessories,cocina,100.0,False,2026-10-30,pendiente,
+car accessories,coffee accessories,cocina,80.0,False,2026-10-30,pendiente,
+coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
+closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,pendiente,
+portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,pendiente,
+stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,pendiente,
+closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,pendiente,
+closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,pendiente,
+wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
+metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
+storage closet organizer,closet organizer,hogar,60.0,False,2026-10-30,pendiente,
+closet storage,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+organizer for closet,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+closet organizer,closet organizer,hogar,40.0,False,2026-10-30,filtrado,igual a la semilla
+executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,pendiente,
+leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
+desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
+golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
+cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,pendiente,
+modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,pendiente,
+gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,pendiente,
+kids desk accessories,desk accessories,oficina,150.0,False,2026-10-30,filtrado,producto para niños
+desk lamp,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
+desk chair,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
+standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
+standing desk,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
+home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,pendiente,
+computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,pendiente,
+pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+ikea desk accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
+gaming desk,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+desk accessories for women,desk accessories,oficina,50.0,False,2026-10-30,pendiente,
+comcast business phone,phone accessories,tecnología,21500.0,True,2026-10-30,pendiente,
+dyson hair dryer accessories,phone accessories,tecnología,11500.0,True,2026-10-30,filtrado,marca
+miu miu accessories,phone accessories,tecnología,9450.0,True,2026-10-30,pendiente,
+how to fix phone speaker,phone accessories,tecnología,8050.0,True,2026-10-30,filtrado,tienda/intención no-producto
+how to set up google authenticator on new phone,phone accessories,tecnología,7850.0,True,2026-10-30,filtrado,tienda/intención no-producto
+how to stop phone from overheating,phone accessories,tecnología,7850.0,True,2026-10-30,filtrado,tienda/intención no-producto
+how to get a virtual phone number,phone accessories,tecnología,7250.0,True,2026-10-30,filtrado,tienda/intención no-producto
+how to transfer contacts to new phone,phone accessories,tecnología,6600.0,True,2026-10-30,filtrado,tienda/intención no-producto
+how to backup android phone,phone accessories,tecnología,5900.0,True,2026-10-30,filtrado,tienda/intención no-producto
+lidl near me,phone accessories,tecnología,5750.0,True,2026-10-30,filtrado,tienda/intención no-producto
+dyson v6 accessories,phone accessories,tecnología,4950.0,False,2026-10-30,filtrado,marca
+toyota accessories,phone accessories,tecnología,150.0,False,2026-10-30,pendiente,
+internet accessories,phone accessories,tecnología,110.0,False,2026-10-30,pendiente,
+bike accessories,phone accessories,tecnología,80.0,False,2026-10-30,pendiente,
+mobile phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
+phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,igual a la semilla
+apple accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
+apple phone accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
+accessories for phone,phone accessories,tecnología,40.0,False,2026-10-30,pendiente,
