@@ -27,7 +27,7 @@ def test_economics_flags_estimates_and_lowers_confidence():
     e = dc.economics(row("glove", 28.99, tendencia="?"), comp([300, 300]), CFG)
     assert e["costo_estimado"] and "tendencia" in e["falta_verificar"]
     assert e["confianza"] < 0.7
-    real = dc.economics(row("glove", 28.99), comp([300, 300]), CFG, real_cost=5.0)
+    real = dc.economics(row("glove", 28.99), comp([300] * 10), CFG, real_cost=5.0, moq=100, lead_days=60)
     assert not real["costo_estimado"] and real["confianza"] == 1.0
     assert real["ventas_mes_proy"] == 150  # 300 x 0.5 captura
 
@@ -80,3 +80,33 @@ def test_budget_drops_lowest_priority_when_two_do_not_fit():
     second = Candidate("second", 80, 6.75, 5.0, 100, 250)
     plan = allocate([top, second], 1500, cfg)
     assert [r["producto"] for r in plan["asignacion"]] == ["top"]
+
+
+def test_stock_plan_reorder_point_and_gmroi():
+    plan = dc.stock_plan(300, 5.0, 6.0, CFG, moq=100, lead_days=49)
+    # 10/day; safety = 1.65 x 0.5 x 10 x 7 = 57.75; order = max(100, 600) = 600
+    assert plan["stock_seguridad"] == 58
+    assert plan["punto_reorden"] == 548          # 10 x 49 + 57.75
+    assert plan["pedido_unidades"] == 658
+    assert plan["rotacion_anual"] == round(3650 / (300 + 57.75), 1)
+    assert plan["gmroi"] == round(6.0 * 3650 / (357.75 * 5.0), 1)
+    assert not plan["proveedor_estimado"]
+    assert dc.stock_plan(300, 5.0, 6.0, CFG)["proveedor_estimado"]
+
+
+def test_layer1_knockouts_moq_and_quote():
+    slow = dc.economics(row("slow", 30.99), comp([20] * 10), CFG, real_cost=5.0, moq=500, lead_days=60)
+    pricey = dc.economics(row("pricey", 24.99), comp([300] * 10), CFG, real_cost=8.0, moq=100, lead_days=60)
+    out = dc.recommend(pd.DataFrame([slow, pricey]), 3000, CFG)
+    reasons = dict(out["descartados"])
+    assert "días de venta" in reasons["slow"]
+    assert "costo objetivo" in reasons["pricey"]
+
+
+def test_gmroi_ranking_flags_ties():
+    a = dc.economics(row("A", 34.99), comp([200] * 10), CFG, real_cost=6.0, moq=100, lead_days=60)
+    b = dc.economics(row("B", 33.99), comp([200] * 10), CFG, real_cost=6.0, moq=100, lead_days=60)
+    out = dc.recommend(pd.DataFrame([b, a]), 3000, CFG, prioridad="gmroi")
+    r = out["ranking"]
+    assert r.loc[0, "tipo"] == "A" and r["empate_con_el_1"].all()
+    assert r.loc[0, "gmroi"] >= r.loc[1, "gmroi"]

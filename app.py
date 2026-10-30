@@ -277,14 +277,19 @@ def run_decision(budget: float, max_products: int, mult: float = 1.0, prioridad:
     """Shortlist -> economics -> recommendation (used by Decisión and Inicio)."""
     best = criteria.shortlist(EV)
     cands = pd.read_csv(CANDIDATES_PATH)
-    real_cost = {}
+    supplier = {}  # keyword -> real quote: landed cost, MOQ, lead time (days, door to Amazon)
     for _, r in cands.iterrows():
         f, fl = pd.to_numeric(r.get("costo_fabrica"), errors="coerce"), pd.to_numeric(r.get("flete_unidad"), errors="coerce")
-        if pd.notna(f):
-            real_cost[r["keyword"]] = float(f) + (0.0 if pd.isna(fl) else float(fl))
+        moq, lead = pd.to_numeric(r.get("moq"), errors="coerce"), pd.to_numeric(r.get("dias_entrega"), errors="coerce")
+        if str(r.get("nombre", "")).startswith("EJEMPLO"):
+            continue
+        supplier[r["keyword"]] = {
+            "real_cost": float(f) + (0.0 if pd.isna(fl) else float(fl)) if pd.notna(f) else None,
+            "moq": float(moq) if pd.notna(moq) else None, "lead_days": float(lead) if pd.notna(lead) else None,
+        }
     comp_rows = competition.load()
     econ = pd.DataFrame([decision.economics(r, comp_rows[comp_rows["keyword"] == r["tipo"]], cfg, mult,
-                                            real_cost.get(r["tipo"]))
+                                            **supplier.get(r["tipo"], {}))
                          for _, r in best.iterrows()])
     win = cal.seasonal_windows(pt, cfg, today)
     timing = {} if win.empty else {r["keyword"]: (int(r["dias_para_pedir"]), str(r["buscar_proveedor_desde"]))
@@ -318,13 +323,18 @@ def page_decision():
         dec_esc = d3.select_slider("Escenario de ventas", ["Pesimista", "Base", "Optimista"], value="Base",
                                    key="dec_esc")
         mult = {"Pesimista": 0.5, "Base": 1.0, "Optimista": 1.5}[dec_esc]
-        default_prio = "Rotación" if cfg["decision"].get("prioridad", {}).get("valor", "rotacion") == "rotacion"             else "Ganancia"
-        prio = d4.segmented_control("Priorizar por", ["Rotación", "Ganancia"], default=default_prio, key="dec_prio",
-                                    help="Rotación = lo que más se vende (unidades/mes de un vendedor nuevo). "
-                                         "Ganancia = filtro de margen mínimo y mayor ganancia mensual.") or default_prio
-        by_units = prio == "Rotación"
+        prio_modes = {"GMROI": "gmroi", "Rotación": "rotacion", "Ganancia": "ganancia"}
+        default_mode = cfg["decision"].get("prioridad", {}).get("valor", "gmroi")
+        default_prio = next(k for k, v in prio_modes.items() if v == default_mode)
+        prio = d4.segmented_control(
+            "Priorizar por", list(prio_modes), default=default_prio, key="dec_prio",
+            help="GMROI = dólares de margen al año por cada dólar en inventario (margen × rotación), recomendado. "
+                 "Rotación = unidades/mes de un vendedor nuevo. Ganancia = filtro de margen y mayor ganancia mensual.",
+        ) or default_prio
+        mode = prio_modes[prio]
+        by_units = mode == "rotacion"
 
-        rec, econ = run_decision(float(dec_budget), dec_max, mult, "rotacion" if by_units else "ganancia")
+        rec, econ = run_decision(float(dec_budget), dec_max, mult, mode)
 
         verdict_card(rec)
 
@@ -367,22 +377,57 @@ def page_decision():
             st.dataframe(brand.pretty(pd.DataFrame(rec["esperar"], columns=["producto", "motivo"])),
                          hide_index=True, width="stretch")
 
-        st.markdown(brand.pill("Ranking de candidatos" + (" por rotación" if by_units else " por ganancia")),
-                    unsafe_allow_html=True)
         ranking = rec.get("ranking", pd.DataFrame())
         if not ranking.empty:
+            st.markdown(brand.pill(f"Plan de operación · {ranking.loc[0, 'tipo']}"), unsafe_allow_html=True)
+            top = ranking.iloc[0]
+            o1, o2, o3, o4 = st.columns(4)
+            o1.metric("Primer pedido", f"{top['pedido_unidades']:,} u.",
+                      help="Max(pedido mínimo, 2 meses de venta) + stock de seguridad.")
+            o2.metric("Reponer cuando queden", f"{top['punto_reorden']:,} u.",
+                      help="Punto de reorden = venta diaria × días de entrega + stock de seguridad.")
+            o3.metric("Stock de seguridad", f"{top['stock_seguridad']:,} u.",
+                      help=f"Z × variabilidad × √días de entrega, para {cfg['inventario']['nivel_servicio']['valor']:.0%} "
+                           "de probabilidad de no quedarse sin stock.")
+            o4.metric("GMROI", f"{top['gmroi']:.1f}", help="Dólares de margen al año por cada dólar en inventario.")
+            inv = cfg["inventario"]
+            cov = top["cobertura_inicial_dias"]
+            band = (f"El primer pedido cubre ~{cov} días: " +
+                    ("dentro de la zona sana de FBA." if inv["cobertura_min_dias"]["valor"] <= cov <= inv["cobertura_max_dias"]["valor"]
+                     else f"fuera de la zona sana de FBA ({inv['cobertura_min_dias']['valor']}–{inv['cobertura_max_dias']['valor']} "
+                          "días): manda a Amazon solo una parte y guarda el resto con el forwarder."))
+            steps = [
+                band,
+                f"Precio {top['precio_sugerido']:.2f} (terminado en 9, bajo el umbral del dólar siguiente).",
+                "Meta: 5 reseñas lo antes posible (Amazon Vine + solicitar reseña en Seller Central). Es la palanca de "
+                "conversión más fuerte.",
+                "Publicidad al lanzar para ganar velocidad; el costo de publicidad sobre la venta total (TACoS) debe "
+                "bajar mes a mes.",
+                f"Nunca quedarse sin stock: al llegar a {top['punto_reorden']:,} unidades, pedir de nuevo "
+                f"(entrega de {top['dias_entrega']:.0f} días).",
+            ]
+            if top["oportunidades"]:
+                steps.append(f"Oportunidad: {top['oportunidades']}.")
+            if top["riesgos"]:
+                steps.append(f"Riesgo: {top['riesgos']}.")
+            st.markdown("\n".join(f"{i}. {t}" for i, t in enumerate(steps, 1)))
+            if top["proveedor_estimado"]:
+                st.caption(f"Pedido mínimo ({top['moq']:.0f} u.) y entrega ({top['dias_entrega']:.0f} días) son supuestos: "
+                           "cárgalos con la cotización en Productos y rentabilidad (columnas moq y dias_entrega).")
+
+            label = {"gmroi": " por GMROI", "rotacion": " por rotación", "ganancia": " por ganancia"}[mode]
+            st.markdown(brand.pill("Ranking de candidatos" + label), unsafe_allow_html=True)
             nicho = COMP_SUM.set_index("keyword")["vendidos_mes_top10"] if not COMP_SUM.empty else pd.Series(dtype=float)
             ranking = ranking.assign(vendidos_mes_top10=ranking["tipo"].map(nicho))
-            top_val = ranking["valor_ajustado"].iloc[0]
-            ranking["empate_con_el_1"] = ranking["valor_ajustado"] >= top_val * 0.8
-            cols = ["tipo", "ventas_mes_proy", "vendidos_mes_top10", "precio_sugerido", "costo_puesto", "costo_objetivo",
-                    "margen_pct", "ganancia_mes_proy", "condicion", "confianza", "empate_con_el_1", "falta_verificar"]
+            cols = ["tipo", "gmroi", "rotacion_anual", "ventas_mes_proy", "vendidos_mes_top10", "precio_sugerido",
+                    "costo_puesto", "costo_objetivo", "margen_pct", "ganancia_mes_proy", "pedido_unidades", "punto_reorden",
+                    "condicion", "riesgos", "oportunidades", "confianza", "empate_con_el_1", "falta_verificar"]
             ranking.insert(0, "puesto", range(1, len(ranking) + 1))
             st.dataframe(brand.pretty(ranking[["puesto", *cols]]), hide_index=True, width="stretch")
             ties = int(ranking["empate_con_el_1"].sum())
             if ties > 1:
                 st.caption(f"{ties} candidatos están a menos de 20% del primero: es un empate técnico con los datos "
-                           "actuales. La cotización real decide.")
+                           "actuales. La cotización real (costo, pedido mínimo y entrega) decide.")
         elif not econ.empty:
             st.dataframe(brand.pretty(econ), hide_index=True, width="stretch")
         if rec["descartados"]:
@@ -393,9 +438,12 @@ def page_decision():
         st.caption(
             f"Cómo decide: precio sugerido = mediana del top 10 de Amazon (terminado en .99). Costo = cotización real si "
             f"la cargaste en Productos y rentabilidad; si no, {d['costo_pct_precio']['valor']:.0%} del precio (estimado). "
-            + ("Prioridad ROTACIÓN: ordena por unidades/mes que vendería un vendedor nuevo; el margen no descarta, "
-             "solo marca el costo objetivo que hay que conseguir. " if by_units else
-             "Prioridad GANANCIA: descarta lo que no llega al margen mínimo y ordena por ganancia mensual. ")
+            + {"gmroi": "Prioridad GMROI: margen anual ÷ inventario promedio a costo (pedido/2 + stock de seguridad), o sea "
+                         "margen × rotación; descarta bajo el GMROI mínimo. ",
+               "rotacion": "Prioridad ROTACIÓN: ordena por unidades/mes que vendería un vendedor nuevo. ",
+               "ganancia": "Prioridad GANANCIA: descarta lo que no llega al margen mínimo y ordena por ganancia mensual. "}[mode]
+            + "Siempre descarta: lo que pierde dinero, un pedido mínimo de más de "
+            f"{cfg['inventario']['cobertura_max_dias']['valor']} días de venta y una cotización por encima del costo objetivo. "
             + f"Ventas/mes = lo que venden hoy los listados nuevos (<500 reseñas) del top 10 × "
             f"{d['captura_nuevo_vendedor']['valor']:.0%} × escenario. Confianza baja por cada dato sin verificar "
             f"(tendencia, peso, costo). Prueba 1 a {dec_max} productos con las reglas del presupuesto (reserva, "
