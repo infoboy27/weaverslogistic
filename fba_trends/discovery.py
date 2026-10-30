@@ -32,6 +32,7 @@ JUNK_WORDS = {
     # local businesses and services (pet groomers, salons...), not products
     "llc", "inc", "co", "company", "salon", "spa", "mobile", "insurance", "tips", "school", "course", "class",
     "classes", "academy", "services", "service", "appointment", "prices", "cost", "projects", "corner",
+    "nyt", "crossword", "clue", "fashioned",  # crossword clues ("kitchen gadget brand nyt")
 }
 # US state abbreviations: "corner pet grooming greenville sc" is a local business search
 US_STATES = {
@@ -40,9 +41,10 @@ US_STATES = {
     "sd", "tn", "tx", "ut", "vt", "va", "wa", "wv", "wi", "wy",
 }
 # Licensed franchises (excluded by the criteria) and electronics / battery-powered products.
-LICENSED = re.compile(r"toy story|pokemon|marvel|star wars|harry potter|bluey|paw patrol|hello kitty|stitch|frozen")
+LICENSED = re.compile(r"toy story|pokemon|marvel|star wars|harry potter|bluey|paw patrol|hello kitty|stitch|frozen"
+                      r"|fifa|world cup|panini|topps|nfl|nba|mlb|ascended heroes")
 ELECTRONIC = {"robot", "remote", "automatic", "electric", "heated", "vacuum", "battery", "rechargeable", "usb",
-              "smart", "wireless", "bluetooth", "led", "camera", "gps"}
+              "smart", "wireless", "bluetooth", "led", "camera", "gps", "printer"}
 # Single words that are a whole category, not a product
 TOO_BROAD = {"dog", "dogs", "cat", "cats", "pet", "pets", "puppy", "kitten", "baby", "toy", "toys", "gift", "gifts"}
 # Big consumer brands: a branded query means people want THAT brand, not a private-label product.
@@ -50,8 +52,9 @@ BRANDS = {
     "huggies", "pampers", "nike", "adidas", "stanley", "owala", "yeti", "hydro", "apple", "samsung", "dyson",
     "lego", "disney", "barbie", "crocs", "lululemon", "kitchenaid", "ninja", "keurig", "nespresso", "cricut",
     "kong", "furbo", "graco", "chicco", "uppababy", "dove", "olaplex", "dyson", "shark", "bissell", "rubbermaid",
-    "ruffwear", "k9", "frontline", "seresto", "maxpower", "froplay", "meowscles", "craft smart", "bark",
+    "ruffwear", "k9", "frontline", "seresto", "maxpower", "froplay", "meowscles", "bark", "zuru", "canon", "liene",
 }
+BRAND_PHRASES = re.compile(r"craft smart|athletic works|royal change|dog friendly co|sticker therapy")
 GENERIC = {"best", "top", "good", "new", "cheap", "for", "the", "and", "with", "a", "of", "to", "in", "on"}
 YEAR = re.compile(r"\b20\d\d\b")
 
@@ -70,7 +73,7 @@ def junk_reason(term: str, seed: str) -> str | None:
         return "dominio web"
     if JUNK_WORDS & set(words):
         return "tienda/intención no-producto"
-    if BRANDS & set(words):
+    if BRANDS & set(words) or BRAND_PHRASES.search(term):
         return "marca"
     if US_STATES & set(words[1:]):
         return "negocio local"
@@ -153,13 +156,18 @@ def seeds_due(seed_log: dict[str, str], every_days: int = 30, today: date | None
     return [(seed, cat) for _, _, seed, cat in sorted(due)]
 
 
-def next_to_scan(df: pd.DataFrame, n: int, priority: list[str] | None = None) -> list[str]:
-    """Pending terms: `priority` first (in its order), then Amazon types, then breakouts / biggest risers."""
+def next_to_scan(df: pd.DataFrame, n: int, priority: list[str] | None = None, max_per_seed: int = 2) -> list[str]:
+    """Pending terms: `priority` first (in its order), then Amazon types, then breakouts / biggest risers.
+    At most `max_per_seed` non-priority terms per seed per run, so one seed's near-duplicates
+    ('mini / long / booty resistance bands'...) don't eat the whole daily Google budget."""
     pending = df[df["estado"] == "pendiente"].copy()
     rank = {k: i for i, k in enumerate(priority or [])}
     pending["_prio"] = pending["termino"].map(lambda k: -rank.get(k, 10_000))
     pending["_amazon"] = pending["seed"].astype(str).str.startswith("amazon")  # product types already selling
     pending = pending.sort_values(["_prio", "_amazon", "breakout", "subida_pct"], ascending=False)
+    is_prio = pending["termino"].isin(rank)
+    nth = pending.groupby("seed").cumcount()
+    pending = pending[is_prio | (nth < max_per_seed)]
     return pending["termino"].head(n).tolist()
 
 

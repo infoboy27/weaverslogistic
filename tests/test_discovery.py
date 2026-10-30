@@ -88,3 +88,23 @@ def test_junk_filter_drops_local_businesses_licenses_and_electronics():
     assert d.junk_reason("cat toy for kids", "cat toy") == "producto para niños"
     assert d.junk_reason("orthopedic dog bed", "dog bed") is None
     assert d.junk_reason("small stocking stuffers for men", "stocking stuffers") is None
+
+
+def test_junk_filter_crossword_licenses_brand_phrases():
+    from fba_trends import discovery as d
+    assert d.junk_reason("kitchen gadget brand nyt", "kitchen gadget") is not None
+    assert d.junk_reason("world cup sticker book", "sticker") == "licencia de marca"
+    assert d.junk_reason("athletic works resistance bands", "resistance bands") == "marca"
+    assert d.junk_reason("liene sticker printer", "sticker") is not None
+    assert d.junk_reason("mini resistance bands", "resistance bands") is None
+
+
+def test_next_to_scan_caps_terms_per_seed():
+    import pandas as pd
+    from fba_trends import discovery as d
+    rows = [[f"{m} resistance bands", "resistance bands", 100 - i] for i, m in enumerate(["mini", "long", "booty"])]
+    rows += [["donut dog bed", "dog bed", 10], ["fecha term", "fecha: Navidad", 0]]
+    t = pd.DataFrame([{"termino": a, "seed": b, "categoria": "x", "subida_pct": c, "breakout": False,
+                       "descubierto": "2026-10-30", "estado": "pendiente", "motivo": ""} for a, b, c in rows])
+    got = d.next_to_scan(t, 10, priority=["fecha term"])
+    assert got == ["fecha term", "mini resistance bands", "long resistance bands", "donut dog bed"]
