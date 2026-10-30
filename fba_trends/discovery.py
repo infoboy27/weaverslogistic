@@ -32,6 +32,7 @@ JUNK_WORDS = {
     # local businesses and services (pet groomers, salons...), not products
     "llc", "inc", "co", "company", "salon", "spa", "mobile", "insurance", "tips", "school", "course", "class",
     "classes", "academy", "services", "service", "appointment", "prices", "cost", "projects", "corner",
+    "nearby", "shop", "shops", "business", "rental", "rent",
     "nyt", "crossword", "clue", "fashioned",  # crossword clues ("kitchen gadget brand nyt")
 }
 # US state abbreviations: "corner pet grooming greenville sc" is a local business search
@@ -53,6 +54,7 @@ BRANDS = {
     "lego", "disney", "barbie", "crocs", "lululemon", "kitchenaid", "ninja", "keurig", "nespresso", "cricut",
     "kong", "furbo", "graco", "chicco", "uppababy", "dove", "olaplex", "dyson", "shark", "bissell", "rubbermaid",
     "ruffwear", "k9", "frontline", "seresto", "maxpower", "froplay", "meowscles", "bark", "zuru", "canon", "liene",
+    "gopro", "miu", "closetmaid", "theraband", "comcast", "verizon", "otterbox", "anker", "gucci", "prada", "coach",
 }
 BRAND_PHRASES = re.compile(r"craft smart|athletic works|royal change|dog friendly co|sticker therapy")
 GENERIC = {"best", "top", "good", "new", "cheap", "for", "the", "and", "with", "a", "of", "to", "in", "on"}
