@@ -76,8 +76,9 @@ def allocate(candidates: list[Candidate], total_budget: float, cfg: dict) -> dic
         moq_cost = misfit.moq * misfit.landed_cost
         best_alone = total_budget - reserve - launch_cost
         if moq_cost <= best_alone and len(selected) > 1:
-            # It would fit with fewer products: keep the higher score, drop the lowest.
-            lowest = min((c for c in selected if c is not misfit), key=lambda c: c.score)
+            # It would fit with fewer products: keep the higher score, drop the lowest (it may be the misfit
+            # itself; excluding it here used to drop the best product instead).
+            lowest = min(selected, key=lambda c: c.score)
             selected.remove(lowest)
             rejected.append((lowest.name, "El presupuesto no alcanza para tantos productos; se prioriza mayor score"))
         else:

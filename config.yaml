@@ -98,6 +98,9 @@ decision:
   horizonte_meses:
     valor: 3
     nota: "Ventana para comparar opciones (ganancia esperada en los primeros N meses)."
+  prioridad:
+    valor: rotacion
+    nota: "rotacion = ordenar por unidades que vende un vendedor nuevo; el margen no descarta, da el costo objetivo. ganancia = filtro de margen + ganancia mensual."
   mejora_minima_para_diversificar:
     valor: 0.10
     nota: "Solo se recomienda sumar otro producto si la ganancia ajustada por riesgo mejora al menos este %."

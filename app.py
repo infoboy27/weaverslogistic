@@ -273,7 +273,7 @@ if not UNIVERSE.empty:
     _types = pd.concat([_types, pd.DataFrame(_extra)], ignore_index=True).dropna(subset=["precio_mediana"])
     EV = criteria.with_manual(criteria.evaluate(_types, cfg, _tt, pt, COMP_SUM), criteria.load_pipeline(), cfg)
 
-def run_decision(budget: float, max_products: int, mult: float = 1.0):
+def run_decision(budget: float, max_products: int, mult: float = 1.0, prioridad: str | None = None):
     """Shortlist -> economics -> recommendation (used by Decisión and Inicio)."""
     best = criteria.shortlist(EV)
     cands = pd.read_csv(CANDIDATES_PATH)
@@ -293,7 +293,7 @@ def run_decision(budget: float, max_products: int, mult: float = 1.0):
         return {"veredicto": ("ninguno", "No compren nada este mes", "Todavía no hay candidatos que pasen el embudo."),
                 "preliminar": True, "opciones": pd.DataFrame(), "asignacion": pd.DataFrame(), "esperar": [],
                 "descartados": []}, econ
-    return decision.recommend(econ, budget, cfg, max_products, timing), econ
+    return decision.recommend(econ, budget, cfg, max_products, timing, prioridad), econ
 
 
 def verdict_card(rec: dict) -> None:
@@ -311,15 +311,20 @@ def page_decision():
     if EV is None:
         st.info("Primero hace falta el universo de Amazon (pestaña Embudo).")
     else:
-        d1, d2, d3 = st.columns(3)
+        d1, d2, d3, d4 = st.columns(4)
         dec_budget = d1.number_input("Presupuesto total (USD)", min_value=1000, max_value=50_000, value=int(SETTINGS["presupuesto_usd"]),
                                      step=250, key="dec_budget")
         dec_max = d2.slider("Máximo de productos a considerar", 1, 5, 3, key="dec_max")
         dec_esc = d3.select_slider("Escenario de ventas", ["Pesimista", "Base", "Optimista"], value="Base",
                                    key="dec_esc")
         mult = {"Pesimista": 0.5, "Base": 1.0, "Optimista": 1.5}[dec_esc]
+        default_prio = "Rotación" if cfg["decision"].get("prioridad", {}).get("valor", "rotacion") == "rotacion"             else "Ganancia"
+        prio = d4.segmented_control("Priorizar por", ["Rotación", "Ganancia"], default=default_prio, key="dec_prio",
+                                    help="Rotación = lo que más se vende (unidades/mes de un vendedor nuevo). "
+                                         "Ganancia = filtro de margen mínimo y mayor ganancia mensual.") or default_prio
+        by_units = prio == "Rotación"
 
-        rec, econ = run_decision(float(dec_budget), dec_max, mult)
+        rec, econ = run_decision(float(dec_budget), dec_max, mult, "rotacion" if by_units else "ganancia")
 
         verdict_card(rec)
 
@@ -329,9 +334,18 @@ def page_decision():
             k1, k2, k3, k4 = st.columns(4)
             k1.metric("Invertido", f"${invested:,.0f}")
             k2.metric("Reserva", f"${dec_budget - invested:,.0f}")
-            k3.metric(f"Ganancia esperada {cfg['decision']['horizonte_meses']['valor']} meses",
-                      f"${alloc['ganancia_horizonte'].sum():,.0f}")
+            horizon = cfg['decision']['horizonte_meses']['valor']
+            if by_units:
+                k3.metric(f"Unidades vendidas en {horizon} meses", f"{alloc['unidades_horizonte'].sum():,.0f}")
+            else:
+                k3.metric(f"Ganancia esperada {horizon} meses", f"${alloc['ganancia_horizonte'].sum():,.0f}")
             k4.metric("Ganancia mensual proyectada", f"${alloc['ganancia_mes_proy'].sum():,.0f}")
+            for r in alloc.itertuples():
+                if r.condicion:
+                    st.warning(f"**{r.producto}**: su margen queda bajo el mínimo con el costo supuesto. "
+                               f"{r.condicion} (fábrica + flete por unidad) para ganar "
+                               f"{cfg['supuestos']['margen_neto_minimo']['valor']:.0%}. Pide esa cotización primero.",
+                               icon=":material/request_quote:")
             c1, c2 = st.columns([1, 1])
             with c1:
                 st.markdown(brand.pill("Cómo dividir el presupuesto"), unsafe_allow_html=True)
@@ -342,7 +356,8 @@ def page_decision():
                 st.plotly_chart(charts.options_bar(rec["opciones"], chosen), width="stretch")
             st.markdown(brand.pill("Plan de compra"), unsafe_allow_html=True)
             st.dataframe(brand.pretty(alloc[["producto", "precio_sugerido", "unidades", "inversion_inventario",
-                                             "costo_lanzamiento", "ventas_mes_proy", "meses_de_stock_est",
+                                             "costo_lanzamiento", "ventas_mes_proy", "unidades_horizonte",
+                                             "condicion", "meses_de_stock_est",
                                              "ganancia_mes_proy", "ganancia_horizonte", "ganancia_esperada_si_vende_todo",
                                              "recupera_inversion_meses", "confianza"]]),
                          hide_index=True, width="stretch")
@@ -352,10 +367,24 @@ def page_decision():
             st.dataframe(brand.pretty(pd.DataFrame(rec["esperar"], columns=["producto", "motivo"])),
                          hide_index=True, width="stretch")
 
-        st.markdown(brand.pill("Todos los candidatos evaluados"), unsafe_allow_html=True)
-        if not econ.empty:
-            st.dataframe(brand.pretty(econ.sort_values("ganancia_mes_proy", ascending=False)),
-                         hide_index=True, width="stretch")
+        st.markdown(brand.pill("Ranking de candidatos" + (" por rotación" if by_units else " por ganancia")),
+                    unsafe_allow_html=True)
+        ranking = rec.get("ranking", pd.DataFrame())
+        if not ranking.empty:
+            nicho = COMP_SUM.set_index("keyword")["vendidos_mes_top10"] if not COMP_SUM.empty else pd.Series(dtype=float)
+            ranking = ranking.assign(vendidos_mes_top10=ranking["tipo"].map(nicho))
+            top_val = ranking["valor_ajustado"].iloc[0]
+            ranking["empate_con_el_1"] = ranking["valor_ajustado"] >= top_val * 0.8
+            cols = ["tipo", "ventas_mes_proy", "vendidos_mes_top10", "precio_sugerido", "costo_puesto", "costo_objetivo",
+                    "margen_pct", "ganancia_mes_proy", "condicion", "confianza", "empate_con_el_1", "falta_verificar"]
+            ranking.insert(0, "puesto", range(1, len(ranking) + 1))
+            st.dataframe(brand.pretty(ranking[["puesto", *cols]]), hide_index=True, width="stretch")
+            ties = int(ranking["empate_con_el_1"].sum())
+            if ties > 1:
+                st.caption(f"{ties} candidatos están a menos de 20% del primero: es un empate técnico con los datos "
+                           "actuales. La cotización real decide.")
+        elif not econ.empty:
+            st.dataframe(brand.pretty(econ), hide_index=True, width="stretch")
         if rec["descartados"]:
             with st.expander(f"Descartados por el cerebro ({len(rec['descartados'])})"):
                 st.dataframe(brand.pretty(pd.DataFrame(rec["descartados"], columns=["producto", "motivo"])),
@@ -364,10 +393,13 @@ def page_decision():
         st.caption(
             f"Cómo decide: precio sugerido = mediana del top 10 de Amazon (terminado en .99). Costo = cotización real si "
             f"la cargaste en Productos y rentabilidad; si no, {d['costo_pct_precio']['valor']:.0%} del precio (estimado). "
-            f"Ventas/mes = lo que venden hoy los listados nuevos (<500 reseñas) del top 10 × "
+            + ("Prioridad ROTACIÓN: ordena por unidades/mes que vendería un vendedor nuevo; el margen no descarta, "
+             "solo marca el costo objetivo que hay que conseguir. " if by_units else
+             "Prioridad GANANCIA: descarta lo que no llega al margen mínimo y ordena por ganancia mensual. ")
+            + f"Ventas/mes = lo que venden hoy los listados nuevos (<500 reseñas) del top 10 × "
             f"{d['captura_nuevo_vendedor']['valor']:.0%} × escenario. Confianza baja por cada dato sin verificar "
             f"(tendencia, peso, costo). Prueba 1 a {dec_max} productos con las reglas del presupuesto (reserva, "
-            f"lanzamiento, MOQ {d['moq_por_defecto']['valor']} u., máximo de meses de stock) y elige la mayor ganancia "
+            f"lanzamiento, MOQ {d['moq_por_defecto']['valor']} u., máximo de meses de stock) y elige la opción que más vende (o más gana) "
             f"ajustada por confianza; solo suma productos si mejora al menos {d['mejora_minima_para_diversificar']['valor']:.0%}. "
             "Es una guía para decidir, no una garantía: valida con cotizaciones y muestras."
         )
