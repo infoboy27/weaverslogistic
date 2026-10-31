@@ -26,7 +26,11 @@
   "coffee accessories": "2026-10-30",
   "closet organizer": "2026-10-30",
   "desk accessories": "2026-10-30",
-  "phone accessories": "2026-10-30"
+  "phone accessories": "2026-10-30",
+  "car accessories": "2026-10-31",
+  "camping gear": "2026-10-31",
+  "beach accessories": "2026-10-31",
+  "garden tools": "2026-10-31"
  },
  "runs": [
   {
@@ -149,6 +153,14 @@
    "escaneados": 9,
    "bloqueado": false,
    "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-10-31",
+   "semillas": 4,
+   "nuevos": 34,
+   "escaneados": 10,
+   "bloqueado": false,
+   "orden": "semillas primero"
   }
  ]
 }

@@ -132,7 +132,7 @@ kong jumbler ball dog toy,dog toy,mascotas,900.0,False,2026-10-23,filtrado,marca
 kong wild knots bear dog toy,dog toy,mascotas,650.0,False,2026-10-23,filtrado,marca
 dog toy storage,dog toy,mascotas,450.0,False,2026-10-23,escaneado,
 toy story 5,dog toy,mascotas,400.0,False,2026-10-23,escaneado,
-chicken dog toy,dog toy,mascotas,170.0,False,2026-10-23,pendiente,
+chicken dog toy,dog toy,mascotas,170.0,False,2026-10-23,escaneado,
 dog toy box,dog toy,mascotas,160.0,False,2026-10-23,pendiente,
 interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,pendiente,
 kong dog toy,dog toy,mascotas,90.0,False,2026-10-23,filtrado,marca
@@ -294,7 +294,7 @@ travel,coffee accessories,cocina,100.0,False,2026-10-30,pendiente,
 car accessories,coffee accessories,cocina,80.0,False,2026-10-30,pendiente,
 coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
 closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,filtrado,marca
-portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,pendiente,
+portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escaneado,
 stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,pendiente,
 closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,pendiente,
 closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,filtrado,marca
@@ -306,8 +306,8 @@ hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 organizer for closet,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 closet organizer,closet organizer,hogar,40.0,False,2026-10-30,filtrado,igual a la semilla
-executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,pendiente,
-leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
+executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,escaneado,
+leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
 golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
 cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,pendiente,
@@ -345,3 +345,63 @@ phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,i
 apple accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
 apple phone accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
 accessories for phone,phone accessories,tecnología,40.0,False,2026-10-30,pendiente,
+3d printed car accessories list,car accessories,auto,8150.0,True,2026-10-31,filtrado,tienda/intención no-producto
+dyson vacuum accessories,car accessories,auto,800.0,False,2026-10-31,filtrado,marca
+dyson accessories,car accessories,auto,500.0,False,2026-10-31,filtrado,marca
+3d printing car accessories,car accessories,auto,350.0,False,2026-10-31,escaneado,
+new car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
+pokemon car accessories,car accessories,auto,200.0,False,2026-10-31,filtrado,licencia de marca
+womens car accessories,car accessories,auto,200.0,False,2026-10-31,pendiente,
+dog car accessories,car accessories,auto,170.0,False,2026-10-31,pendiente,
+red car accessories,car accessories,auto,160.0,False,2026-10-31,pendiente,
+car travel accessories,car accessories,auto,140.0,False,2026-10-31,pendiente,
+car accessories for women,car accessories,auto,120.0,False,2026-10-31,pendiente,
+custom car accessories,car accessories,auto,120.0,False,2026-10-31,pendiente,
+car accessories for men,car accessories,auto,80.0,False,2026-10-31,pendiente,
+car accessories shop,car accessories,auto,80.0,False,2026-10-31,filtrado,tienda/intención no-producto
+car wash accessories,car accessories,auto,70.0,False,2026-10-31,pendiente,
+car interior accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
+pink car accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
+car parts and accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
+car accessories near me,car accessories,auto,50.0,False,2026-10-31,filtrado,tienda/intención no-producto
+car parts,car accessories,auto,50.0,False,2026-10-31,pendiente,
+running shoes,camping gear,outdoor,42200.0,True,2026-10-31,escaneado,
+python tutorial,camping gear,outdoor,40100.0,True,2026-10-31,escaneado,
+mortgage rates today,camping gear,outdoor,38550.0,True,2026-10-31,pendiente,
+laptop,camping gear,outdoor,38350.0,True,2026-10-31,pendiente,
+cloud storage pricing,camping gear,outdoor,36900.0,True,2026-10-31,pendiente,
+home security camera,camping gear,outdoor,36100.0,True,2026-10-31,filtrado,electrónica
+language learning app,camping gear,outdoor,35950.0,True,2026-10-31,filtrado,tienda/intención no-producto
+podcast equipment setup,camping gear,outdoor,35900.0,True,2026-10-31,pendiente,
+vpn service,camping gear,outdoor,35550.0,True,2026-10-31,filtrado,tienda/intención no-producto
+iphone 16 review,camping gear,outdoor,35250.0,True,2026-10-31,filtrado,tienda/intención no-producto
+pet insurance cost,camping gear,outdoor,34450.0,True,2026-10-31,filtrado,tienda/intención no-producto
+moving company quotes,camping gear,outdoor,34300.0,True,2026-10-31,filtrado,tienda/intención no-producto
+headphones wireless,camping gear,outdoor,34050.0,True,2026-10-31,filtrado,electrónica
+learn golang,camping gear,outdoor,34050.0,True,2026-10-31,pendiente,
+healthy meal prep,camping gear,outdoor,33750.0,True,2026-10-31,pendiente,
+electric cars comparison,camping gear,outdoor,32950.0,True,2026-10-31,filtrado,electrónica
+meal delivery service,camping gear,outdoor,32450.0,True,2026-10-31,filtrado,tienda/intención no-producto
+digital marketing course,camping gear,outdoor,32250.0,True,2026-10-31,filtrado,tienda/intención no-producto
+dog training tips,camping gear,outdoor,32250.0,True,2026-10-31,filtrado,tienda/intención no-producto
+electric bike review,camping gear,outdoor,31950.0,True,2026-10-31,filtrado,tienda/intención no-producto
+how to cook pasta,camping gear,outdoor,31750.0,True,2026-10-31,filtrado,tienda/intención no-producto
+flights new york,camping gear,outdoor,31700.0,True,2026-10-31,pendiente,
+home insurance quotes,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tienda/intención no-producto
+coworking space near me,camping gear,outdoor,31150.0,True,2026-10-31,filtrado,tienda/intención no-producto
+hamilton beach personal blender with travel lid,beach accessories,verano,7350.0,True,2026-10-31,filtrado,demasiado largo
+dog beach accessories,beach accessories,verano,130.0,False,2026-10-31,pendiente,
+beach house accessories,beach accessories,verano,80.0,False,2026-10-31,pendiente,
+baby beach accessories,beach accessories,verano,60.0,False,2026-10-31,pendiente,
+beach accessories near me,beach accessories,verano,60.0,False,2026-10-31,filtrado,tienda/intención no-producto
+how to winterize garden,garden tools,jardín,16750.0,True,2026-10-31,filtrado,tienda/intención no-producto
+garden pest identification,garden tools,jardín,16350.0,True,2026-10-31,escaneado,
+how to start a vegetable garden,garden tools,jardín,14650.0,True,2026-10-31,filtrado,tienda/intención no-producto
+office chairs,garden tools,jardín,6550.0,True,2026-10-31,escaneado,
+learn programming,garden tools,jardín,5500.0,True,2026-10-31,pendiente,
+garden tools set,garden tools,jardín,250.0,False,2026-10-31,pendiente,
+giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,pendiente,
+cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,pendiente,
+giraffe tools,garden tools,jardín,110.0,False,2026-10-31,pendiente,
+garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
+garden tools,garden tools,jardín,60.0,False,2026-10-31,filtrado,igual a la semilla
