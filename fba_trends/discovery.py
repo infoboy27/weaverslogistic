@@ -15,6 +15,7 @@ from datetime import date, timedelta
 import pandas as pd
 
 from .collect import TrendsFetchError
+from . import safe_io
 from .config import DATA_DIR
 
 SEEDS_PATH = DATA_DIR / "seeds.csv"
@@ -119,7 +120,7 @@ def load() -> pd.DataFrame:
 
 
 def save(df: pd.DataFrame) -> None:
-    df[COLUMNS].to_csv(DISCOVERY_PATH, index=False)
+    safe_io.write_csv(df[COLUMNS], DISCOVERY_PATH)
 
 
 def add_rising(df: pd.DataFrame, seed: str, categoria: str, rising: pd.DataFrame,

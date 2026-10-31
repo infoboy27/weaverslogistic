@@ -9,6 +9,7 @@ from datetime import date
 import pandas as pd
 
 from fba_trends import collect
+from fba_trends import safe_io
 from fba_trends.config import DATA_DIR, load_config
 from fba_trends.trends import CONTROL_KEYWORDS, adjust_for_market, analyze, anomalous_weeks
 
@@ -41,12 +42,12 @@ def main(with_volume: bool = False, max_volume_terms: int = 8, verbose: bool = T
             try:
                 vol = collect.relative_volume(missing)
                 cache = pd.concat([cache, pd.DataFrame({"keyword": list(vol), "volumen": list(vol.values())})])
-                cache.to_csv(VOLUME_PATH, index=False)
+                safe_io.write_csv(cache, VOLUME_PATH)
             except collect.TrendsFetchError as e:
                 print(f"Volumen no actualizado: {e}")
     df["volumen_vs_yoga_mat_pct"] = df["keyword"].map(dict(zip(cache["keyword"], cache["volumen"])))
 
-    df.to_csv(DATA_DIR / "ranking.csv", index=False)
+    safe_io.write_csv(df, DATA_DIR / "ranking.csv")
     cols = [c for c in ["keyword", "categoria", "clasificacion", "trend_score", "crec_anual_pct", "crec_vs_mercado_pct", "yoy_pct", "momentum_pct",
                         "mes_pico", "pedir_antes_de", "volumen_vs_yoga_mat_pct", "finalista"] if c in df]
     if verbose:

@@ -38,9 +38,8 @@ def load_settings(path: Path = SETTINGS_PATH) -> dict:
 
 
 def save_settings(settings: dict, path: Path = SETTINGS_PATH) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        yaml.safe_dump(settings, f, allow_unicode=True, sort_keys=False)
+    from .safe_io import write_text
+    write_text(path, yaml.safe_dump(settings, allow_unicode=True, sort_keys=False))
 
 
 def _get(cfg: dict, keys: tuple):

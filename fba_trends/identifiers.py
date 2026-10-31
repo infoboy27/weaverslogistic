@@ -9,7 +9,7 @@ from datetime import date
 
 import pandas as pd
 
-from . import keepa
+from . import keepa, safe_io
 from .config import DATA_DIR
 
 PATH = DATA_DIR / "identifiers.csv"
@@ -47,7 +47,7 @@ def save(rows: list[dict]) -> pd.DataFrame:
         return current
     new = pd.DataFrame(rows).reindex(columns=COLUMNS).fillna("")
     merged = pd.concat([current[~current["asin"].isin(new["asin"])], new], ignore_index=True)
-    merged.to_csv(PATH, index=False)
+    safe_io.write_csv(merged, PATH)
     return merged
 
 

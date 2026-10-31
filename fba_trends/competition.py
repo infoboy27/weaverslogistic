@@ -15,6 +15,7 @@ from datetime import date
 
 import pandas as pd
 
+from . import safe_io
 from .config import DATA_DIR
 
 COMPETITION_PATH = DATA_DIR / "competition.csv"
@@ -92,7 +93,7 @@ def save_keyword(df_kw: pd.DataFrame) -> None:
     """Replace the snapshot rows for the keyword(s) in df_kw."""
     current = load()
     current = current[~current["keyword"].isin(df_kw["keyword"].unique())]
-    pd.concat([current, df_kw], ignore_index=True).to_csv(COMPETITION_PATH, index=False)
+    safe_io.write_csv(pd.concat([current, df_kw], ignore_index=True), COMPETITION_PATH)
 
 
 def summarize(df: pd.DataFrame) -> dict:

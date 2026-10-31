@@ -13,6 +13,7 @@ from datetime import date
 import pandas as pd
 
 from fba_trends import collect, competition, criteria, discovery
+from fba_trends import safe_io
 from fba_trends.config import DATA_DIR, load_config
 from scripts import rank_keywords
 
@@ -75,7 +76,7 @@ def scan_phase(table: pd.DataFrame, run: dict, n_scans: int) -> pd.DataFrame:
         if term not in set(kw["keyword"]):
             note = f"seed: {table.loc[row, 'seed']}; +{table.loc[row, 'subida_pct']:.0f}%"
             kw.loc[len(kw)] = [term, f"descubierto: {table.loc[row, 'categoria']}", note]
-            kw.to_csv(KEYWORDS_PATH, index=False)
+            safe_io.write_csv(kw, KEYWORDS_PATH)
         run["escaneados"] += 1
         print(f"escaneado '{term}'")
         wait()
@@ -124,7 +125,7 @@ def main(n_seeds: int = 4, n_scans: int = 10) -> dict:
     # Re-rank; measure volume for at most 4 new finalists (one request) if not blocked
     rank_keywords.main(with_volume=not run["bloqueado"], max_volume_terms=4, verbose=False)
     state["runs"].append(run)
-    STATE_PATH.write_text(json.dumps(state, indent=1, ensure_ascii=False), encoding="utf-8")
+    safe_io.write_text(STATE_PATH, json.dumps(state, indent=1, ensure_ascii=False))
     print(f"Resumen: {run}")
     return run
 

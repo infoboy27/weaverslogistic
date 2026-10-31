@@ -11,6 +11,7 @@ import time
 
 import pandas as pd
 
+from . import safe_io
 from .config import DATA_DIR
 
 TRENDS_DIR = DATA_DIR / "trends"
@@ -33,7 +34,7 @@ def slug(keyword: str) -> str:
 def save(keyword: str, s: pd.Series, long: bool = False) -> None:
     folder = LONG_DIR if long else TRENDS_DIR
     folder.mkdir(parents=True, exist_ok=True)
-    s.rename(keyword).to_frame().to_csv(folder / f"{slug(keyword)}.csv", index_label="fecha")
+    safe_io.write_csv(s.rename(keyword).to_frame(), folder / f"{slug(keyword)}.csv", index=True, index_label="fecha")
 
 
 def load(keyword: str, long: bool = False) -> pd.Series | None:

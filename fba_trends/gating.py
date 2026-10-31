@@ -16,7 +16,7 @@ from datetime import date
 
 import pandas as pd
 
-from . import discovery, identifiers
+from . import discovery, identifiers, safe_io
 from .config import DATA_DIR
 
 RESTRICTIONS_PATH = DATA_DIR / "restrictions.csv"
@@ -198,6 +198,6 @@ def verify(asins: list[str], client, seller_id: str, *, pause: float = 0.25, max
         time.sleep(pause)  # restrictions API: 5 requests/second
     if new:
         merged = pd.concat([current[~current["asin"].isin([n["asin"] for n in new])], pd.DataFrame(new)])
-        merged[RESTRICTION_COLUMNS].to_csv(RESTRICTIONS_PATH, index=False)
+        safe_io.write_csv(merged[RESTRICTION_COLUMNS], RESTRICTIONS_PATH)
         return merged
     return current
