@@ -108,3 +108,10 @@ def test_next_to_scan_caps_terms_per_seed():
                        "descubierto": "2026-10-30", "estado": "pendiente", "motivo": ""} for a, b, c in rows])
     got = d.next_to_scan(t, 10, priority=["fecha term"])
     assert got == ["fecha term", "mini resistance bands", "long resistance bands", "donut dog bed"]
+
+
+def test_learning_intent_is_not_a_product():
+    # Regression: the first server-side scan (2026-10-31) scanned these as if they were products
+    for term in ["python tutorial", "learn programming", "garden pest identification"]:
+        assert discovery.junk_reason(term, "") == "tienda/intención no-producto", term
+    assert discovery.junk_reason("portable closet organizer", "") is None

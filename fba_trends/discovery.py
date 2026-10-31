@@ -35,6 +35,9 @@ JUNK_WORDS = {
     "classes", "academy", "services", "service", "appointment", "prices", "cost", "projects", "corner",
     "nearby", "shop", "shops", "business", "rental", "rent",
     "nyt", "crossword", "clue", "fashioned",  # crossword clues ("kitchen gadget brand nyt")
+    # learning / information intent ("python tutorial", "garden pest identification"), not products
+    "tutorial", "tutorials", "learn", "learning", "programming", "python", "identification", "identify",
+    "guide", "definition", "certification", "degree", "salary", "pdf", "online",
 }
 # US state abbreviations: "corner pet grooming greenville sc" is a local business search
 US_STATES = {
