@@ -281,8 +281,6 @@ def run_decision(budget: float, max_products: int, mult: float = 1.0, prioridad:
     for _, r in cands.iterrows():
         f, fl = pd.to_numeric(r.get("costo_fabrica"), errors="coerce"), pd.to_numeric(r.get("flete_unidad"), errors="coerce")
         moq, lead = pd.to_numeric(r.get("moq"), errors="coerce"), pd.to_numeric(r.get("dias_entrega"), errors="coerce")
-        if str(r.get("nombre", "")).startswith("EJEMPLO"):
-            continue
         supplier[r["keyword"]] = {
             "real_cost": float(f) + (0.0 if pd.isna(fl) else float(fl)) if pd.notna(f) else None,
             "moq": float(moq) if pd.notna(moq) else None, "lead_days": float(lead) if pd.notna(lead) else None,
@@ -955,7 +953,6 @@ def page_assumptions():
     st.write("Estos valores son **aproximaciones** y deben verificarse antes de comprar inventario:")
     st.dataframe(brand.pretty(pd.DataFrame(estimated_assumptions(cfg))), hide_index=True, width="stretch")
     st.write(
-        "- Las filas de candidatos marcadas *EJEMPLO FICTICIO* no son datos reales.\n"
         "- La tarifa FBA exacta por producto sale del **FBA Revenue Calculator** de Amazon.\n"
         "- El costo de fábrica y el flete deben venir de cotizaciones reales (proveedor + forwarder)."
     )

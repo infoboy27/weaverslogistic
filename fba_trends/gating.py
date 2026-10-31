@@ -97,7 +97,9 @@ def products(ranking: pd.DataFrame, universe: pd.DataFrame, competition: pd.Data
         for _, r in ranking.iterrows():
             k = str(r["keyword"])
             cat = str(r.get("categoria") or "").replace("descubierto: ", "")
-            if cat == "control" or discovery.junk_reason(k, "") in NOT_PRODUCT:
+            # control = market baseline; "ejemplo:" = real series kept only to illustrate patterns
+            if (cat == "control" or str(r.get("notas") or "").startswith("ejemplo:")
+                    or discovery.junk_reason(k, "") in NOT_PRODUCT):
                 continue
             row = rows.setdefault(k, {"producto": k, "sector": cat, "subcategoria": "", "precio_ref": None,
                                       "asins": [], "titulos": ""})

@@ -43,7 +43,7 @@ Log: `data/discovery_log.txt`. Google Shopping (gprop=froogle) se probó y no de
 ## Archivos
 
 - `config.yaml`: tarifas, supuestos, tiempos de entrega y reglas de presupuesto. Lo marcado `estimado: true` **no es un dato verificado**.
-- `data/candidates.csv`: tus productos candidatos. Las filas "EJEMPLO FICTICIO" hay que reemplazarlas.
+- `data/candidates.csv`: tus productos candidatos (precio real de Amazon; costo pendiente hasta tener cotización).
 - `data/trends/`: series de Google Trends guardadas.
 - `fba_trends/`: `trends.py` (clasificación), `profit.py` (rentabilidad), `budget.py` (presupuesto), `scoring.py`, `collect.py`.
 
