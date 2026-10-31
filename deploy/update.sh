@@ -56,8 +56,15 @@ smoke() {
     sleep 3
   done
   [ "$s" = healthy ] || return 1
-  [ "$(curl -fsS -m 10 "https://$domain/_stcore/health")" = ok ] || return 1
-  curl -fsSI -m 10 "https://$domain/" | grep -qi '^strict-transport-security' || return 1
+  # Traefik needs a few seconds to route to the new container (404 meanwhile): retry up to ~60 s.
+  for _ in $(seq 1 12); do
+    if [ "$(curl -fsS -m 10 "https://$domain/_stcore/health" 2>/dev/null)" = ok ] \
+       && curl -fsSI -m 10 "https://$domain/" 2>/dev/null | grep -qi '^strict-transport-security'; then
+      return 0
+    fi
+    sleep 5
+  done
+  return 1
 }
 
 if smoke; then
