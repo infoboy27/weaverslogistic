@@ -259,6 +259,7 @@ LABELS = {
     "confianza": "Confianza", "falta_verificar": "Falta verificar", "opcion": "Opción", "invertido": "Invertido $",
     "reserva": "Reserva $", "ganancia_horizonte": "Ganancia horizonte $", "ganancia_ajustada": "Ganancia ajustada $",
     "recupera_inversion_meses": "Recupera inversión (meses)",
+    "upc": "UPC", "asins": "ASINs ref.", "amazon": "Amazon", "evidencia": "Evidencia",
 }
 
 

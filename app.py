@@ -1054,12 +1054,13 @@ def page_settings():
 # ---------------------------------------------------------------- Vender sin permiso (ungated)
 def page_ungated():
     import os
-    from fba_trends import gating
+    from fba_trends import gating, identifiers
+    from fba_trends.keepa import KeepaError
     from fba_trends.sp_api import SPAPIClient, SPAPIError, configured
     page_title("Vender sin permiso", "Productos que Amazon US no pide aprobar para vender")
     ranking = pd.read_csv(DATA_DIR / "ranking.csv") if (DATA_DIR / "ranking.csv").exists() else pd.DataFrame()
     prods = gating.products(ranking, UNIVERSE, competition.load())
-    rep = gating.report(prods, gating.load_restrictions(), today)
+    rep = gating.report(prods, gating.load_restrictions(), today, identifiers.load())
     if rep.empty:
         st.info("Todavía no hay productos analizados.")
         return
@@ -1071,21 +1072,67 @@ def page_ungated():
     k3.metric("Verificados con Amazon", int(rep["evidencia"].str.startswith(gating.VERIFICADO).sum()))
     k4.metric("Requieren aprobación", int((rep["estado"] == gating.APROBACION).sum()))
 
-    show = st.segmented_control("Mostrar", [gating.LIBRE, gating.REVISAR, gating.APROBACION, "Todos"],
-                                default=gating.LIBRE, key="ungated_filter")
-    view = rep if show in (None, "Todos") else rep[rep["estado"] == show]
-    sectors = sorted(x for x in view["sector"].dropna().unique() if x)
-    pick = st.multiselect("Sector", sectors, key="ungated_sectors", placeholder="Todos los sectores")
-    if pick:
-        view = view[view["sector"].isin(pick)]
-    st.dataframe(brand.pretty(view), hide_index=True, width="stretch", column_config={
-        "Producto": st.column_config.TextColumn(pinned=True),  # stays visible while scrolling sideways on phones
-        "Precio ref. $": st.column_config.NumberColumn(format="$%.2f"),
-        "Score tendencia": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.0f"),
-    })
-    st.download_button("Descargar CSV", view.to_csv(index=False).encode("utf-8"), icon=":material/download:",
-                       file_name=f"productos_{(show or 'todos').lower().replace(' ', '_')}_{today:%Y-%m-%d}.csv",
-                       mime="text/csv")
+    q = st.text_input("Buscar", placeholder="Producto, ASIN o UPC", key="ungated_q",
+                      help="Busca en todos los estados. Un UPC/EAN que no esté en la lista se puede consultar en Amazon.")
+    if q.strip():
+        show = "busqueda"
+        view = rep[[identifiers.matches(q, r.producto, r.asins, r.upc) for r in rep.itertuples()]]
+    else:
+        show = st.segmented_control("Mostrar", [gating.LIBRE, gating.REVISAR, gating.APROBACION, "Todos"],
+                                    default=gating.LIBRE, key="ungated_filter")
+        view = rep if show in (None, "Todos") else rep[rep["estado"] == show]
+        sectors = sorted(x for x in view["sector"].dropna().unique() if x)
+        pick = st.multiselect("Sector", sectors, key="ungated_sectors", placeholder="Todos los sectores")
+        if pick:
+            view = view[view["sector"].isin(pick)]
+    first_asin = view["asins"].fillna("").str.split().str[0]
+    view = view.assign(amazon=first_asin.map(lambda a: f"https://www.amazon.com/dp/{a}" if isinstance(a, str) else None))
+    if view.empty and q.strip():
+        st.info("Nada en la lista coincide con esa búsqueda.")
+    else:
+        st.dataframe(brand.pretty(view), hide_index=True, width="stretch", column_config={
+            "Producto": st.column_config.TextColumn(pinned=True),  # stays visible while scrolling sideways on phones
+            "Amazon": st.column_config.LinkColumn(display_text="Ver"),
+            "Precio ref. $": st.column_config.NumberColumn(format="$%.2f"),
+            "Score tendencia": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.0f"),
+        })
+        st.download_button("Descargar CSV", view.to_csv(index=False).encode("utf-8"), icon=":material/download:",
+                           file_name=f"productos_{(show or 'todos').lower().replace(' ', '_')}_{today:%Y-%m-%d}.csv",
+                           mime="text/csv")
+
+    if identifiers.looks_like_code(q):
+        st.markdown(brand.pill("Consultar este código en Amazon"), unsafe_allow_html=True)
+        if not identifiers.source():
+            st.caption("Para consultar un UPC/EAN en Amazon hace falta KEEPA_API_KEY o SP-API en el servidor.")
+        elif st.button(f"Buscar {identifiers.digits(q)} en Amazon", icon=":material/barcode_scanner:"):
+            try:
+                found = identifiers.lookup(q)
+            except (identifiers.NoSource, KeepaError, SPAPIError) as e:
+                st.error(str(e))
+            else:
+                if not found:
+                    st.info("Amazon no tiene ese código listado: puedes crear el listado tú.")
+                for f in found:
+                    status, reason = gating.classify(f["titulo"], today)
+                    st.markdown(f"**[{f['titulo'] or f['asin']}](https://www.amazon.com/dp/{f['asin']})** · "
+                                f"ASIN {f['asin']} · **{status}** ({reason.lower()}, estimado por título)")
+
+    st.markdown(brand.pill("Códigos UPC"), unsafe_allow_html=True)
+    src = identifiers.source()
+    with_upc = int((rep["upc"].fillna("") != "").sum())
+    st.caption(f"{with_upc} de {len(rep)} productos tienen UPC. Es el código de barras de los listados de referencia "
+               "(los primeros resultados en Amazon), útil para buscarlos en Seller Central o con proveedores.")
+    if not src:
+        st.caption("Para traerlos hace falta KEEPA_API_KEY o las credenciales SP-API en el servidor.")
+    else:
+        ref = [a for s_ in rep["asins"].dropna() for a in s_.split()]
+        if st.button(f"Obtener UPC de {len(set(ref))} ASIN ({src})", icon=":material/barcode:"):
+            bar = st.progress(0.0)
+            try:
+                identifiers.fetch(ref, progress=lambda i, n: bar.progress(i / n, f"{i}/{n}"))
+                st.rerun()
+            except (identifiers.NoSource, KeepaError, SPAPIError) as e:
+                st.error(str(e))
 
     st.markdown(brand.pill("Verificar con tu cuenta de Amazon"), unsafe_allow_html=True)
     seller = os.getenv("SP_API_SELLER_ID", "")

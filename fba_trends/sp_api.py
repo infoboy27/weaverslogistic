@@ -72,6 +72,31 @@ class SPAPIClient:
         except (requests.RequestException, ValueError) as exc:
             raise SPAPIError("Amazon rechazó la consulta. Revisa roles, cuota y autorización SP-API.") from exc
 
+    def _catalog(self, path, params):
+        try:
+            response = self.session.get(
+                f"{NA_ENDPOINT}/catalog/2022-04-01/{path}",
+                params={"marketplaceIds": US_MARKETPLACE, **params},
+                headers={"x-amz-access-token": self.access_token(), "accept": "application/json"},
+                timeout=20,
+            )
+            response.raise_for_status()
+            return response.json()
+        except (requests.RequestException, ValueError) as exc:
+            raise SPAPIError("Amazon rechazó la consulta. Revisa roles, cuota y autorización SP-API.") from exc
+
+    def get_item(self, asin):
+        """One ASIN with its identifiers (UPC/EAN) and summary."""
+        asin = str(asin).strip().upper()
+        if len(asin) != 10 or not asin.isalnum():
+            raise ValueError(f"ASIN inválido: {asin!r}")
+        return self._catalog(f"items/{asin}", {"includedData": "identifiers,summaries"})
+
+    def find_by_code(self, code, code_type="UPC"):
+        """ASINs listed under a UPC/EAN."""
+        return self._catalog("items", {"identifiers": code, "identifiersType": code_type,
+                                       "includedData": "identifiers,summaries"}).get("items", [])
+
     def listing_restrictions(self, asin, seller_id, *, condition="new_new"):
         """Whether *this seller* may list the ASIN (Listings Restrictions API, role Product Listing).
 

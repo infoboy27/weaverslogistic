@@ -16,7 +16,7 @@ from datetime import date
 
 import pandas as pd
 
-from . import discovery
+from . import discovery, identifiers
 from .config import DATA_DIR
 
 RESTRICTIONS_PATH = DATA_DIR / "restrictions.csv"
@@ -121,9 +121,12 @@ def load_restrictions() -> pd.DataFrame:
     return pd.DataFrame(columns=RESTRICTION_COLUMNS)
 
 
-def report(prods: pd.DataFrame, restrictions: pd.DataFrame | None = None, today: date | None = None) -> pd.DataFrame:
-    """Status per product; SP-API answers on its reference ASINs override the rules."""
-    cols = ["producto", "estado", "motivo", "evidencia", "sector", "subcategoria", "precio_ref", "tendencia",
+def report(prods: pd.DataFrame, restrictions: pd.DataFrame | None = None, today: date | None = None,
+           ids: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Status per product; SP-API answers on its reference ASINs override the rules.
+
+    ids (data/identifiers.csv) adds the UPC of the reference ASINs."""
+    cols = ["producto", "estado", "upc", "motivo", "evidencia", "sector", "subcategoria", "precio_ref", "tendencia",
             "trend_score", "asins"]
     if prods is None or prods.empty:
         return pd.DataFrame(columns=cols)
@@ -147,7 +150,8 @@ def report(prods: pd.DataFrame, restrictions: pd.DataFrame | None = None, today:
             elif status != APROBACION or "brand" not in reason:
                 status, reason = LIBRE, "Amazon no pide aprobación a tu cuenta para estos ASIN"
         out.append({**{c: p.get(c) for c in cols if c in p}, "producto": p["producto"], "estado": status,
-                    "motivo": reason, "evidencia": evidence, "asins": " ".join(asins)})
+                    "motivo": reason, "evidencia": evidence, "asins": " ".join(asins),
+                    "upc": identifiers.codes_for(asins, ids)})
     order = {LIBRE: 0, REVISAR: 1, APROBACION: 2}
     df = pd.DataFrame(out).reindex(columns=cols)
     df["_o"] = df["estado"].map(order)

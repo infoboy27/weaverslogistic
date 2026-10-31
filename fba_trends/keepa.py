@@ -127,6 +127,11 @@ def fetch_products(asins: list[str], max_age_hours: float = 24, domain: int = DO
     return {"products": out, "tokens_left": tokens_left, "consultados": len(stale)}
 
 
+def find_by_code(code: str, domain: int = DOMAIN_US) -> list[dict]:
+    """Products listed under a UPC/EAN (Keepa `code` lookup, no history: 1 token per product)."""
+    return _get("product", {"domain": domain, "code": code}).get("products") or []
+
+
 def search_asins(term: str, domain: int = DOMAIN_US) -> list[str]:
     """Top results for a search term (Keepa product search; costs extra tokens per page)."""
     data = _get("search", {"domain": domain, "type": "product", "term": term, "page": 0})

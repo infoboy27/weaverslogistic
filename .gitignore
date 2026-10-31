@@ -24,5 +24,6 @@ data/examples_log.txt
 # Usuarios (hashes) y respuestas SP-API propias del servidor
 secrets/
 data/restrictions.csv
+data/identifiers.csv
 data/settings.yaml
 .gstack/
