@@ -2,8 +2,10 @@
 
 Modes (WEAVERS_AUTH_MODE):
 - password (default): username + password from a users file (WEAVERS_USERS_FILE), one user per line:
-  ``usuario scrypt$16384$8$1$<salt_b64>$<hash_b64>``. Create lines with ``python -m scripts.add_user``.
-  The session survives a browser refresh through an HMAC-signed cookie (WEAVERS_SESSION_SECRET).
+  ``usuario scrypt$16384$8$1$<salt_b64>$<hash_b64> [totp:<base32>]``. Create lines with
+  ``python -m scripts.add_user``; the optional third field turns on 2FA (TOTP, RFC 6238) for that user.
+  The session survives a browser refresh through an HMAC-signed cookie (WEAVERS_SESSION_SECRET) that
+  carries the user's session epoch (audit.py): "cerrar sesión en todos los dispositivos" bumps it.
 - oidc: Streamlit st.login + allowlist WEAVERS_ALLOWED_EMAILS ([auth] in .streamlit/secrets.toml).
 - disabled: only with WEAVERS_ALLOW_INSECURE_LOCAL=1, for local tests.
 Anything else (or missing users/secret) denies access.
@@ -19,6 +21,8 @@ import time
 from pathlib import Path
 
 import streamlit as st
+
+from . import audit
 
 COOKIE = "weavers_session"
 SESSION_TTL = 12 * 3600
@@ -54,19 +58,44 @@ def verify_password(password: str, stored: str) -> bool:
 _DUMMY_HASH = hash_password(secrets.token_urlsafe(16))  # equal timing for unknown users
 
 
-def load_users(path: str | os.PathLike | None = None) -> dict[str, str]:
+def load_accounts(path: str | os.PathLike | None = None) -> dict[str, dict]:
+    """{usuario: {"hash": ..., "totp": base32 secret or None}}"""
     path = Path(path or os.getenv("WEAVERS_USERS_FILE", "/run/secrets/weavers_users"))
-    users = {}
+    accounts = {}
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
     except OSError:
         return {}
     for line in lines:
-        line = line.strip()
-        if line and not line.startswith("#") and len(line.split()) == 2:
-            name, stored = line.split()
-            users[name.casefold()] = stored
-    return users
+        parts = line.split()
+        if not parts or parts[0].startswith("#") or len(parts) not in (2, 3):
+            continue
+        totp = parts[2][5:] if len(parts) == 3 and parts[2].startswith("totp:") else None
+        accounts[parts[0].casefold()] = {"hash": parts[1], "totp": totp}
+    return accounts
+
+
+def load_users(path: str | os.PathLike | None = None) -> dict[str, str]:
+    return {name: a["hash"] for name, a in load_accounts(path).items()}
+
+
+# ---------------------------------------------------------------- TOTP (RFC 6238, SHA-1, 30 s, 6 digits)
+def totp_code(secret_b32: str, at: float, step: int = 30) -> str:
+    key = base64.b32decode(secret_b32.upper() + "=" * (-len(secret_b32) % 8))
+    digest = hmac.new(key, int(at // step).to_bytes(8, "big"), hashlib.sha1).digest()
+    offset = digest[-1] & 0x0F
+    return f"{(int.from_bytes(digest[offset:offset + 4], 'big') & 0x7FFFFFFF) % 1_000_000:06d}"
+
+
+def verify_totp(secret_b32: str, code: str, now: float | None = None, window: int = 1) -> bool:
+    now = time.time() if now is None else now
+    code = "".join(ch for ch in str(code) if ch.isdigit())
+    if len(code) != 6:
+        return False
+    try:
+        return any(hmac.compare_digest(totp_code(secret_b32, now + i * 30), code) for i in range(-window, window + 1))
+    except (ValueError, TypeError):
+        return False
 
 
 # ---------------------------------------------------------------- brute-force throttle
@@ -99,14 +128,16 @@ def _key(secret: str, stored_hash: str) -> bytes:
     return hashlib.sha256(f"{secret}\x00{stored_hash}".encode()).digest()
 
 
-def make_token(user: str, secret: str, stored_hash: str, now: float | None = None) -> str:
+def make_token(user: str, secret: str, stored_hash: str, now: float | None = None, epoch: int = 0) -> str:
     now = time.time() if now is None else now
-    body = base64.urlsafe_b64encode(json.dumps({"u": user, "e": int(now + SESSION_TTL)}).encode()).decode()
+    body = base64.urlsafe_b64encode(json.dumps({"u": user, "e": int(now + SESSION_TTL), "v": epoch}).encode()).decode()
     sig = hmac.new(_key(secret, stored_hash), body.encode(), hashlib.sha256).hexdigest()
     return f"{body}.{sig}"
 
 
-def read_token(token: str, secret: str, users: dict[str, str], now: float | None = None) -> str | None:
+def read_token(token: str, secret: str, users: dict[str, str], now: float | None = None,
+               epoch_of=None) -> str | None:
+    """User name if the cookie is valid, unexpired and of the user's current session epoch."""
     now = time.time() if now is None else now
     try:
         body, sig = token.split(".")
@@ -116,7 +147,11 @@ def read_token(token: str, secret: str, users: dict[str, str], now: float | None
         if not stored or now > float(data["e"]):
             return None
         expected = hmac.new(_key(secret, stored), body.encode(), hashlib.sha256).hexdigest()
-        return user if hmac.compare_digest(sig, expected) else None
+        if not hmac.compare_digest(sig, expected):
+            return None
+        if epoch_of is not None and int(data.get("v", 0)) != epoch_of(user):
+            return None  # "cerrar sesión en todos los dispositivos" happened after this cookie
+        return user
     except (ValueError, KeyError, TypeError):
         return None
 
@@ -148,7 +183,8 @@ def require_login() -> None:
 
 
 def _require_password() -> None:
-    users = load_users()
+    accounts = load_accounts()
+    users = {name: a["hash"] for name, a in accounts.items()}
     secret = os.getenv("WEAVERS_SESSION_SECRET", "")
     if not users or len(secret) < 32:
         st.error("Autenticación sin configurar (usuarios o secreto de sesión). Acceso denegado.")
@@ -160,30 +196,41 @@ def _require_password() -> None:
         user = ss["auth_user"] = None
     if not user and not ss.get("auth_logged_out"):
         token = st.context.cookies.get(COOKIE)
-        user = read_token(token, secret, users) if token else None
+        user = read_token(token, secret, users, epoch_of=audit.epoch) if token else None
         ss["auth_user"] = user
 
     if user:
         if ss.pop("auth_set_cookie", False):
-            _set_cookie(make_token(user, secret, users[user]), SESSION_TTL)
+            _set_cookie(make_token(user, secret, users[user], epoch=audit.epoch(user)), SESSION_TTL)
         with st.sidebar:
             st.caption(f"Sesión: {user}")
-            if st.button("Cerrar sesión", key="weavers_logout"):
+            out, out_all = st.columns(2)
+            if out.button("Cerrar sesión", key="weavers_logout", width="stretch"):
+                audit.record(user, "logout", _client_ip())
+                ss["auth_user"], ss["auth_logged_out"] = None, True
+                st.rerun()
+            if out_all.button("En todos", key="weavers_logout_all", width="stretch",
+                              help="Cierra tu sesión en todos los navegadores y dispositivos"):
+                audit.bump_epoch(user)
+                audit.record(user, "logout_all", _client_ip())
                 ss["auth_user"], ss["auth_logged_out"] = None, True
                 st.rerun()
         return
 
     if ss.get("auth_logged_out"):
         _set_cookie("", 0)
-    _login_form(users, secret)
+    _login_form(accounts)
     st.stop()
 
 
-def _login_form(users: dict[str, str], secret: str) -> None:
+def _login_form(accounts: dict[str, dict]) -> None:
     from . import brand
+    ss = st.session_state
     with st.container(key="wv_login"):  # .st-key-wv_login: centered card, see brand.css()
         st.markdown(f'<div class="wv-login-logo"><img src="{brand.LOGO_URL}" alt="Weavers"></div>'
                     '<div class="wv-login-sub">Panel FBA · acceso privado</div>', unsafe_allow_html=True)
+        if ss.get("auth_pending"):  # password ok, waiting for the 2FA code
+            return _totp_step(accounts)
         with st.form("login"):
             name = st.text_input("Usuario", autocomplete="username")
             pwd = st.text_input("Contraseña", type="password", autocomplete="current-password")
@@ -193,17 +240,52 @@ def _login_form(users: dict[str, str], secret: str) -> None:
         name = name.strip().casefold()
         keys = (f"u:{name}", f"ip:{_client_ip()}")
         if is_locked(*keys):
+            audit.record(name, "locked", _client_ip())
             st.error("Demasiados intentos. Espera 15 minutos.")
             return
-        stored = users.get(name)
-        ok = verify_password(pwd, stored or _DUMMY_HASH) and stored is not None
+        account = accounts.get(name)
+        ok = verify_password(pwd, account["hash"] if account else _DUMMY_HASH) and account is not None
         if not ok:
             record_failure(*keys)
+            audit.record(name, "login_fail", _client_ip())
             st.error("Usuario o contraseña incorrectos.")
             return
+        if account["totp"]:
+            ss["auth_pending"] = name
+            st.rerun()
         clear_failures(*keys)
-        st.session_state.update(auth_user=name, auth_logged_out=False, auth_set_cookie=True)
+        audit.record(name, "login_ok", _client_ip())
+        ss.update(auth_user=name, auth_logged_out=False, auth_set_cookie=True)
         st.rerun()
+
+
+def _totp_step(accounts: dict[str, dict]) -> None:
+    ss = st.session_state
+    name = ss["auth_pending"]
+    with st.form("totp"):
+        st.caption(f"Verificación en dos pasos para {name}")
+        code = st.text_input("Código de 6 dígitos", max_chars=6, autocomplete="one-time-code")
+        sent = st.form_submit_button("Verificar", type="primary", width="stretch")
+    if st.button("Volver", key="totp_back"):
+        ss.pop("auth_pending", None)
+        st.rerun()
+    if not sent:
+        return
+    keys = (f"u:{name}", f"ip:{_client_ip()}")
+    account = accounts.get(name)
+    if is_locked(*keys) or not account or not account["totp"]:
+        st.error("Demasiados intentos. Espera 15 minutos.")
+        return
+    if not verify_totp(account["totp"], code):
+        record_failure(*keys)
+        audit.record(name, "totp_fail", _client_ip())
+        st.error("Código incorrecto.")
+        return
+    clear_failures(*keys)
+    audit.record(name, "login_ok", _client_ip())
+    ss.pop("auth_pending", None)
+    ss.update(auth_user=name, auth_logged_out=False, auth_set_cookie=True)
+    st.rerun()
 
 
 def _require_oidc() -> None:

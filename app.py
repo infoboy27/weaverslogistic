@@ -12,7 +12,7 @@ import json
 from datetime import date
 
 from fba_trends import (alerts, brand, charts, collect, competition, criteria, decision, discovery, keepa,
-                        navidad, patterns, seasons)
+                        navidad, patterns, safe_io, seasons)
 from fba_trends import calendar as cal
 from fba_trends.budget import Candidate, allocate
 from fba_trends.config import (DATA_DIR, estimated_assumptions, load_config, load_settings, save_settings,
@@ -41,8 +41,22 @@ def num(v, default=None):
         return default
 
 
-@st.cache_data(show_spinner=False, ttl=600)
+def data_stamp() -> float:
+    """Newest change in the trend series: the heavy tables below are recomputed only when it moves."""
+    folders = [DATA_DIR / "trends", DATA_DIR / "trends_long"]
+    return max((f.stat().st_mtime for d in folders if d.exists() for f in d.glob("*.csv")), default=0.0)
+
+
 def trend_table(keywords: tuple[str, ...]) -> pd.DataFrame:
+    return _trend_table(keywords, data_stamp())
+
+
+def pattern_table(keywords: tuple[str, ...]):
+    return _pattern_table(keywords, data_stamp())
+
+
+@st.cache_data(show_spinner=False, max_entries=8)
+def _trend_table(keywords: tuple[str, ...], stamp: float) -> pd.DataFrame:
     rows = []
     glitch = anomalous_weeks(collect.load, collect.cached_keywords())
     for k in keywords:
@@ -52,8 +66,8 @@ def trend_table(keywords: tuple[str, ...]) -> pd.DataFrame:
     return adjust_for_market(pd.DataFrame(rows)) if rows else pd.DataFrame(rows)
 
 
-@st.cache_data(show_spinner=False, ttl=600)
-def pattern_table(keywords: tuple[str, ...]):
+@st.cache_data(show_spinner=False, max_entries=8)
+def _pattern_table(keywords: tuple[str, ...], stamp: float):
     glitch = anomalous_weeks(collect.load, list(keywords))
     rows = [{"keyword": k, **patterns.classify(collect.load(k), glitch, collect.load(k, long=True))}
             for k in keywords if collect.load(k) is not None]
@@ -528,7 +542,7 @@ def page_funnel():
         )
         if st.button("Guardar pipeline"):
             filled = edited_pipe[["etapa_manual", "notas", "peso_kg"]].fillna("").astype(str).ne("").any(axis=1)
-            edited_pipe[filled][criteria.PIPELINE_COLUMNS].to_csv(criteria.PIPELINE_PATH, index=False)
+            safe_io.write_csv(edited_pipe[filled][criteria.PIPELINE_COLUMNS], criteria.PIPELINE_PATH)
             st.success("Guardado.")
 
 # ---------------------------------------------------------------- Alertas
@@ -685,7 +699,7 @@ La 'marca' se toma de la primera palabra del título y puede fallar en productos
         column_config=editor_labels(competition.COLUMNS),
     )
     if st.button("Guardar competencia"):
-        edited_comp.to_csv(competition.COMPETITION_PATH, index=False)
+        safe_io.write_csv(edited_comp, competition.COMPETITION_PATH)
         st.success("Guardado.")
 
 # ---------------------------------------------------------------- Navidad
@@ -884,7 +898,7 @@ def page_products():
         ),
     )
     if st.button("Guardar candidatos"):
-        edited.to_csv(CANDIDATES_PATH, index=False)
+        safe_io.write_csv(edited, CANDIDATES_PATH)
         st.success("Guardado.")
 
     results, pending = product_results(edited)
@@ -1047,6 +1061,15 @@ def page_settings():
             st.rerun()
     st.caption("Se guardan en data/settings.yaml y se aplican encima de la configuración base (config.yaml).")
 
+    from fba_trends import audit
+    events = audit.recent(50)
+    if events:
+        st.markdown(brand.pill("Accesos recientes"), unsafe_allow_html=True)
+        names = {"login_ok": "Entró", "login_fail": "Contraseña incorrecta", "totp_fail": "Código 2FA incorrecto",
+                 "locked": "Bloqueado por intentos", "logout": "Cerró sesión", "logout_all": "Cerró todas sus sesiones"}
+        st.dataframe(pd.DataFrame([{"Fecha": e["at"], "Usuario": e["username"], "Evento": names.get(e["event"], e["event"]),
+                                    "IP": e["ip"]} for e in events]), hide_index=True, width="stretch")
+
 
 # ---------------------------------------------------------------- Vender sin permiso (ungated)
 def page_ungated():
@@ -1157,7 +1180,7 @@ def page_spapi():
     from fba_trends.sp_api import SPAPIClient, SPAPIError, configured
     if not configured():
         st.warning("Amazon SP-API todavía no está conectado. Configura las credenciales privadas del servidor.")
-        st.caption("Consulta PRODUCTION.md para el alta de la aplicación privada en Seller Central.")
+        st.caption("Consulta PRODUCCION.md para el alta de la aplicación privada en Seller Central.")
         return
     kw = st.text_input("Buscar en el catálogo Amazon US", placeholder="dog cooling mat")
     if st.button("Consultar catálogo oficial", type="primary") and kw.strip():
@@ -1191,7 +1214,7 @@ def page_spapi():
 
 # ---------------------------------------------------------------- navigation
 PAGES = {
-    "home": st.Page(page_home, url_path="inicio", title="Inicio", icon=":material/space_dashboard:", default=True),
+    "home": st.Page(page_home, title="Inicio", icon=":material/space_dashboard:", default=True),
     "decision": st.Page(page_decision, url_path="decision", title="Decisión", icon=":material/psychology:"),
     "ungated": st.Page(page_ungated, url_path="sin-permiso", title="Vender sin permiso", icon=":material/lock_open:"),
     "funnel": st.Page(page_funnel, url_path="embudo", title="Embudo", icon=":material/filter_alt:"),
