@@ -1,0 +1,5 @@
+# weaverslogistic — install with: (crontab -l; cat deploy/crontab.txt) | crontab -
+# Times are server time (UTC). 14:00 UTC = 10:00 Santo Domingo.
+17 * * * * /home/ubuntu/weaverslogistic/deploy/update.sh >> /home/ubuntu/backups/weaverslogistic/update.log 2>&1 # weaverslogistic
+0 14 * * * /home/ubuntu/weaverslogistic/deploy/discover.sh # weaverslogistic
+40 7 * * * /home/ubuntu/weaverslogistic/deploy/backup.sh >> /home/ubuntu/backups/weaverslogistic/backup.log 2>&1 # weaverslogistic

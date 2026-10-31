@@ -1,6 +1,8 @@
 # Behind an existing Traefik (server 163: loadbalancer-traefik on winu-bot-signal-network).
-# Secrets live on the host only: .env (0600) and secrets/users.txt (0640). See IMPLEMENTACION_PRODUCCION.md.
+# Secrets live on the host only: .env (0600) and secrets/users.txt (0640). See PRODUCCION.md.
+# Live data lives outside the git checkout (WEAVERS_DATA_PATH) so code updates never touch it.
 #   docker compose -f docker-compose.traefik.yml up -d --build
+#   docker compose -f docker-compose.traefik.yml --profile jobs run --rm worker python -m scripts.discover
 name: weaverslogistic
 services:
   app:
@@ -20,7 +22,7 @@ services:
       KEEPA_API_KEY: ${KEEPA_API_KEY:-}
       DATABASE_URL: postgresql+psycopg://weavers:${POSTGRES_PASSWORD:?required}@db:5432/weavers
     volumes:
-      - ./data:/app/data
+      - ${WEAVERS_DATA_PATH:-./data}:/app/data
       - ./secrets/users.txt:/run/secrets/weavers_users:ro
     depends_on:
       db:
@@ -54,6 +56,22 @@ services:
       traefik.http.middlewares.weavers-fba-ratelimit.ratelimit.average: "50"
       traefik.http.middlewares.weavers-fba-ratelimit.ratelimit.burst: "200"
       traefik.http.middlewares.weavers-fba-ratelimit.ratelimit.sourcecriterion.requestheadername: Cf-Connecting-Ip
+
+  # Daily scan (cron, deploy/discover.sh). Same image and data, no Traefik labels, never serves traffic.
+  worker:
+    image: weaverslogistic-app
+    profiles: [jobs]
+    user: "1000:1000"
+    environment:
+      KEEPA_API_KEY: ${KEEPA_API_KEY:-}
+    volumes:
+      - ${WEAVERS_DATA_PATH:-./data}:/app/data
+    networks: [default]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: ["/tmp", "/home/appuser:uid=1000,gid=1000,mode=0700"]
+    mem_limit: 768m
 
   db:
     image: postgres:17-alpine

@@ -20,8 +20,8 @@ Cada ASIN consulta cuesta tokens; las respuestas se guardan en `data/keepa/` y s
 
 ## Descubrimiento diario
 
-Una tarea programada de Windows ("Weavers FBA Discovery", 10:00, o al encender si estaba apagada) ejecuta
-`scripts/run_discover.cmd`:
+En producción corre en el servidor todos los días a las 10:00 (hora RD) con `deploy/discover.sh` (ver PRODUCCION.md).
+`scripts/run_discover.cmd` es la versión para correrlo a mano en Windows. Ambos ejecutan `scripts.discover`:
 
 1. Toma ~4 categorías semilla de `data/seeds.csv` (cada una se repite cada 30 días) y pide a Google Trends sus búsquedas **en aumento** de los últimos 12 meses en EE.UU.
 2. Filtra basura (dominios, tiendas, "near me", preguntas, términos genéricos).
@@ -57,4 +57,4 @@ Log: `data/discovery_log.txt`. Google Shopping (gprop=froogle) se probó y no de
 
 ## Preparación para producción
 
-Consulta [IMPLEMENTACION_PRODUCCION.md](IMPLEMENTACION_PRODUCCION.md) para la instalación HTTPS, login OIDC, Amazon SP-API, PostgreSQL y la checklist de seguridad. Los cambios se revisan en [PR #1](https://github.com/infoboy27/weaverslogistic/pull/1).
+Operación, despliegue, usuarios, respaldos y claves de Amazon: [PRODUCCION.md](PRODUCCION.md).
