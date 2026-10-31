@@ -97,3 +97,5 @@ docker run --rm -v "$PWD/requirements.txt:/r.txt:ro" python:3.14-slim \
   gana el último que guarda.
 - Google Trends limita por IP (~15-20 consultas por corrida); el escaneo se corta en el primer bloqueo y sigue al día siguiente.
 - Las tarifas FBA, referral, PPC y devoluciones de `config.yaml` son estimadas hasta conectar la API de tarifas.
+- La prueba de humo de `update.sh` es HTTP (health + cabecera HSTS por la URL pública); no inicia sesión.
+- El monitoreo registra caídas en Grafana, pero el servidor no tiene Alertmanager: nadie recibe un aviso.
