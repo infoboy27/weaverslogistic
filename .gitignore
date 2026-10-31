@@ -20,3 +20,8 @@ data/examples_log.txt
 .env.production
 .env.local
 .env.*.local
+
+# Usuarios (hashes) y respuestas SP-API propias del servidor
+secrets/
+data/restrictions.csv
+data/settings.yaml

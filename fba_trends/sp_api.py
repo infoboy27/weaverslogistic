@@ -71,3 +71,28 @@ class SPAPIClient:
             return response.json()
         except (requests.RequestException, ValueError) as exc:
             raise SPAPIError("Amazon rechazó la consulta. Revisa roles, cuota y autorización SP-API.") from exc
+
+    def listing_restrictions(self, asin, seller_id, *, condition="new_new"):
+        """Whether *this seller* may list the ASIN (Listings Restrictions API, role Product Listing).
+
+        Returns the ``restrictions`` list: empty means no approval needed; reasons carry
+        codes such as APPROVAL_REQUIRED, ASIN_NOT_FOUND or NOT_ELIGIBLE.
+        """
+        asin = str(asin).strip().upper()
+        if len(asin) != 10 or not asin.isalnum():
+            raise ValueError(f"ASIN inválido: {asin!r}")
+        if not seller_id:
+            raise SPAPIError("Falta SP_API_SELLER_ID (Merchant Token de Seller Central).")
+        try:
+            response = self.session.get(
+                f"{NA_ENDPOINT}/listings/2021-08-01/restrictions",
+                params={"asin": asin, "sellerId": seller_id, "marketplaceIds": US_MARKETPLACE,
+                        "conditionType": condition},
+                headers={"x-amz-access-token": self.access_token(), "accept": "application/json"},
+                timeout=20,
+            )
+            response.raise_for_status()
+            return response.json().get("restrictions", [])
+        except (requests.RequestException, ValueError) as exc:
+            raise SPAPIError("Amazon rechazó la consulta de restricciones. Revisa el rol Product Listing "
+                             "y SP_API_SELLER_ID.") from exc

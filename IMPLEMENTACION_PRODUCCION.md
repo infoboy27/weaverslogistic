@@ -170,3 +170,28 @@ Fase D — **experiencia**: dashboard profesional responsive, búsquedas guardad
 - [Keepa API](https://keepa.com/#!api)
 
 **Regla final:** estar configurado no significa estar validado. Un release se aprueba solo tras verificación en el dominio real y autorización efectiva de proveedores.
+
+## 11. Despliegue actual: fba.weaversnodes.org (servidor 163, Traefik existente)
+
+- Código en `/home/ubuntu/weaverslogistic`, compose `docker-compose.traefik.yml` (app + Postgres). Sin Caddy: lo publica el
+  `loadbalancer-traefik` del servidor por labels en la red `winu-bot-signal-network`, TLS Let's Encrypt (httpChallenge),
+  cabeceras de seguridad, `noindex` y rate limit por IP (`Cf-Connecting-Ip`).
+- Login **usuario + contraseña** (`WEAVERS_AUTH_MODE=password`): hashes scrypt en `secrets/users.txt` (fuera de Git),
+  cookie de sesión firmada con HMAC (`WEAVERS_SESSION_SECRET`, 12 h, se invalida al cambiar la contraseña) y bloqueo de
+  15 min tras 5 intentos fallidos por usuario o IP. Alta o cambio de contraseña:
+  ```bash
+  docker run --rm -it -v "$PWD/secrets:/s" --user 1000 weaverslogistic-app \
+    python -m scripts.add_user /s/users.txt correo@dominio.com --generate
+  ```
+  (efecto inmediato; no hace falta reiniciar).
+- `.env` (0600): `APP_DOMAIN`, `WEAVERS_SESSION_SECRET`, `POSTGRES_PASSWORD` y, opcional, `SP_API_*` + `SP_API_SELLER_ID`.
+- Datos: cron cada hora `deploy/sync_data.sh` trae los escaneos diarios que sube la tarea de Windows; si el commit trae
+  cambios de código, reconstruye la app.
+
+### Reporte «Vender sin permiso»
+
+Página `/sin-permiso`: lista cada producto analizado con estado *No requiere aprobación*, *Revisar* o *Requiere
+aprobación*, motivo y descarga CSV. Sin SP-API el estado es **estimado por categoría** (`fba_trends/gating.py`: categorías
+restringidas de Amazon US, marcas con licencia/terceros, hazmat, juguetes en Q4). Con SP-API (rol *Product Listing*) y
+`SP_API_SELLER_ID` (Merchant Token), el botón «Verificar» consulta la Listings Restrictions API por los ASIN de referencia
+de cada producto y esa respuesta, propia de tu cuenta, reemplaza la estimación.

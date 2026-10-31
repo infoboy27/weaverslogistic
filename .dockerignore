@@ -8,3 +8,5 @@ __pycache__/
 data/keepa/
 data/*_log.txt
 tests/
+secrets/
+.env.*

@@ -1051,6 +1051,61 @@ def page_settings():
     st.caption("Se guardan en data/settings.yaml y se aplican encima de la configuración base (config.yaml).")
 
 
+# ---------------------------------------------------------------- Vender sin permiso (ungated)
+def page_ungated():
+    import os
+    from fba_trends import gating
+    from fba_trends.sp_api import SPAPIClient, SPAPIError, configured
+    page_title("Vender sin permiso", "Productos que Amazon US no pide aprobar para vender")
+    ranking = pd.read_csv(DATA_DIR / "ranking.csv") if (DATA_DIR / "ranking.csv").exists() else pd.DataFrame()
+    prods = gating.products(ranking, UNIVERSE, competition.load())
+    rep = gating.report(prods, gating.load_restrictions(), today)
+    if rep.empty:
+        st.info("Todavía no hay productos analizados.")
+        return
+
+    free = rep[rep["estado"] == gating.LIBRE]
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("Productos analizados", len(rep))
+    k2.metric("Sin permiso", len(free))
+    k3.metric("Verificados con Amazon", int(rep["evidencia"].str.startswith(gating.VERIFICADO).sum()))
+    k4.metric("Requieren aprobación", int((rep["estado"] == gating.APROBACION).sum()))
+
+    show = st.segmented_control("Mostrar", [gating.LIBRE, gating.REVISAR, gating.APROBACION, "Todos"],
+                                default=gating.LIBRE, key="ungated_filter")
+    view = rep if show in (None, "Todos") else rep[rep["estado"] == show]
+    sectors = sorted(x for x in view["sector"].dropna().unique() if x)
+    pick = st.multiselect("Sector", sectors, key="ungated_sectors")
+    if pick:
+        view = view[view["sector"].isin(pick)]
+    st.dataframe(brand.pretty(view), hide_index=True, width="stretch", column_config={
+        "Precio ref. $": st.column_config.NumberColumn(format="$%.2f"),
+        "Score tendencia": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.0f"),
+    })
+    st.download_button("Descargar CSV", view.to_csv(index=False).encode("utf-8"), icon=":material/download:",
+                       file_name=f"productos_{(show or 'todos').lower().replace(' ', '_')}_{today:%Y-%m-%d}.csv",
+                       mime="text/csv")
+
+    st.markdown(brand.pill("Verificar con tu cuenta de Amazon"), unsafe_allow_html=True)
+    seller = os.getenv("SP_API_SELLER_ID", "")
+    if not configured() or not seller:
+        st.caption("Sin SP-API conectado el estado es **estimado por categoría** (reglas públicas de Amazon y marcas "
+                   "con licencia). Con SP_API_LWA_CLIENT_ID/SECRET, SP_API_REFRESH_TOKEN y SP_API_SELLER_ID en el "
+                   "servidor, este botón pregunta a Amazon por cada ASIN de referencia si tu cuenta necesita "
+                   "aprobación.")
+        return
+    asins = [a for s in rep.loc[rep["estado"] != gating.APROBACION, "asins"].dropna() for a in s.split()]
+    if st.button(f"Verificar {len(set(asins))} ASIN con Amazon", type="primary"):
+        bar = st.progress(0.0)
+        try:
+            gating.verify(asins, SPAPIClient(), seller, progress=lambda i, n: bar.progress(i / n, f"{i}/{n}"))
+            st.success("Listo. El reporte ya usa la respuesta de Amazon.")
+            st.rerun()
+        except SPAPIError as e:
+            st.error(str(e))
+    st.caption("Las respuestas se guardan en data/restrictions.csv y se repiten cada 14 días.")
+
+
 # ---------------------------------------------------------------- Amazon Selling Partner API
 def page_spapi():
     page_title("Amazon Seller Central", "Catálogo oficial SP-API · datos de tu cuenta autorizada")
@@ -1093,6 +1148,7 @@ def page_spapi():
 PAGES = {
     "home": st.Page(page_home, url_path="inicio", title="Inicio", icon=":material/space_dashboard:", default=True),
     "decision": st.Page(page_decision, url_path="decision", title="Decisión", icon=":material/psychology:"),
+    "ungated": st.Page(page_ungated, url_path="sin-permiso", title="Vender sin permiso", icon=":material/lock_open:"),
     "funnel": st.Page(page_funnel, url_path="embudo", title="Embudo", icon=":material/filter_alt:"),
     "next": st.Page(page_next, url_path="lo-que-viene", title="Lo que viene", icon=":material/event_upcoming:"),
     "xmas": st.Page(page_xmas, url_path="navidad", title="Navidad", icon=":material/redeem:"),
@@ -1110,7 +1166,7 @@ PAGES = {
 }
 st.logo(str(brand.LOGO_PATH), size="large", icon_image=str(brand.ICON_PATH))
 nav = st.navigation({
-    "": [PAGES["home"], PAGES["decision"]],
+    "": [PAGES["home"], PAGES["decision"], PAGES["ungated"]],
     "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["xmas"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
     "Mercado": [PAGES["comp"], PAGES["keepa"], PAGES["spapi"]],
     "Plan": [PAGES["products"], PAGES["budget"]],
