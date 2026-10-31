@@ -165,7 +165,8 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 [data-testid="stCaptionContainer"] {{ color:{MUTED}; }}
 /* Login */
 .st-key-wv_login {{ max-width:400px; margin:8vh auto 0; }}
-.st-key-wv_login [data-testid="stImage"] {{ margin:0 auto; }}
+.wv-login-logo {{ text-align:center; }}
+.wv-login-logo img {{ width:170px; max-width:60%; mix-blend-mode:lighten; }}  /* PNG has a navy box */
 .wv-login-sub {{ text-align:center; color:{MUTED}; font-size:.9rem; margin:4px 0 14px; }}
 /* Tablet: metric rows go 2 x 2 instead of four squeezed cards */
 @media (max-width: 1024px) {{

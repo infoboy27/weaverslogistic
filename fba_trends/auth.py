@@ -182,8 +182,8 @@ def _require_password() -> None:
 def _login_form(users: dict[str, str], secret: str) -> None:
     from . import brand
     with st.container(key="wv_login"):  # .st-key-wv_login: centered card, see brand.css()
-        st.image(str(brand.LOGO_PATH), width=170)
-        st.markdown('<div class="wv-login-sub">Panel FBA · acceso privado</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="wv-login-logo"><img src="{brand.LOGO_URL}" alt="Weavers"></div>'
+                    '<div class="wv-login-sub">Panel FBA · acceso privado</div>', unsafe_allow_html=True)
         with st.form("login"):
             name = st.text_input("Usuario", autocomplete="username")
             pwd = st.text_input("Contraseña", type="password", autocomplete="current-password")

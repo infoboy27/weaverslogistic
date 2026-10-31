@@ -25,3 +25,4 @@ data/examples_log.txt
 secrets/
 data/restrictions.csv
 data/settings.yaml
+.gstack/
