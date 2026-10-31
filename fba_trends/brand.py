@@ -163,6 +163,28 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 [data-testid="stAlert"] {{ border-radius:14px; }}
 [data-testid="stFileUploaderDropzone"] {{ background:#07093F; border:1px dashed rgba(87,195,255,.3); border-radius:14px; }}
 [data-testid="stCaptionContainer"] {{ color:{MUTED}; }}
+/* Login */
+.st-key-wv_login {{ max-width:400px; margin:8vh auto 0; }}
+.st-key-wv_login [data-testid="stImage"] {{ margin:0 auto; }}
+.wv-login-sub {{ text-align:center; color:{MUTED}; font-size:.9rem; margin:4px 0 14px; }}
+/* Tablet: metric rows go 2 x 2 instead of four squeezed cards */
+@media (max-width: 1024px) {{
+  [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) {{ flex-wrap:wrap !important; }}
+  [data-testid="stHorizontalBlock"]:has(> [data-testid="stColumn"] [data-testid="stMetric"]) > [data-testid="stColumn"] {{
+    flex:1 1 calc(50% - 1rem) !important; min-width:calc(50% - 1rem) !important; }}
+}}
+/* Phone */
+@media (max-width: 640px) {{
+  .block-container {{ padding:3.6rem 1rem 3rem; }}
+  [data-testid="stHeader"] {{ background:rgba(1,2,54,.92); backdrop-filter:blur(8px); }}
+  .wv-page {{ margin-bottom:16px; }}
+  .wv-page h1 {{ font-size:1.6rem; }}
+  .wv-v-title {{ font-size:1.4rem; }}
+  .wv-verdict {{ padding:18px 18px; border-radius:16px; }}
+  [data-testid="stMetric"] {{ padding:12px 14px; border-radius:14px; }}
+  [data-testid="stMetricValue"] {{ font-size:1.3rem; }}
+  .st-key-wv_login {{ margin-top:4vh; }}
+}}
 </style>
 """
 

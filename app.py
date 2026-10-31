@@ -24,11 +24,11 @@ from fba_trends.trends import adjust_for_market, analyze, anomalous_weeks, lead_
 CANDIDATES_PATH = DATA_DIR / "candidates.csv"
 
 st.set_page_config(page_title="Weavers · FBA Trends", page_icon=str(brand.ICON_PATH), layout="wide",
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="auto")  # open on desktop, collapsed on phones
+st.markdown(brand.css(), unsafe_allow_html=True)  # before login so that page is branded too
 from fba_trends.auth import require_login
 require_login()
 brand.register_plotly_template()
-st.markdown(brand.css(), unsafe_allow_html=True)
 cfg = load_config(with_settings=True)
 SETTINGS = load_settings()
 
@@ -1075,10 +1075,11 @@ def page_ungated():
                                 default=gating.LIBRE, key="ungated_filter")
     view = rep if show in (None, "Todos") else rep[rep["estado"] == show]
     sectors = sorted(x for x in view["sector"].dropna().unique() if x)
-    pick = st.multiselect("Sector", sectors, key="ungated_sectors")
+    pick = st.multiselect("Sector", sectors, key="ungated_sectors", placeholder="Todos los sectores")
     if pick:
         view = view[view["sector"].isin(pick)]
     st.dataframe(brand.pretty(view), hide_index=True, width="stretch", column_config={
+        "Producto": st.column_config.TextColumn(pinned=True),  # stays visible while scrolling sideways on phones
         "Precio ref. $": st.column_config.NumberColumn(format="$%.2f"),
         "Score tendencia": st.column_config.ProgressColumn(min_value=0, max_value=100, format="%.0f"),
     })
