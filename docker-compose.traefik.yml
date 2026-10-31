@@ -29,7 +29,7 @@ services:
     security_opt: ["no-new-privileges:true"]
     cap_drop: [ALL]
     read_only: true
-    tmpfs: [/tmp, /home/appuser]
+    tmpfs: ["/tmp", "/home/appuser:uid=1000,gid=1000,mode=0700"]
     mem_limit: 1g
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8501/_stcore/health',timeout=3)"]
