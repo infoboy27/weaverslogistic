@@ -4,7 +4,13 @@
 # commit is rebuilt (rollback). Data is not in the checkout (WEAVERS_DATA_PATH), so a pull
 # never touches it. Private repo: put a read-only GitHub token in secrets/github_token.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+APP_DIR=${WV_APP_DIR:-$(cd "$(dirname "$0")/.." && pwd)}
+cd "$APP_DIR"
+# git merge below rewrites this very file; bash reads scripts lazily, so run from a copy.
+if [ -z "${WV_UPDATE_COPY:-}" ]; then
+  cp deploy/update.sh /tmp/weaverslogistic-update.sh
+  WV_UPDATE_COPY=1 WV_APP_DIR="$APP_DIR" exec bash /tmp/weaverslogistic-update.sh "$@"
+fi
 REPO=infoboy27/weaverslogistic
 COMPOSE="docker compose -f docker-compose.traefik.yml"
 log() { echo "$(date '+%F %T') $*"; }
