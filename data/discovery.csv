@@ -206,7 +206,7 @@ knitting bag,knitting kit,hobby,450.0,False,2026-10-24,escaneado,
 diy beaded christmas tree kit,diy kit,hobby,12050.0,True,2026-10-26,escaneado,
 diy watch kit,diy kit,hobby,500.0,False,2026-10-26,escaneado,
 diy squishy kit,diy kit,hobby,190.0,False,2026-10-26,escaneado,
-diy journal kit,diy kit,hobby,170.0,False,2026-10-26,pendiente,
+diy journal kit,diy kit,hobby,170.0,False,2026-10-26,escaneado,
 diy diamond art kit,diy kit,hobby,160.0,False,2026-10-26,pendiente,
 diy projects,diy kit,hobby,80.0,False,2026-10-26,filtrado,tienda/intención no-producto
 diy nail kit,diy kit,hobby,60.0,False,2026-10-26,pendiente,
@@ -229,7 +229,7 @@ panini sticker book,sticker,hobby,700.0,False,2026-10-27,escaneado,
 how to make a sticker on tiktok,sticker,hobby,450.0,False,2026-10-27,filtrado,tienda/intención no-producto
 liene sticker printer,sticker,hobby,300.0,False,2026-10-27,escaneado,
 sticker therapy,sticker,hobby,300.0,False,2026-10-27,escaneado,
-sticker box,sticker,hobby,170.0,False,2026-10-27,pendiente,
+sticker box,sticker,hobby,170.0,False,2026-10-27,escaneado,
 sticker memes,sticker,hobby,110.0,False,2026-10-27,pendiente,
 sticker machine,sticker,hobby,60.0,False,2026-10-27,pendiente,
 sticker book,sticker,hobby,50.0,False,2026-10-27,pendiente,
@@ -275,7 +275,7 @@ kitchen gadget brand nyt,kitchen gadget,cocina,41450.0,True,2026-10-29,escaneado
 canon gadget bag 2400,kitchen gadget,cocina,41050.0,True,2026-10-29,escaneado,
 kitchen gadget fashioned from pearl,kitchen gadget,cocina,36850.0,True,2026-10-29,escaneado,
 revolutionary kitchen gadget nyt,kitchen gadget,cocina,28950.0,True,2026-10-29,escaneado,
-kitchen gadget set,kitchen gadget,cocina,170.0,False,2026-10-29,pendiente,
+kitchen gadget set,kitchen gadget,cocina,170.0,False,2026-10-29,escaneado,
 cool kitchen gadget,kitchen gadget,cocina,140.0,False,2026-10-29,pendiente,
 cleaner kitchen gadget,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 kitchen gadget brands,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
@@ -308,8 +308,8 @@ closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 closet organizer,closet organizer,hogar,40.0,False,2026-10-30,filtrado,igual a la semilla
 executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,escaneado,
 leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
-desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
-golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,pendiente,
+desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
+golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,pendiente,
 modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,pendiente,
 gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,pendiente,
@@ -351,8 +351,8 @@ dyson accessories,car accessories,auto,500.0,False,2026-10-31,filtrado,marca
 3d printing car accessories,car accessories,auto,350.0,False,2026-10-31,escaneado,
 new car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
 pokemon car accessories,car accessories,auto,200.0,False,2026-10-31,filtrado,licencia de marca
-womens car accessories,car accessories,auto,200.0,False,2026-10-31,pendiente,
-dog car accessories,car accessories,auto,170.0,False,2026-10-31,pendiente,
+womens car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
+dog car accessories,car accessories,auto,170.0,False,2026-10-31,escaneado,
 red car accessories,car accessories,auto,160.0,False,2026-10-31,pendiente,
 car travel accessories,car accessories,auto,140.0,False,2026-10-31,pendiente,
 car accessories for women,car accessories,auto,120.0,False,2026-10-31,pendiente,
@@ -367,8 +367,8 @@ car accessories near me,car accessories,auto,50.0,False,2026-10-31,filtrado,tien
 car parts,car accessories,auto,50.0,False,2026-10-31,pendiente,
 running shoes,camping gear,outdoor,42200.0,True,2026-10-31,escaneado,
 python tutorial,camping gear,outdoor,40100.0,True,2026-10-31,escaneado,
-mortgage rates today,camping gear,outdoor,38550.0,True,2026-10-31,pendiente,
-laptop,camping gear,outdoor,38350.0,True,2026-10-31,pendiente,
+mortgage rates today,camping gear,outdoor,38550.0,True,2026-10-31,escaneado,
+laptop,camping gear,outdoor,38350.0,True,2026-10-31,escaneado,
 cloud storage pricing,camping gear,outdoor,36900.0,True,2026-10-31,pendiente,
 home security camera,camping gear,outdoor,36100.0,True,2026-10-31,filtrado,electrónica
 language learning app,camping gear,outdoor,35950.0,True,2026-10-31,filtrado,tienda/intención no-producto
@@ -378,7 +378,7 @@ iphone 16 review,camping gear,outdoor,35250.0,True,2026-10-31,filtrado,tienda/in
 pet insurance cost,camping gear,outdoor,34450.0,True,2026-10-31,filtrado,tienda/intención no-producto
 moving company quotes,camping gear,outdoor,34300.0,True,2026-10-31,filtrado,tienda/intención no-producto
 headphones wireless,camping gear,outdoor,34050.0,True,2026-10-31,filtrado,electrónica
-learn golang,camping gear,outdoor,34050.0,True,2026-10-31,pendiente,
+learn golang,camping gear,outdoor,34050.0,True,2026-10-31,filtrado,tienda/intención no-producto
 healthy meal prep,camping gear,outdoor,33750.0,True,2026-10-31,pendiente,
 electric cars comparison,camping gear,outdoor,32950.0,True,2026-10-31,filtrado,electrónica
 meal delivery service,camping gear,outdoor,32450.0,True,2026-10-31,filtrado,tienda/intención no-producto
@@ -398,10 +398,54 @@ how to winterize garden,garden tools,jardín,16750.0,True,2026-10-31,filtrado,ti
 garden pest identification,garden tools,jardín,16350.0,True,2026-10-31,escaneado,
 how to start a vegetable garden,garden tools,jardín,14650.0,True,2026-10-31,filtrado,tienda/intención no-producto
 office chairs,garden tools,jardín,6550.0,True,2026-10-31,escaneado,
-learn programming,garden tools,jardín,5500.0,True,2026-10-31,pendiente,
-garden tools set,garden tools,jardín,250.0,False,2026-10-31,pendiente,
+learn programming,garden tools,jardín,5500.0,True,2026-10-31,filtrado,tienda/intención no-producto
+garden tools set,garden tools,jardín,250.0,False,2026-10-31,escaneado,
 giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,pendiente,
 cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,pendiente,
 giraffe tools,garden tools,jardín,110.0,False,2026-10-31,pendiente,
 garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
 garden tools,garden tools,jardín,60.0,False,2026-10-31,filtrado,igual a la semilla
+how to use an instant pot,plant pot,jardín,5700.0,True,2026-11-01,filtrado,tienda/intención no-producto
+instant pot 6qt 9-in-1 pressure cooker bundle,plant pot,jardín,3450.0,False,2026-11-01,filtrado,demasiado largo
+instant pot duo plus 9-in-1 electric pressure cooker,plant pot,jardín,2800.0,False,2026-11-01,filtrado,electrónica
+ikea affordable plant pot,plant pot,jardín,800.0,False,2026-11-01,filtrado,tienda/intención no-producto
+orgain organic plant based protein powder,plant pot,jardín,700.0,False,2026-11-01,filtrado,demasiado largo
+rs3 plant pot,plant pot,jardín,250.0,False,2026-11-01,pendiente,
+gold plant pot,plant pot,jardín,180.0,False,2026-11-01,pendiente,
+black plant pot,plant pot,jardín,150.0,False,2026-11-01,pendiente,
+ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
+pink plant pot,plant pot,jardín,90.0,False,2026-11-01,pendiente,
+plant pot cover,plant pot,jardín,80.0,False,2026-11-01,pendiente,
+tall plant pot,plant pot,jardín,40.0,False,2026-11-01,pendiente,
+bagsmart blast travel backpack,travel accessories,viaje,17150.0,True,2026-11-01,pendiente,
+museums,travel accessories,viaje,14500.0,True,2026-11-01,pendiente,
+budget travel destinations,travel accessories,viaje,12450.0,True,2026-11-01,pendiente,
+places to travel in december,travel accessories,viaje,10950.0,True,2026-11-01,pendiente,
+travel itinerary template,travel accessories,viaje,10700.0,True,2026-11-01,pendiente,
+yoga,travel accessories,viaje,550.0,False,2026-11-01,pendiente,
+fitness,travel accessories,viaje,160.0,False,2026-11-01,pendiente,
+tea,travel accessories,viaje,160.0,False,2026-11-01,pendiente,
+coffee,travel accessories,viaje,140.0,False,2026-11-01,pendiente,
+travel destinations,travel accessories,viaje,100.0,False,2026-11-01,pendiente,
+fishing,travel accessories,viaje,50.0,False,2026-11-01,pendiente,
+kids travel accessories,travel accessories,viaje,50.0,False,2026-11-01,filtrado,producto para niños
+hair dryers,hair accessories,belleza,5650.0,True,2026-11-01,pendiente,
+how to remove gum from hair,hair accessories,belleza,5450.0,True,2026-11-01,filtrado,tienda/intención no-producto
+blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,pendiente,
+luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
+floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
+silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,pendiente,
+red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,pendiente,
+dyson hair accessories,hair accessories,belleza,90.0,False,2026-11-01,filtrado,marca
+hair accessories for kids,hair accessories,belleza,80.0,False,2026-11-01,filtrado,producto para niños
+hair accessories for long hair,hair accessories,belleza,70.0,False,2026-11-01,pendiente,
+gold hair accessories,hair accessories,belleza,70.0,False,2026-11-01,pendiente,
+hair accessories organizer,hair accessories,belleza,60.0,False,2026-11-01,pendiente,
+baby hair accessories,hair accessories,belleza,60.0,False,2026-11-01,pendiente,
+hair accessories for women,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
+kids hair accessories,hair accessories,belleza,50.0,False,2026-11-01,filtrado,producto para niños
+pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
+hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
+long hair accessories,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
+ice cream,skincare tool,belleza,120.0,False,2026-11-01,pendiente,
+skincare for oily skin,skincare tool,belleza,100.0,False,2026-11-01,pendiente,

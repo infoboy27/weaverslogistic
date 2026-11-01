@@ -30,7 +30,11 @@
   "car accessories": "2026-10-31",
   "camping gear": "2026-10-31",
   "beach accessories": "2026-10-31",
-  "garden tools": "2026-10-31"
+  "garden tools": "2026-10-31",
+  "plant pot": "2026-11-01",
+  "travel accessories": "2026-11-01",
+  "hair accessories": "2026-11-01",
+  "skincare tool": "2026-11-01"
  },
  "runs": [
   {
@@ -161,6 +165,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "semillas primero"
+  },
+  {
+   "fecha": "2026-11-01",
+   "semillas": 4,
+   "nuevos": 33,
+   "escaneados": 10,
+   "bloqueado": false,
+   "orden": "cola primero"
   }
  ]
 }
