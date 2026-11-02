@@ -133,7 +133,7 @@ kong wild knots bear dog toy,dog toy,mascotas,650.0,False,2026-10-23,filtrado,ma
 dog toy storage,dog toy,mascotas,450.0,False,2026-10-23,escaneado,
 toy story 5,dog toy,mascotas,400.0,False,2026-10-23,escaneado,
 chicken dog toy,dog toy,mascotas,170.0,False,2026-10-23,escaneado,
-dog toy box,dog toy,mascotas,160.0,False,2026-10-23,pendiente,
+dog toy box,dog toy,mascotas,160.0,False,2026-10-23,escaneado,
 interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,pendiente,
 kong dog toy,dog toy,mascotas,90.0,False,2026-10-23,filtrado,marca
 dog chew toy,dog toy,mascotas,50.0,False,2026-10-23,pendiente,
@@ -148,7 +148,7 @@ giant q tip cat toy,cat toy,mascotas,6400.0,True,2026-10-23,escaneado,
 gecko rush cat toy,cat toy,mascotas,4900.0,False,2026-10-23,escaneado,
 cat wash toy,cat toy,mascotas,600.0,False,2026-10-23,escaneado,
 cat toy for kids,cat toy,mascotas,160.0,False,2026-10-23,filtrado,producto para niños
-cat toy box,cat toy,mascotas,150.0,False,2026-10-23,pendiente,
+cat toy box,cat toy,mascotas,150.0,False,2026-10-23,escaneado,
 automatic cat toy,cat toy,mascotas,110.0,False,2026-10-23,filtrado,electrónica
 cat plush toy,cat toy,mascotas,110.0,False,2026-10-23,pendiente,
 dog,cat toy,mascotas,100.0,False,2026-10-23,filtrado,demasiado genérico
@@ -165,7 +165,7 @@ dog friendly co,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
 dog friendly co harness,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
 dog friendly harness,dog harness,mascotas,350.0,False,2026-10-24,escaneado,
 leather dog harness,dog harness,mascotas,300.0,False,2026-10-24,escaneado,
-dog running harness,dog harness,mascotas,150.0,False,2026-10-24,pendiente,
+dog running harness,dog harness,mascotas,150.0,False,2026-10-24,escaneado,
 dog harness for car,dog harness,mascotas,110.0,False,2026-10-24,pendiente,
 ruffwear harness,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
 ruffwear,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
@@ -200,14 +200,14 @@ pet grooming insurance,pet grooming,mascotas,70.0,False,2026-10-24,filtrado,tien
 pet grooming service,pet grooming,mascotas,60.0,False,2026-10-24,filtrado,tienda/intención no-producto
 cat grooming,pet grooming,mascotas,40.0,False,2026-10-24,pendiente,
 craft smart outdoor acrylic paint,craft kit,hobby,11850.0,True,2026-10-24,escaneado,
-diamond craft kit,craft kit,hobby,150.0,False,2026-10-24,pendiente,
+diamond craft kit,craft kit,hobby,150.0,False,2026-10-24,escaneado,
 resin craft kit,craft kit,hobby,80.0,False,2026-10-24,pendiente,
 knitting bag,knitting kit,hobby,450.0,False,2026-10-24,escaneado,
 diy beaded christmas tree kit,diy kit,hobby,12050.0,True,2026-10-26,escaneado,
 diy watch kit,diy kit,hobby,500.0,False,2026-10-26,escaneado,
 diy squishy kit,diy kit,hobby,190.0,False,2026-10-26,escaneado,
 diy journal kit,diy kit,hobby,170.0,False,2026-10-26,escaneado,
-diy diamond art kit,diy kit,hobby,160.0,False,2026-10-26,pendiente,
+diy diamond art kit,diy kit,hobby,160.0,False,2026-10-26,escaneado,
 diy projects,diy kit,hobby,80.0,False,2026-10-26,filtrado,tienda/intención no-producto
 diy nail kit,diy kit,hobby,60.0,False,2026-10-26,pendiente,
 diy clock kit,diy kit,hobby,50.0,False,2026-10-26,pendiente,
@@ -310,8 +310,8 @@ executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,escan
 leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
-cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,pendiente,
-modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,pendiente,
+cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,escaneado,
+modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,escaneado,
 gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,pendiente,
 kids desk accessories,desk accessories,oficina,150.0,False,2026-10-30,filtrado,producto para niños
 desk lamp,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
@@ -353,7 +353,7 @@ new car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
 pokemon car accessories,car accessories,auto,200.0,False,2026-10-31,filtrado,licencia de marca
 womens car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
 dog car accessories,car accessories,auto,170.0,False,2026-10-31,escaneado,
-red car accessories,car accessories,auto,160.0,False,2026-10-31,pendiente,
+red car accessories,car accessories,auto,160.0,False,2026-10-31,escaneado,
 car travel accessories,car accessories,auto,140.0,False,2026-10-31,pendiente,
 car accessories for women,car accessories,auto,120.0,False,2026-10-31,pendiente,
 custom car accessories,car accessories,auto,120.0,False,2026-10-31,pendiente,
@@ -411,7 +411,7 @@ instant pot duo plus 9-in-1 electric pressure cooker,plant pot,jardín,2800.0,Fa
 ikea affordable plant pot,plant pot,jardín,800.0,False,2026-11-01,filtrado,tienda/intención no-producto
 orgain organic plant based protein powder,plant pot,jardín,700.0,False,2026-11-01,filtrado,demasiado largo
 rs3 plant pot,plant pot,jardín,250.0,False,2026-11-01,filtrado,tienda/intención no-producto
-gold plant pot,plant pot,jardín,180.0,False,2026-11-01,pendiente,
+gold plant pot,plant pot,jardín,180.0,False,2026-11-01,escaneado,
 black plant pot,plant pot,jardín,150.0,False,2026-11-01,pendiente,
 ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
 pink plant pot,plant pot,jardín,90.0,False,2026-11-01,pendiente,
@@ -431,7 +431,7 @@ fishing,travel accessories,viaje,50.0,False,2026-11-01,filtrado,no relacionado c
 kids travel accessories,travel accessories,viaje,50.0,False,2026-11-01,filtrado,producto para niños
 hair dryers,hair accessories,belleza,5650.0,True,2026-11-01,filtrado,electrónica
 how to remove gum from hair,hair accessories,belleza,5450.0,True,2026-11-01,filtrado,tienda/intención no-producto
-blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,pendiente,
+blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,escaneado,
 luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
 floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
 silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,pendiente,
