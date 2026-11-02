@@ -33,7 +33,7 @@ JUNK_WORDS = {
     # local businesses and services (pet groomers, salons...), not products
     "llc", "inc", "co", "company", "salon", "spa", "mobile", "insurance", "tips", "school", "course", "class",
     "classes", "academy", "services", "service", "appointment", "prices", "cost", "projects", "corner",
-    "nearby", "shop", "shops", "business", "rental", "rent",
+    "nearby", "shop", "shops", "business", "rental", "rent", "destinations", "flights", "rs3", "bagsmart", "places", "itinerary", "template",
     "nyt", "crossword", "clue", "fashioned",  # crossword clues ("kitchen gadget brand nyt")
     # learning / information intent ("python tutorial", "garden pest identification"), not products
     "tutorial", "tutorials", "learn", "learning", "programming", "python", "identification", "identify",
@@ -49,7 +49,7 @@ US_STATES = {
 LICENSED = re.compile(r"toy story|pokemon|marvel|star wars|harry potter|bluey|paw patrol|hello kitty|stitch|frozen"
                       r"|fifa|world cup|panini|topps|nfl|nba|mlb|ascended heroes")
 ELECTRONIC = {"robot", "remote", "automatic", "electric", "heated", "vacuum", "battery", "rechargeable", "usb",
-              "smart", "wireless", "bluetooth", "led", "camera", "gps", "printer"}
+              "smart", "wireless", "bluetooth", "led", "camera", "gps", "printer", "dryer", "dryers"}
 # Single words that are a whole category, not a product
 TOO_BROAD = {"dog", "dogs", "cat", "cats", "pet", "pets", "puppy", "kitten", "baby", "toy", "toys", "gift", "gifts"}
 # Big consumer brands: a branded query means people want THAT brand, not a private-label product.
@@ -98,7 +98,22 @@ def junk_reason(term: str, seed: str) -> str | None:
     seed_words = set(seed.lower().split()) - GENERIC
     if len(words) == 1 and words[0] in seed_words:
         return "demasiado genérico"
+    if not seed.startswith(("amazon", "fecha")):
+        # Google's "rising" list also returns unrelated trending searches ("mortgage rates today" for
+        # "desk accessories"): the term must share a specific word with its seed.
+        strong = {_stem(w) for w in seed_words - WEAK_SEED_WORDS}
+        if strong and not strong & {_stem(w) for w in words}:
+            return "no relacionado con la semilla"
     return None
+
+
+# Seed words too broad to prove relevance on their own ("miu miu accessories" for "phone accessories").
+WEAK_SEED_WORDS = {"accessories", "accessory", "gear", "tools", "tool", "essentials", "kit", "gadget",
+                   "gifts", "gift", "supplies", "aid", "set"}
+
+
+def _stem(word: str) -> str:
+    return word[:-1] if len(word) > 3 and word.endswith("s") else word
 
 
 def rising_queries(seed: str, timeframe: str = "today 12-m", geo: str = "US") -> pd.DataFrame:

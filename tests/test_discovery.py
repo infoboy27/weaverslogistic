@@ -115,3 +115,14 @@ def test_learning_intent_is_not_a_product():
     for term in ["python tutorial", "learn programming", "garden pest identification"]:
         assert d.junk_reason(term, "") == "tienda/intención no-producto", term
     assert d.junk_reason("portable closet organizer", "") is None
+
+
+def test_junk_filter_requires_relation_to_seed():
+    from fba_trends import discovery as d
+    assert d.junk_reason("mortgage rates today", "desk accessories") == "no relacionado con la semilla"
+    assert d.junk_reason("office chairs", "desk accessories") == "no relacionado con la semilla"
+    assert d.junk_reason("running shoes", "gym accessories") == "no relacionado con la semilla"
+    assert d.junk_reason("leather desk accessories", "desk accessories") is None
+    assert d.junk_reason("chicken dog toy", "dog toy") is None
+    assert d.junk_reason("dog toys for chewers", "dog toy") is None   # plural still matches
+    assert d.junk_reason("valentines gifts for him", "fecha: San Valentín") is None  # date terms are hand-picked

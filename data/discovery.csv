@@ -238,7 +238,7 @@ hot yoga accessories,yoga accessories,fitness,60.0,False,2026-10-27,pendiente,
 gym shoes,gym accessories,fitness,100.0,False,2026-10-27,pendiente,
 gym bag,gym accessories,fitness,60.0,False,2026-10-27,pendiente,
 home gym accessories,gym accessories,fitness,50.0,False,2026-10-27,pendiente,
-pilates accessories,gym accessories,fitness,40.0,False,2026-10-27,pendiente,
+pilates accessories,gym accessories,fitness,40.0,False,2026-10-27,filtrado,no relacionado con la semilla
 royal change glute resistance bands,resistance bands,fitness,35050.0,True,2026-10-27,escaneado,
 adidas resistance bands,resistance bands,fitness,6000.0,True,2026-10-27,filtrado,marca
 pro resistance bands,resistance bands,fitness,1950.0,False,2026-10-27,escaneado,
@@ -269,7 +269,7 @@ neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
 nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,pendiente,
 baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,pendiente,
 zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,pendiente,
-zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,pendiente,
+zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,filtrado,no relacionado con la semilla
 magnesium for sleep,sleep aid,bienestar,50.0,False,2026-10-29,pendiente,
 kitchen gadget brand nyt,kitchen gadget,cocina,41450.0,True,2026-10-29,escaneado,
 canon gadget bag 2400,kitchen gadget,cocina,41050.0,True,2026-10-29,escaneado,
@@ -290,8 +290,8 @@ gopro hero13 black accessories bundle,coffee accessories,cocina,18050.0,True,202
 cuisinart 14 cup programmable coffee maker,coffee accessories,cocina,11050.0,True,2026-10-30,filtrado,demasiado largo
 coffee table accessories,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
 coffee table,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
-travel,coffee accessories,cocina,100.0,False,2026-10-30,pendiente,
-car accessories,coffee accessories,cocina,80.0,False,2026-10-30,pendiente,
+travel,coffee accessories,cocina,100.0,False,2026-10-30,filtrado,no relacionado con la semilla
+car accessories,coffee accessories,cocina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
 closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,filtrado,marca
 portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escaneado,
@@ -321,7 +321,7 @@ standing desk,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
 home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,pendiente,
 computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,pendiente,
 pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
-gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
 ikea desk accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
 gaming desk,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
@@ -337,9 +337,9 @@ how to transfer contacts to new phone,phone accessories,tecnología,6600.0,True,
 how to backup android phone,phone accessories,tecnología,5900.0,True,2026-10-30,filtrado,tienda/intención no-producto
 lidl near me,phone accessories,tecnología,5750.0,True,2026-10-30,filtrado,tienda/intención no-producto
 dyson v6 accessories,phone accessories,tecnología,4950.0,False,2026-10-30,filtrado,marca
-toyota accessories,phone accessories,tecnología,150.0,False,2026-10-30,pendiente,
-internet accessories,phone accessories,tecnología,110.0,False,2026-10-30,pendiente,
-bike accessories,phone accessories,tecnología,80.0,False,2026-10-30,pendiente,
+toyota accessories,phone accessories,tecnología,150.0,False,2026-10-30,filtrado,no relacionado con la semilla
+internet accessories,phone accessories,tecnología,110.0,False,2026-10-30,filtrado,no relacionado con la semilla
+bike accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 mobile phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
 phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,igual a la semilla
 apple accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
@@ -369,24 +369,24 @@ running shoes,camping gear,outdoor,42200.0,True,2026-10-31,escaneado,
 python tutorial,camping gear,outdoor,40100.0,True,2026-10-31,escaneado,
 mortgage rates today,camping gear,outdoor,38550.0,True,2026-10-31,escaneado,
 laptop,camping gear,outdoor,38350.0,True,2026-10-31,escaneado,
-cloud storage pricing,camping gear,outdoor,36900.0,True,2026-10-31,pendiente,
+cloud storage pricing,camping gear,outdoor,36900.0,True,2026-10-31,filtrado,no relacionado con la semilla
 home security camera,camping gear,outdoor,36100.0,True,2026-10-31,filtrado,electrónica
 language learning app,camping gear,outdoor,35950.0,True,2026-10-31,filtrado,tienda/intención no-producto
-podcast equipment setup,camping gear,outdoor,35900.0,True,2026-10-31,pendiente,
+podcast equipment setup,camping gear,outdoor,35900.0,True,2026-10-31,filtrado,no relacionado con la semilla
 vpn service,camping gear,outdoor,35550.0,True,2026-10-31,filtrado,tienda/intención no-producto
 iphone 16 review,camping gear,outdoor,35250.0,True,2026-10-31,filtrado,tienda/intención no-producto
 pet insurance cost,camping gear,outdoor,34450.0,True,2026-10-31,filtrado,tienda/intención no-producto
 moving company quotes,camping gear,outdoor,34300.0,True,2026-10-31,filtrado,tienda/intención no-producto
 headphones wireless,camping gear,outdoor,34050.0,True,2026-10-31,filtrado,electrónica
 learn golang,camping gear,outdoor,34050.0,True,2026-10-31,filtrado,tienda/intención no-producto
-healthy meal prep,camping gear,outdoor,33750.0,True,2026-10-31,pendiente,
+healthy meal prep,camping gear,outdoor,33750.0,True,2026-10-31,filtrado,no relacionado con la semilla
 electric cars comparison,camping gear,outdoor,32950.0,True,2026-10-31,filtrado,electrónica
 meal delivery service,camping gear,outdoor,32450.0,True,2026-10-31,filtrado,tienda/intención no-producto
 digital marketing course,camping gear,outdoor,32250.0,True,2026-10-31,filtrado,tienda/intención no-producto
 dog training tips,camping gear,outdoor,32250.0,True,2026-10-31,filtrado,tienda/intención no-producto
 electric bike review,camping gear,outdoor,31950.0,True,2026-10-31,filtrado,tienda/intención no-producto
 how to cook pasta,camping gear,outdoor,31750.0,True,2026-10-31,filtrado,tienda/intención no-producto
-flights new york,camping gear,outdoor,31700.0,True,2026-10-31,pendiente,
+flights new york,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tienda/intención no-producto
 home insurance quotes,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tienda/intención no-producto
 coworking space near me,camping gear,outdoor,31150.0,True,2026-10-31,filtrado,tienda/intención no-producto
 hamilton beach personal blender with travel lid,beach accessories,verano,7350.0,True,2026-10-31,filtrado,demasiado largo
@@ -402,7 +402,7 @@ learn programming,garden tools,jardín,5500.0,True,2026-10-31,filtrado,tienda/in
 garden tools set,garden tools,jardín,250.0,False,2026-10-31,escaneado,
 giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,pendiente,
 cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,pendiente,
-giraffe tools,garden tools,jardín,110.0,False,2026-10-31,pendiente,
+giraffe tools,garden tools,jardín,110.0,False,2026-10-31,filtrado,no relacionado con la semilla
 garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
 garden tools,garden tools,jardín,60.0,False,2026-10-31,filtrado,igual a la semilla
 how to use an instant pot,plant pot,jardín,5700.0,True,2026-11-01,filtrado,tienda/intención no-producto
@@ -410,26 +410,26 @@ instant pot 6qt 9-in-1 pressure cooker bundle,plant pot,jardín,3450.0,False,202
 instant pot duo plus 9-in-1 electric pressure cooker,plant pot,jardín,2800.0,False,2026-11-01,filtrado,electrónica
 ikea affordable plant pot,plant pot,jardín,800.0,False,2026-11-01,filtrado,tienda/intención no-producto
 orgain organic plant based protein powder,plant pot,jardín,700.0,False,2026-11-01,filtrado,demasiado largo
-rs3 plant pot,plant pot,jardín,250.0,False,2026-11-01,pendiente,
+rs3 plant pot,plant pot,jardín,250.0,False,2026-11-01,filtrado,tienda/intención no-producto
 gold plant pot,plant pot,jardín,180.0,False,2026-11-01,pendiente,
 black plant pot,plant pot,jardín,150.0,False,2026-11-01,pendiente,
 ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
 pink plant pot,plant pot,jardín,90.0,False,2026-11-01,pendiente,
 plant pot cover,plant pot,jardín,80.0,False,2026-11-01,pendiente,
 tall plant pot,plant pot,jardín,40.0,False,2026-11-01,pendiente,
-bagsmart blast travel backpack,travel accessories,viaje,17150.0,True,2026-11-01,pendiente,
-museums,travel accessories,viaje,14500.0,True,2026-11-01,pendiente,
-budget travel destinations,travel accessories,viaje,12450.0,True,2026-11-01,pendiente,
-places to travel in december,travel accessories,viaje,10950.0,True,2026-11-01,pendiente,
-travel itinerary template,travel accessories,viaje,10700.0,True,2026-11-01,pendiente,
-yoga,travel accessories,viaje,550.0,False,2026-11-01,pendiente,
-fitness,travel accessories,viaje,160.0,False,2026-11-01,pendiente,
-tea,travel accessories,viaje,160.0,False,2026-11-01,pendiente,
-coffee,travel accessories,viaje,140.0,False,2026-11-01,pendiente,
-travel destinations,travel accessories,viaje,100.0,False,2026-11-01,pendiente,
-fishing,travel accessories,viaje,50.0,False,2026-11-01,pendiente,
+bagsmart blast travel backpack,travel accessories,viaje,17150.0,True,2026-11-01,filtrado,tienda/intención no-producto
+museums,travel accessories,viaje,14500.0,True,2026-11-01,filtrado,no relacionado con la semilla
+budget travel destinations,travel accessories,viaje,12450.0,True,2026-11-01,filtrado,tienda/intención no-producto
+places to travel in december,travel accessories,viaje,10950.0,True,2026-11-01,filtrado,tienda/intención no-producto
+travel itinerary template,travel accessories,viaje,10700.0,True,2026-11-01,filtrado,tienda/intención no-producto
+yoga,travel accessories,viaje,550.0,False,2026-11-01,filtrado,no relacionado con la semilla
+fitness,travel accessories,viaje,160.0,False,2026-11-01,filtrado,no relacionado con la semilla
+tea,travel accessories,viaje,160.0,False,2026-11-01,filtrado,no relacionado con la semilla
+coffee,travel accessories,viaje,140.0,False,2026-11-01,filtrado,no relacionado con la semilla
+travel destinations,travel accessories,viaje,100.0,False,2026-11-01,filtrado,tienda/intención no-producto
+fishing,travel accessories,viaje,50.0,False,2026-11-01,filtrado,no relacionado con la semilla
 kids travel accessories,travel accessories,viaje,50.0,False,2026-11-01,filtrado,producto para niños
-hair dryers,hair accessories,belleza,5650.0,True,2026-11-01,pendiente,
+hair dryers,hair accessories,belleza,5650.0,True,2026-11-01,filtrado,electrónica
 how to remove gum from hair,hair accessories,belleza,5450.0,True,2026-11-01,filtrado,tienda/intención no-producto
 blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,pendiente,
 luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
@@ -447,5 +447,5 @@ kids hair accessories,hair accessories,belleza,50.0,False,2026-11-01,filtrado,pr
 pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
 hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
 long hair accessories,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
-ice cream,skincare tool,belleza,120.0,False,2026-11-01,pendiente,
+ice cream,skincare tool,belleza,120.0,False,2026-11-01,filtrado,no relacionado con la semilla
 skincare for oily skin,skincare tool,belleza,100.0,False,2026-11-01,pendiente,
