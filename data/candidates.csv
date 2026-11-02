@@ -1,4 +1,8 @@
 nombre,keyword,precio_venta,costo_fabrica,flete_unidad,fba_fee,size_tier,cuft_unidad,moq,dias_entrega,ventas_mes_est,resenas_top10,asins_competidores,fuente
 Cooling towel,cooling towel,10.99,,,,small_standard,0.03,,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
 Embroidery kit,embroidery kit,14.99,,,,large_standard_1lb,0.08,,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
-Dog cooling mat,dog cooling mat,26.99,,,,large_standard_2lb,0.25,,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
+Dog cooling mat,dog cooling mat,25.99,,,,large_standard_2lb,0.25,,,,,,precio = mediana top10 Amazon 2026-10-15; costo PENDIENTE cotización; size_tier ESTIMADO
+Cat wrestling glove,cat wrestling glove,27.99,,,,large_standard_1lb,0.1,,,,,,precio sugerido Decisión 2026-11-02; costo/moq/días PENDIENTE cotización (docs/plantilla_cotizacion_proveedores.md); size_tier ESTIMADO
+Dog grooming hammock,dog grooming hammock,34.99,,,,large_standard_2lb,0.2,,,,,,precio sugerido Decisión 2026-11-02; costo/moq/días PENDIENTE cotización (docs/plantilla_cotizacion_proveedores.md); size_tier ESTIMADO
+Bead organizer,bead organizer,25.99,,,,large_standard_1lb,0.1,,,,,,precio sugerido Decisión 2026-11-02; costo/moq/días PENDIENTE cotización (docs/plantilla_cotizacion_proveedores.md); size_tier ESTIMADO
+Dog purse carrier,dog purse carrier,38.99,,,,large_standard_2lb,0.3,,,,,,precio sugerido Decisión 2026-11-02; costo/moq/días PENDIENTE cotización (docs/plantilla_cotizacion_proveedores.md); size_tier ESTIMADO
