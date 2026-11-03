@@ -191,7 +191,7 @@ corner pet grooming,pet grooming,mascotas,250.0,False,2026-10-24,filtrado,tienda
 pet grooming table,pet grooming,mascotas,250.0,False,2026-10-24,escaneado,
 dog grooming tips,pet grooming,mascotas,200.0,False,2026-10-24,filtrado,tienda/intención no-producto
 corner pet grooming greenville sc,pet grooming,mascotas,150.0,False,2026-10-24,filtrado,tienda/intención no-producto
-pet grooming kit,pet grooming,mascotas,140.0,False,2026-10-24,pendiente,
+pet grooming kit,pet grooming,mascotas,140.0,False,2026-10-24,escaneado,
 dyson pet grooming tool,pet grooming,mascotas,130.0,False,2026-10-24,filtrado,marca
 pet grooming vacuum kit,pet grooming,mascotas,120.0,False,2026-10-24,filtrado,electrónica
 pet grooming near me,pet grooming,mascotas,110.0,False,2026-10-24,filtrado,tienda/intención no-producto
@@ -266,7 +266,7 @@ shoulder massage tool,massage tool,bienestar,80.0,False,2026-10-29,pendiente,
 head massage tool,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 massage gun,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
-nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,pendiente,
+nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,escaneado,
 baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,pendiente,
 zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,pendiente,
 zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,filtrado,no relacionado con la semilla
@@ -276,7 +276,7 @@ canon gadget bag 2400,kitchen gadget,cocina,41050.0,True,2026-10-29,escaneado,
 kitchen gadget fashioned from pearl,kitchen gadget,cocina,36850.0,True,2026-10-29,escaneado,
 revolutionary kitchen gadget nyt,kitchen gadget,cocina,28950.0,True,2026-10-29,escaneado,
 kitchen gadget set,kitchen gadget,cocina,170.0,False,2026-10-29,escaneado,
-cool kitchen gadget,kitchen gadget,cocina,140.0,False,2026-10-29,pendiente,
+cool kitchen gadget,kitchen gadget,cocina,140.0,False,2026-10-29,escaneado,
 cleaner kitchen gadget,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 kitchen gadget brands,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 ikea nålblecka kitchen countertop organizer,kitchen organizer,cocina,38350.0,True,2026-10-29,filtrado,tienda/intención no-producto
@@ -295,7 +295,7 @@ car accessories,coffee accessories,cocina,80.0,False,2026-10-30,filtrado,no rela
 coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
 closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,filtrado,marca
 portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escaneado,
-stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,pendiente,
+stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,escaneado,
 closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,pendiente,
 closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,filtrado,marca
 wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
@@ -312,9 +312,9 @@ desk accessories set,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 golf desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
 cat desk accessories,desk accessories,oficina,250.0,False,2026-10-30,escaneado,
 modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,escaneado,
-gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,pendiente,
+gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,escaneado,
 kids desk accessories,desk accessories,oficina,150.0,False,2026-10-30,filtrado,producto para niños
-desk lamp,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
+desk lamp,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
 desk chair,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
 standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
 standing desk,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
@@ -400,7 +400,7 @@ how to start a vegetable garden,garden tools,jardín,14650.0,True,2026-10-31,fil
 office chairs,garden tools,jardín,6550.0,True,2026-10-31,escaneado,
 learn programming,garden tools,jardín,5500.0,True,2026-10-31,filtrado,tienda/intención no-producto
 garden tools set,garden tools,jardín,250.0,False,2026-10-31,escaneado,
-giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,pendiente,
+giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,escaneado,
 cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,pendiente,
 giraffe tools,garden tools,jardín,110.0,False,2026-10-31,filtrado,no relacionado con la semilla
 garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
@@ -412,7 +412,7 @@ ikea affordable plant pot,plant pot,jardín,800.0,False,2026-11-01,filtrado,tien
 orgain organic plant based protein powder,plant pot,jardín,700.0,False,2026-11-01,filtrado,demasiado largo
 rs3 plant pot,plant pot,jardín,250.0,False,2026-11-01,filtrado,tienda/intención no-producto
 gold plant pot,plant pot,jardín,180.0,False,2026-11-01,escaneado,
-black plant pot,plant pot,jardín,150.0,False,2026-11-01,pendiente,
+black plant pot,plant pot,jardín,150.0,False,2026-11-01,escaneado,
 ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
 pink plant pot,plant pot,jardín,90.0,False,2026-11-01,pendiente,
 plant pot cover,plant pot,jardín,80.0,False,2026-11-01,pendiente,
@@ -432,8 +432,8 @@ kids travel accessories,travel accessories,viaje,50.0,False,2026-11-01,filtrado,
 hair dryers,hair accessories,belleza,5650.0,True,2026-11-01,filtrado,electrónica
 how to remove gum from hair,hair accessories,belleza,5450.0,True,2026-11-01,filtrado,tienda/intención no-producto
 blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,escaneado,
-luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
-floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,pendiente,
+luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
+floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
 silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,pendiente,
 red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,pendiente,
 dyson hair accessories,hair accessories,belleza,90.0,False,2026-11-01,filtrado,marca
