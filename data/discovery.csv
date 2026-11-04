@@ -118,8 +118,8 @@ orthopedic dog bed,dog bed,mascotas,250.0,False,2026-10-23,escaneado,
 donut dog bed,dog bed,mascotas,200.0,False,2026-10-23,escaneado,
 outdoor dog bed,dog bed,mascotas,190.0,False,2026-10-23,escaneado,
 small dog bed,dog bed,mascotas,180.0,False,2026-10-23,escaneado,
-xl dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
-cooling dog bed,dog bed,mascotas,130.0,False,2026-10-23,pendiente,
+xl dog bed,dog bed,mascotas,130.0,False,2026-10-23,escaneado,
+cooling dog bed,dog bed,mascotas,130.0,False,2026-10-23,escaneado,
 washable dog bed,dog bed,mascotas,110.0,False,2026-10-23,pendiente,
 dog couch bed,dog bed,mascotas,90.0,False,2026-10-23,pendiente,
 k9 ballistics dog bed,dog bed,mascotas,80.0,False,2026-10-23,filtrado,marca
@@ -134,7 +134,7 @@ dog toy storage,dog toy,mascotas,450.0,False,2026-10-23,escaneado,
 toy story 5,dog toy,mascotas,400.0,False,2026-10-23,escaneado,
 chicken dog toy,dog toy,mascotas,170.0,False,2026-10-23,escaneado,
 dog toy box,dog toy,mascotas,160.0,False,2026-10-23,escaneado,
-interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,pendiente,
+interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,escaneado,
 kong dog toy,dog toy,mascotas,90.0,False,2026-10-23,filtrado,marca
 dog chew toy,dog toy,mascotas,50.0,False,2026-10-23,pendiente,
 robot dog,dog toy,mascotas,50.0,False,2026-10-23,filtrado,electrónica
@@ -254,8 +254,8 @@ booty resistance bands,resistance bands,fitness,190.0,False,2026-10-27,escaneado
 theraband resistance bands,resistance bands,fitness,160.0,False,2026-10-27,filtrado,marca
 pull up resistance bands,resistance bands,fitness,110.0,False,2026-10-27,pendiente,
 target resistance bands,resistance bands,fitness,60.0,False,2026-10-27,filtrado,tienda/intención no-producto
-cellulite massage tool,massage tool,bienestar,130.0,False,2026-10-29,pendiente,
-hair massage tool,massage tool,bienestar,120.0,False,2026-10-29,pendiente,
+cellulite massage tool,massage tool,bienestar,130.0,False,2026-10-29,escaneado,
+hair massage tool,massage tool,bienestar,120.0,False,2026-10-29,escaneado,
 eye massage tool,massage tool,bienestar,110.0,False,2026-10-29,pendiente,
 metal massage tool,massage tool,bienestar,110.0,False,2026-10-29,pendiente,
 fascia massage tool,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
@@ -296,7 +296,7 @@ coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendient
 closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,filtrado,marca
 portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escaneado,
 stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,escaneado,
-closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,pendiente,
+closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,escaneado,
 closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,filtrado,marca
 wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
 metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
@@ -315,7 +315,7 @@ modern desk accessories,desk accessories,oficina,200.0,False,2026-10-30,escanead
 gold desk accessories,desk accessories,oficina,180.0,False,2026-10-30,escaneado,
 kids desk accessories,desk accessories,oficina,150.0,False,2026-10-30,filtrado,producto para niños
 desk lamp,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
-desk chair,desk accessories,oficina,140.0,False,2026-10-30,pendiente,
+desk chair,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
 standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
 standing desk,desk accessories,oficina,120.0,False,2026-10-30,pendiente,
 home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,pendiente,
@@ -354,7 +354,7 @@ pokemon car accessories,car accessories,auto,200.0,False,2026-10-31,filtrado,lic
 womens car accessories,car accessories,auto,200.0,False,2026-10-31,escaneado,
 dog car accessories,car accessories,auto,170.0,False,2026-10-31,escaneado,
 red car accessories,car accessories,auto,160.0,False,2026-10-31,escaneado,
-car travel accessories,car accessories,auto,140.0,False,2026-10-31,pendiente,
+car travel accessories,car accessories,auto,140.0,False,2026-10-31,escaneado,
 car accessories for women,car accessories,auto,120.0,False,2026-10-31,pendiente,
 custom car accessories,car accessories,auto,120.0,False,2026-10-31,pendiente,
 car accessories for men,car accessories,auto,80.0,False,2026-10-31,pendiente,
@@ -390,7 +390,7 @@ flights new york,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tienda/in
 home insurance quotes,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tienda/intención no-producto
 coworking space near me,camping gear,outdoor,31150.0,True,2026-10-31,filtrado,tienda/intención no-producto
 hamilton beach personal blender with travel lid,beach accessories,verano,7350.0,True,2026-10-31,filtrado,demasiado largo
-dog beach accessories,beach accessories,verano,130.0,False,2026-10-31,pendiente,
+dog beach accessories,beach accessories,verano,130.0,False,2026-10-31,escaneado,
 beach house accessories,beach accessories,verano,80.0,False,2026-10-31,pendiente,
 baby beach accessories,beach accessories,verano,60.0,False,2026-10-31,pendiente,
 beach accessories near me,beach accessories,verano,60.0,False,2026-10-31,filtrado,tienda/intención no-producto
@@ -401,7 +401,7 @@ office chairs,garden tools,jardín,6550.0,True,2026-10-31,escaneado,
 learn programming,garden tools,jardín,5500.0,True,2026-10-31,filtrado,tienda/intención no-producto
 garden tools set,garden tools,jardín,250.0,False,2026-10-31,escaneado,
 giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,escaneado,
-cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,pendiente,
+cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,escaneado,
 giraffe tools,garden tools,jardín,110.0,False,2026-10-31,filtrado,no relacionado con la semilla
 garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
 garden tools,garden tools,jardín,60.0,False,2026-10-31,filtrado,igual a la semilla
