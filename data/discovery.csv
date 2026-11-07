@@ -97,7 +97,7 @@ christmas tree decorations,fecha: Navidad,fechas especiales,0.0,False,2026-10-21
 mens stocking stuffers,stocking stuffers,navidad,3650.0,False,2026-10-22,escaneado,
 stocking stuffers for women,stocking stuffers,navidad,750.0,False,2026-10-22,escaneado,
 stocking stuffers,stocking stuffers,navidad,300.0,False,2026-10-22,filtrado,igual a la semilla
-stocking stuffers for young adults,stocking stuffers,navidad,100.0,False,2026-10-22,pendiente,
+stocking stuffers for young adults,stocking stuffers,navidad,100.0,False,2026-10-22,escaneado,
 stocking stuffers for 1 year old boy,stocking stuffers,navidad,80.0,False,2026-10-22,filtrado,demasiado largo
 unique stocking stuffers for adults,stocking stuffers,navidad,80.0,False,2026-10-22,pendiente,
 ulta beauty,stocking stuffers,navidad,80.0,False,2026-10-22,filtrado,tienda/intención no-producto
@@ -235,7 +235,7 @@ sticker machine,sticker,hobby,60.0,False,2026-10-27,pendiente,
 sticker book,sticker,hobby,50.0,False,2026-10-27,pendiente,
 sticker sheets,sticker,hobby,50.0,False,2026-10-27,pendiente,
 hot yoga accessories,yoga accessories,fitness,60.0,False,2026-10-27,pendiente,
-gym shoes,gym accessories,fitness,100.0,False,2026-10-27,pendiente,
+gym shoes,gym accessories,fitness,100.0,False,2026-10-27,escaneado,
 gym bag,gym accessories,fitness,60.0,False,2026-10-27,pendiente,
 home gym accessories,gym accessories,fitness,50.0,False,2026-10-27,pendiente,
 pilates accessories,gym accessories,fitness,40.0,False,2026-10-27,filtrado,no relacionado con la semilla
@@ -257,7 +257,7 @@ target resistance bands,resistance bands,fitness,60.0,False,2026-10-27,filtrado,
 cellulite massage tool,massage tool,bienestar,130.0,False,2026-10-29,escaneado,
 hair massage tool,massage tool,bienestar,120.0,False,2026-10-29,escaneado,
 eye massage tool,massage tool,bienestar,110.0,False,2026-10-29,escaneado,
-metal massage tool,massage tool,bienestar,110.0,False,2026-10-29,pendiente,
+metal massage tool,massage tool,bienestar,110.0,False,2026-10-29,escaneado,
 fascia massage tool,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
 fascia massage,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
 hand massage tool,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
@@ -267,7 +267,7 @@ head massage tool,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 massage gun,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
 nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,escaneado,
-baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,pendiente,
+baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,escaneado,
 zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,pendiente,
 zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,filtrado,no relacionado con la semilla
 magnesium for sleep,sleep aid,bienestar,50.0,False,2026-10-29,pendiente,
@@ -288,8 +288,8 @@ countertop organizer,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
 coffee shops nearby,coffee accessories,cocina,30450.0,True,2026-10-30,filtrado,tienda/intención no-producto
 gopro hero13 black accessories bundle,coffee accessories,cocina,18050.0,True,2026-10-30,filtrado,marca
 cuisinart 14 cup programmable coffee maker,coffee accessories,cocina,11050.0,True,2026-10-30,filtrado,demasiado largo
-coffee table accessories,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
-coffee table,coffee accessories,cocina,110.0,False,2026-10-30,pendiente,
+coffee table accessories,coffee accessories,cocina,110.0,False,2026-10-30,escaneado,
+coffee table,coffee accessories,cocina,110.0,False,2026-10-30,escaneado,
 travel,coffee accessories,cocina,100.0,False,2026-10-30,filtrado,no relacionado con la semilla
 car accessories,coffee accessories,cocina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
@@ -298,8 +298,8 @@ portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escanead
 stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,escaneado,
 closet organizer system,closet organizer,hogar,120.0,False,2026-10-30,escaneado,
 closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,filtrado,marca
-wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
-metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,pendiente,
+wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,escaneado,
+metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,escaneado,
 storage closet organizer,closet organizer,hogar,60.0,False,2026-10-30,pendiente,
 closet storage,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
@@ -318,7 +318,7 @@ desk lamp,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
 desk chair,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
 standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,escaneado,
 standing desk,desk accessories,oficina,120.0,False,2026-10-30,escaneado,
-home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,pendiente,
+home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,escaneado,
 computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,pendiente,
 pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
 gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
@@ -434,7 +434,7 @@ how to remove gum from hair,hair accessories,belleza,5450.0,True,2026-11-01,filt
 blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,escaneado,
 luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
 floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
-silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,pendiente,
+silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,escaneado,
 red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,pendiente,
 dyson hair accessories,hair accessories,belleza,90.0,False,2026-11-01,filtrado,marca
 hair accessories for kids,hair accessories,belleza,80.0,False,2026-11-01,filtrado,producto para niños
