@@ -1,6 +1,6 @@
 termino,seed,categoria,subida_pct,breakout,descubierto,estado,motivo
 baby stroller review,baby essentials,bebé,46300.0,True,2026-10-15,filtrado,tienda/intención no-producto
-minimalist baby essentials,baby essentials,bebé,90.0,False,2026-10-15,pendiente,
+minimalist baby essentials,baby essentials,bebé,90.0,False,2026-10-15,escaneado,
 huggies skin essentials,baby essentials,bebé,70.0,False,2026-10-15,filtrado,marca
 new baby essentials,baby essentials,bebé,60.0,False,2026-10-15,pendiente,
 clear bathroom organizer,bathroom organizer,hogar,80.0,False,2026-10-15,pendiente,
@@ -121,7 +121,7 @@ small dog bed,dog bed,mascotas,180.0,False,2026-10-23,escaneado,
 xl dog bed,dog bed,mascotas,130.0,False,2026-10-23,escaneado,
 cooling dog bed,dog bed,mascotas,130.0,False,2026-10-23,escaneado,
 washable dog bed,dog bed,mascotas,110.0,False,2026-10-23,escaneado,
-dog couch bed,dog bed,mascotas,90.0,False,2026-10-23,pendiente,
+dog couch bed,dog bed,mascotas,90.0,False,2026-10-23,escaneado,
 k9 ballistics dog bed,dog bed,mascotas,80.0,False,2026-10-23,filtrado,marca
 dog bed large,dog bed,mascotas,60.0,False,2026-10-23,pendiente,
 elevated dog bed,dog bed,mascotas,60.0,False,2026-10-23,pendiente,
@@ -152,7 +152,7 @@ cat toy box,cat toy,mascotas,150.0,False,2026-10-23,escaneado,
 automatic cat toy,cat toy,mascotas,110.0,False,2026-10-23,filtrado,electrónica
 cat plush toy,cat toy,mascotas,110.0,False,2026-10-23,escaneado,
 dog,cat toy,mascotas,100.0,False,2026-10-23,filtrado,demasiado genérico
-interactive cat toy,cat toy,mascotas,90.0,False,2026-10-23,pendiente,
+interactive cat toy,cat toy,mascotas,90.0,False,2026-10-23,escaneado,
 cat chew toy,cat toy,mascotas,80.0,False,2026-10-23,pendiente,
 remote control cat toy,cat toy,mascotas,80.0,False,2026-10-23,filtrado,electrónica
 toy story,cat toy,mascotas,80.0,False,2026-10-23,filtrado,licencia de marca
@@ -258,8 +258,8 @@ cellulite massage tool,massage tool,bienestar,130.0,False,2026-10-29,escaneado,
 hair massage tool,massage tool,bienestar,120.0,False,2026-10-29,escaneado,
 eye massage tool,massage tool,bienestar,110.0,False,2026-10-29,escaneado,
 metal massage tool,massage tool,bienestar,110.0,False,2026-10-29,escaneado,
-fascia massage tool,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
-fascia massage,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
+fascia massage tool,massage tool,bienestar,90.0,False,2026-10-29,escaneado,
+fascia massage,massage tool,bienestar,90.0,False,2026-10-29,escaneado,
 hand massage tool,massage tool,bienestar,90.0,False,2026-10-29,pendiente,
 deep tissue massage tool,massage tool,bienestar,80.0,False,2026-10-29,pendiente,
 shoulder massage tool,massage tool,bienestar,80.0,False,2026-10-29,pendiente,
@@ -280,7 +280,7 @@ cool kitchen gadget,kitchen gadget,cocina,140.0,False,2026-10-29,escaneado,
 cleaner kitchen gadget,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 kitchen gadget brands,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 ikea nålblecka kitchen countertop organizer,kitchen organizer,cocina,38350.0,True,2026-10-29,filtrado,tienda/intención no-producto
-kitchen wall organizer,kitchen organizer,cocina,90.0,False,2026-10-29,pendiente,
+kitchen wall organizer,kitchen organizer,cocina,90.0,False,2026-10-29,escaneado,
 kitchen storage,kitchen organizer,cocina,70.0,False,2026-10-29,pendiente,
 kitchen storage organizer,kitchen organizer,cocina,60.0,False,2026-10-29,pendiente,
 countertop organizer kitchen,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
@@ -319,7 +319,7 @@ desk chair,desk accessories,oficina,140.0,False,2026-10-30,escaneado,
 standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,escaneado,
 standing desk,desk accessories,oficina,120.0,False,2026-10-30,escaneado,
 home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,escaneado,
-computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,pendiente,
+computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,escaneado,
 pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
 gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
@@ -403,7 +403,7 @@ garden tools set,garden tools,jardín,250.0,False,2026-10-31,escaneado,
 giraffe tools garden hose reel,garden tools,jardín,150.0,False,2026-10-31,escaneado,
 cordless garden tools,garden tools,jardín,140.0,False,2026-10-31,escaneado,
 giraffe tools,garden tools,jardín,110.0,False,2026-10-31,filtrado,no relacionado con la semilla
-garden power tools,garden tools,jardín,100.0,False,2026-10-31,pendiente,
+garden power tools,garden tools,jardín,100.0,False,2026-10-31,escaneado,
 garden tools,garden tools,jardín,60.0,False,2026-10-31,filtrado,igual a la semilla
 how to use an instant pot,plant pot,jardín,5700.0,True,2026-11-01,filtrado,tienda/intención no-producto
 instant pot 6qt 9-in-1 pressure cooker bundle,plant pot,jardín,3450.0,False,2026-11-01,filtrado,demasiado largo
@@ -435,7 +435,7 @@ blue hair accessories,hair accessories,belleza,180.0,False,2026-11-01,escaneado,
 luxury hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
 floral hair accessories,hair accessories,belleza,150.0,False,2026-11-01,escaneado,
 silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,escaneado,
-red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,pendiente,
+red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,escaneado,
 dyson hair accessories,hair accessories,belleza,90.0,False,2026-11-01,filtrado,marca
 hair accessories for kids,hair accessories,belleza,80.0,False,2026-11-01,filtrado,producto para niños
 hair accessories for long hair,hair accessories,belleza,70.0,False,2026-11-01,pendiente,
@@ -448,4 +448,4 @@ pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
 hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
 long hair accessories,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
 ice cream,skincare tool,belleza,120.0,False,2026-11-01,filtrado,no relacionado con la semilla
-skincare for oily skin,skincare tool,belleza,100.0,False,2026-11-01,pendiente,
+skincare for oily skin,skincare tool,belleza,100.0,False,2026-11-01,escaneado,
