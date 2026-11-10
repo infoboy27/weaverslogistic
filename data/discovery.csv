@@ -5,7 +5,7 @@ huggies skin essentials,baby essentials,bebé,70.0,False,2026-10-15,filtrado,mar
 new baby essentials,baby essentials,bebé,60.0,False,2026-10-15,pendiente,
 clear bathroom organizer,bathroom organizer,hogar,80.0,False,2026-10-15,escaneado,
 bathroom wall organizer,bathroom organizer,hogar,80.0,False,2026-10-15,escaneado,
-vanity organizer,bathroom organizer,hogar,70.0,False,2026-10-15,pendiente,
+vanity organizer,bathroom organizer,hogar,70.0,False,2026-10-15,escaneado,
 bathroom vanity,bathroom organizer,hogar,60.0,False,2026-10-15,pendiente,
 bathroom vanity organizer,bathroom organizer,hogar,50.0,False,2026-10-15,pendiente,
 organizer for bathroom,bathroom organizer,hogar,50.0,False,2026-10-15,pendiente,
@@ -102,7 +102,7 @@ stocking stuffers for 1 year old boy,stocking stuffers,navidad,80.0,False,2026-1
 unique stocking stuffers for adults,stocking stuffers,navidad,80.0,False,2026-10-22,escaneado,
 ulta beauty,stocking stuffers,navidad,80.0,False,2026-10-22,filtrado,tienda/intención no-producto
 stocking stuffers for 2 year old boy,stocking stuffers,navidad,70.0,False,2026-10-22,filtrado,demasiado largo
-small stocking stuffers for men,stocking stuffers,navidad,70.0,False,2026-10-22,pendiente,
+small stocking stuffers for men,stocking stuffers,navidad,70.0,False,2026-10-22,escaneado,
 men's stocking stuffers,stocking stuffers,navidad,60.0,False,2026-10-22,pendiente,
 stocking stuffers for adult children,stocking stuffers,navidad,60.0,False,2026-10-22,pendiente,
 small stocking stuffers,stocking stuffers,navidad,50.0,False,2026-10-22,pendiente,
@@ -156,7 +156,7 @@ interactive cat toy,cat toy,mascotas,90.0,False,2026-10-23,escaneado,
 cat chew toy,cat toy,mascotas,80.0,False,2026-10-23,escaneado,
 remote control cat toy,cat toy,mascotas,80.0,False,2026-10-23,filtrado,electrónica
 toy story,cat toy,mascotas,80.0,False,2026-10-23,filtrado,licencia de marca
-cat stick toy,cat toy,mascotas,70.0,False,2026-10-23,pendiente,
+cat stick toy,cat toy,mascotas,70.0,False,2026-10-23,escaneado,
 diy cat toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
 cat kicker toy,cat toy,mascotas,60.0,False,2026-10-23,pendiente,
 robot cat toy,cat toy,mascotas,60.0,False,2026-10-23,filtrado,electrónica
@@ -171,7 +171,7 @@ ruffwear harness,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
 ruffwear,dog harness,mascotas,100.0,False,2026-10-24,filtrado,marca
 dog car harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
 front clip dog harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
-dog vest harness,dog harness,mascotas,80.0,False,2026-10-24,pendiente,
+dog vest harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
 ruffwear dog harness,dog harness,mascotas,80.0,False,2026-10-24,filtrado,marca
 easy walk harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
 pink dog harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
@@ -262,7 +262,7 @@ fascia massage tool,massage tool,bienestar,90.0,False,2026-10-29,escaneado,
 fascia massage,massage tool,bienestar,90.0,False,2026-10-29,escaneado,
 hand massage tool,massage tool,bienestar,90.0,False,2026-10-29,escaneado,
 deep tissue massage tool,massage tool,bienestar,80.0,False,2026-10-29,escaneado,
-shoulder massage tool,massage tool,bienestar,80.0,False,2026-10-29,pendiente,
+shoulder massage tool,massage tool,bienestar,80.0,False,2026-10-29,escaneado,
 head massage tool,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 massage gun,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
@@ -320,9 +320,9 @@ standing desk accessories,desk accessories,oficina,120.0,False,2026-10-30,escane
 standing desk,desk accessories,oficina,120.0,False,2026-10-30,escaneado,
 home office desk accessories,desk accessories,oficina,100.0,False,2026-10-30,escaneado,
 computer desk accessories,desk accessories,oficina,90.0,False,2026-10-30,escaneado,
-pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
-gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 ikea desk accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
 gaming desk,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
 desk accessories for women,desk accessories,oficina,50.0,False,2026-10-30,pendiente,
@@ -357,7 +357,7 @@ red car accessories,car accessories,auto,160.0,False,2026-10-31,escaneado,
 car travel accessories,car accessories,auto,140.0,False,2026-10-31,escaneado,
 car accessories for women,car accessories,auto,120.0,False,2026-10-31,escaneado,
 custom car accessories,car accessories,auto,120.0,False,2026-10-31,escaneado,
-car accessories for men,car accessories,auto,80.0,False,2026-10-31,pendiente,
+car accessories for men,car accessories,auto,80.0,False,2026-10-31,escaneado,
 car accessories shop,car accessories,auto,80.0,False,2026-10-31,filtrado,tienda/intención no-producto
 car wash accessories,car accessories,auto,70.0,False,2026-10-31,pendiente,
 car interior accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
@@ -391,7 +391,7 @@ home insurance quotes,camping gear,outdoor,31700.0,True,2026-10-31,filtrado,tien
 coworking space near me,camping gear,outdoor,31150.0,True,2026-10-31,filtrado,tienda/intención no-producto
 hamilton beach personal blender with travel lid,beach accessories,verano,7350.0,True,2026-10-31,filtrado,demasiado largo
 dog beach accessories,beach accessories,verano,130.0,False,2026-10-31,escaneado,
-beach house accessories,beach accessories,verano,80.0,False,2026-10-31,pendiente,
+beach house accessories,beach accessories,verano,80.0,False,2026-10-31,escaneado,
 baby beach accessories,beach accessories,verano,60.0,False,2026-10-31,pendiente,
 beach accessories near me,beach accessories,verano,60.0,False,2026-10-31,filtrado,tienda/intención no-producto
 how to winterize garden,garden tools,jardín,16750.0,True,2026-10-31,filtrado,tienda/intención no-producto
@@ -415,7 +415,7 @@ gold plant pot,plant pot,jardín,180.0,False,2026-11-01,escaneado,
 black plant pot,plant pot,jardín,150.0,False,2026-11-01,escaneado,
 ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
 pink plant pot,plant pot,jardín,90.0,False,2026-11-01,escaneado,
-plant pot cover,plant pot,jardín,80.0,False,2026-11-01,pendiente,
+plant pot cover,plant pot,jardín,80.0,False,2026-11-01,escaneado,
 tall plant pot,plant pot,jardín,40.0,False,2026-11-01,pendiente,
 bagsmart blast travel backpack,travel accessories,viaje,17150.0,True,2026-11-01,filtrado,tienda/intención no-producto
 museums,travel accessories,viaje,14500.0,True,2026-11-01,filtrado,no relacionado con la semilla
