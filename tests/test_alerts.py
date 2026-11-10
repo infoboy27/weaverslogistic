@@ -77,3 +77,9 @@ def test_growing_product_with_past_peak_is_not_discarded():
     assert a.discard_alerts(p, pd.DataFrame(), TODAY) == []
     m = a.momentum_alerts(p, today=TODAY)
     assert len(m) == 1 and "confirmar que no sea moda" in m[0]["motivo"]
+
+
+def test_sector_table_empty_when_no_growth_data():
+    products = pd.DataFrame({"keyword": ["dog bed", "cat toy"], "crec_vs_mercado_pct": [None, None]})
+    out = a.sector_table(products, {"dog bed": "mascotas"})
+    assert out.empty and "crec_sector_pct" in out.columns

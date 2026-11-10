@@ -157,13 +157,18 @@ def adjust_for_market(table: pd.DataFrame) -> pd.DataFrame:
     return table
 
 
+YOY_GLITCH_THRESHOLD = 1.5
+
+
 def anomalous_weeks(load, keywords: list[str] | None = None, threshold: float | None = None) -> pd.DatetimeIndex:
     """Weeks with a market-wide Google data glitch (e.g. Mar-Jun 2026), padded around the block.
 
-    With >= 15 usable keywords: median across ALL keywords of (value / its trailing 26-week median).
-    Keywords peak in different seasons, so their seasonality cancels out in the median and only
-    jumps that hit everything at once remain (threshold 1.3). With fewer keywords it falls back to
-    the 4 control keywords (threshold 1.8; two of them are seasonal, so it needs a higher bar).
+    With >= 15 usable keywords a week is a glitch when, in the median across keywords, it is BOTH
+    >= 1.3x its trailing 26-week median AND >= 1.5x the same weeks one year earlier. The year-ago
+    test matters: with many gift/Christmas terms in the list, holiday shopping lifts most keywords
+    ~1.3x over the autumn every year (Nov-Dec 2025 was flagged by the trailing test alone), while
+    the 2026 glitch was 2-7x the year before. With fewer keywords it falls back to the 4 control
+    keywords (threshold 1.8; two of them are seasonal, so it needs a higher bar).
     """
     series = {}
     for k in (keywords or []):
@@ -174,8 +179,11 @@ def anomalous_weeks(load, keywords: list[str] | None = None, threshold: float | 
                 series[k] = w
     if len(series) >= 15:
         df = pd.concat(series, axis=1)
-        baseline = df.rolling(26, min_periods=13).median().shift(4).clip(lower=1)
-        threshold = threshold or 1.3
+        trailing = (df / df.rolling(26, min_periods=13).median().shift(4).clip(lower=1)).median(axis=1)
+        year_ago = df.shift(52).rolling(3, center=True, min_periods=1).mean().clip(lower=1)
+        yoy = (df / year_ago).median(axis=1)
+        flagged = (trailing >= (threshold or 1.3)) & (yoy >= YOY_GLITCH_THRESHOLD)
+        return widen(trailing[flagged].index)
     else:
         series = {k: to_weekly(s) for k in CONTROL_KEYWORDS if (s := load(k)) is not None}
         if len(series) < 2:

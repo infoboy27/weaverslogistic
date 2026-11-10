@@ -118,7 +118,10 @@ def sector_table(products: pd.DataFrame, sector_of: dict[str, str]) -> pd.DataFr
                      "crec_sector_pct": round(float(g["crec_vs_mercado_pct"].median()), 1),
                      "ganador": g["keyword"].iloc[0], "crec_ganador_pct": float(g["crec_vs_mercado_pct"].iloc[0]),
                      "top_3": ", ".join(g["keyword"].head(3))})
-    return pd.DataFrame(rows).sort_values("crec_sector_pct", ascending=False).reset_index(drop=True)
+    columns = ["sector", "productos", "crec_sector_pct", "ganador", "crec_ganador_pct", "top_3"]
+    if not rows:  # no keyword has a growth figure yet: empty table, not a crash of the whole dashboard
+        return pd.DataFrame(columns=columns)
+    return pd.DataFrame(rows, columns=columns).sort_values("crec_sector_pct", ascending=False).reset_index(drop=True)
 
 
 def sector_alerts(sectors: pd.DataFrame) -> list[dict]:
