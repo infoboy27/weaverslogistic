@@ -147,3 +147,32 @@ inventario:
   gmroi_minimo:
     valor: 2.0
     nota: "Margen anual por dólar en inventario. En retail ~3 es referencia; bajo 2 la plata rinde poco."
+
+# Ventas estimadas por BSR (pestaña Marcas): unidades/mes = a × BSR^(-b), por categoría principal de Amazon.
+# Son curvas de partida; se calibran solas con los "X+ bought in past month" de Competencia (ver fba_trends/ventas_bsr.py).
+ventas_bsr:
+  estimado: true
+  nota: "Curvas aproximadas de referencia de la industria (BSR 1,000 ≈ 1,500-3,500 u/mes según categoría). Se reemplazan por la calibración propia cuando hay datos."
+  factor_sobre_minimo: 1.3   # "1K+ bought" es un mínimo; la venta real suele estar algo por encima
+  min_puntos_calibracion: 8
+  por_defecto: {a: 1000000, b: 0.85}
+  categorias:
+    "Home & Kitchen": {a: 1250000, b: 0.85}
+    "Kitchen & Dining": {a: 1100000, b: 0.85}
+    "Pet Supplies": {a: 650000, b: 0.85}
+    "Arts, Crafts & Sewing": {a: 500000, b: 0.85}
+    "Sports & Outdoors": {a: 800000, b: 0.85}
+    "Toys & Games": {a: 900000, b: 0.85}
+    "Tools & Home Improvement": {a: 800000, b: 0.85}
+    "Patio, Lawn & Garden": {a: 550000, b: 0.85}
+    "Health & Household": {a: 1100000, b: 0.85}
+    "Beauty & Personal Care": {a: 1200000, b: 0.85}
+    "Office Products": {a: 550000, b: 0.85}
+    "Automotive": {a: 600000, b: 0.85}
+    "Clothing, Shoes & Jewelry": {a: 1500000, b: 0.85}
+
+# Recolector diario de catálogo SP-API (deploy/collect.sh → scripts.collect_catalog).
+recolector:
+  max_keywords: 40          # por corrida; primero las de Competencia, luego los finalistas del ranking
+  paginas_busqueda: 1       # 20 ASINs por página
+  ofertas: true             # precio, vendedores y si vende Amazon (rol Pricing); false si la app no lo tiene

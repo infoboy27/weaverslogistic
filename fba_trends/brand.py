@@ -52,6 +52,13 @@ def _css() -> str:
 html, body, .stMarkdown, p, label, li, input, textarea, button {{ font-family: {body}; }}
 h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 [data-testid="stIconMaterial"], .material-symbols-rounded {{ font-family: "Material Symbols Rounded" !important; }}
+/* Browser surfaces: selection, caret, focus, scrollbars, form accents, numerals */
+::selection {{ background: rgba(87,195,255,.32); color: {TEXT}; }}
+html {{ scrollbar-color: rgba(87,195,255,.28) {NAVY}; accent-color: {CYAN}; }}
+input, textarea {{ caret-color: {CYAN}; }}
+a:focus-visible, button:focus-visible, [role="tab"]:focus-visible, summary:focus-visible {{
+  outline: 2px solid {CYAN} !important; outline-offset: 2px; }}
+[data-testid="stMetricValue"], .wv-num {{ font-variant-numeric: tabular-nums; }}
 
 /* Canvas */
 .stApp {{
@@ -78,9 +85,7 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 [data-testid="stSidebarNav"] a {{ border-radius: 10px; margin: 1px 6px; padding: 6px 10px; }}
 [data-testid="stSidebarNav"] a span {{ font-family:{body}; font-weight:500; color:{TEXT}; opacity:.82; }}
 [data-testid="stSidebarNav"] a:hover {{ background: rgba(87,195,255,.08); }}
-[data-testid="stSidebarNav"] a[aria-current="page"] {{
-  background: linear-gradient(90deg, rgba(87,195,255,.18), rgba(120,81,236,.18));
-  box-shadow: inset 3px 0 0 {CYAN}; }}
+[data-testid="stSidebarNav"] a[aria-current="page"] {{ background: rgba(87,195,255,.16); }}
 [data-testid="stSidebarNav"] a[aria-current="page"] span {{ opacity:1; font-weight:600; }}
 [data-testid="stNavSectionHeader"], [data-testid="stSidebarNav"] header {{
   font-family:{head}; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:{MUTED};
@@ -99,10 +104,9 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 .wv-page .sub {{ color:{MUTED}; font-size:.95rem; margin-top:6px; }}
 .wv-page .rule {{ width:56px; height:3px; border-radius:3px; background:{GRADIENT}; margin-top:14px; }}
 
-/* Section titles (was the brandbook pill) */
-.wv-pill {{ display:flex; align-items:center; gap:10px; font-family:{head}; font-weight:700;
-  letter-spacing:.1em; text-transform:uppercase; color:{TEXT}; font-size:.78rem; margin:26px 0 12px 0; }}
-.wv-pill::before {{ content:""; width:4px; height:16px; border-radius:3px; background:linear-gradient({CYAN}, {PURPLE}); }}
+/* Section titles (was the brandbook pill): a heading, more space above than below */
+.wv-pill {{ font-family:{head}; font-weight:700; color:{TEXT}; font-size:1.05rem; letter-spacing:-.005em;
+  line-height:1.3; margin:30px 0 10px 0; }}
 
 /* Tabs (sub-sections) */
 .stTabs [role="tablist"] {{ gap:6px; border:0; box-shadow:none; }}
@@ -127,10 +131,8 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
 
 /* Metric cards */
 [data-testid="stMetric"] {{ background:linear-gradient(180deg, #0A0C4E, #07093F); border:1px solid rgba(87,195,255,.12);
-  border-radius:16px; padding:16px 18px; position:relative; overflow:hidden; }}
-[data-testid="stMetric"]::before {{ content:""; position:absolute; left:0; right:0; top:0; height:2px; background:{GRADIENT}; opacity:.8; }}
-[data-testid="stMetricValue"] {{ color:{TEXT}; font-family:{head}; font-weight:700;
-  font-size:clamp(1.15rem, 1.9vw, 1.7rem); }}
+  border-radius:16px; padding:16px 18px; }}
+[data-testid="stMetricValue"] {{ color:{TEXT}; font-family:{head}; font-weight:700; font-size:1.6rem; }}
 [data-testid="stMetricValue"] > div {{ overflow:visible; text-overflow:clip; }}
 [data-testid="stMetricLabel"] p {{ color:{MUTED}; text-transform:uppercase; letter-spacing:.08em; font-size:.68rem;
   white-space:normal; line-height:1.3; }}
@@ -152,7 +154,10 @@ h1, h2, h3, h4, [data-testid="stMetricLabel"] {{ font-family: {head}; }}
   color:{TEXT}; font-family:{head}; font-weight:600; background:transparent; }}
 .stButton button:hover {{ background:rgba(87,195,255,.10); border-color:{CYAN}; color:white; }}
 .stButton button[kind="primary"], [data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"] {{
-  background:linear-gradient(90deg, {CYAN}, {PURPLE}); border:0; color:white; }}
+  background:{CYAN}; border:0; color:{NAVY}; }}
+.stButton button[kind="primary"]:hover, [data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:hover {{
+  background:#7FD2FF; color:{NAVY}; }}
+.stButton button:disabled, [data-testid="stFormSubmitButton"] button:disabled {{ opacity:.45; cursor:not-allowed; }}
 [data-testid="stPageLink"] a {{ border-radius:10px; }}
 [data-testid="stPageLink"] p {{ color:{CYAN}; font-weight:600; }}
 
@@ -205,7 +210,7 @@ def header(subtitle: str) -> str:  # kept for compatibility; the app now uses pa
 
 
 def pill(text: str) -> str:
-    return f'<div class="wv-pill">{text}</div>'
+    return f'<div class="wv-pill" role="heading" aria-level="2">{text}</div>'
 
 
 # Display names for table columns (data files keep their snake_case names).
@@ -259,6 +264,15 @@ LABELS = {
     "confianza": "Confianza", "falta_verificar": "Falta verificar", "opcion": "Opción", "invertido": "Invertido $",
     "reserva": "Reserva $", "ganancia_horizonte": "Ganancia horizonte $", "ganancia_ajustada": "Ganancia ajustada $",
     "recupera_inversion_meses": "Recupera inversión (meses)",
+    "origen": "Origen", "bsr_categoria": "BSR categoría", "subcategoria": "Subcategoría",
+    "bsr_subcategoria": "BSR subcategoría", "vendedores_fba": "Ofertas FBA", "amazon_vende": "Vende Amazon",
+    "ingresos_mes_est": "Ingresos/mes est. $", "mejor_bsr": "Mejor BSR", "cuota_pct": "Cuota %",
+    "marcas": "Marcas", "marca_lider": "Marca líder", "cuota_lider_pct": "Cuota líder %",
+    "cuota_top3_pct": "Cuota top 3 %", "marcas_80pct": "Marcas del 80%", "hhi": "HHI",
+    "concentracion": "Concentración", "vendedores_prom": "Vendedores prom.", "pct_ofertas_fba": "% ofertas FBA",
+    "amazon_vende_listados": "Listados de Amazon", "cambio_ingresos_30d_pct": "Cambio ingresos 30d %",
+    "nichos": "Nichos", "keywords": "Keywords", "a": "a", "b": "b", "ventas_bsr_1000": "Ventas/mes BSR 1k",
+    "ventas_bsr_10000": "Ventas/mes BSR 10k", "ventas_bsr_100000": "Ventas/mes BSR 100k",
     "upc": "UPC", "asins": "ASINs ref.", "amazon": "Amazon", "evidencia": "Evidencia",
 }
 

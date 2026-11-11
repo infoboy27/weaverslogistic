@@ -702,6 +702,118 @@ La 'marca' se toma de la primera palabra del título y puede fallar en productos
         safe_io.write_csv(edited_comp, competition.COMPETITION_PATH)
         st.success("Guardado.")
 
+# ---------------------------------------------------------------- Marcas (SP-API catalog snapshots)
+@st.cache_data(show_spinner=False)
+def _brand_data(stamp: float):
+    from fba_trends import marcas
+    return marcas.build(cfg, competition.load())
+
+
+def catalog_stamp() -> float:
+    from fba_trends import catalogo
+    files = list(catalogo.CATALOG_DIR.glob("*.csv")) if catalogo.CATALOG_DIR.exists() else []
+    files += [competition.COMPETITION_PATH] if competition.COMPETITION_PATH.exists() else []
+    return max((f.stat().st_mtime for f in files), default=0.0)
+
+
+def collect_now(keyword: str) -> None:
+    from fba_trends import catalogo
+    from fba_trends.sp_api import SPAPIClient, SPAPIError
+    comp = competition.load()
+    top10 = comp.loc[comp["keyword"] == keyword, "asin"].dropna().tolist() if not comp.empty else []
+    with st.spinner(f"Consultando el catálogo de Amazon para '{keyword}'..."):
+        try:
+            df, warnings = catalogo.collect_keyword(SPAPIClient(), keyword, top10,
+                                                    offers=bool(cfg.get("recolector", {}).get("ofertas", True)))
+        except (SPAPIError, ValueError) as e:
+            st.error(str(e))
+            return
+    catalogo.save(df)
+    _brand_data.clear()
+    st.success(f"{len(df)} ASINs guardados para '{keyword}'.")
+    for w in warnings:
+        st.warning(w)
+
+
+def page_brands():
+    from fba_trends import marcas
+    from fba_trends.sp_api import configured
+    page_title("Marcas", "Quién vende cuánto en cada nicho · ventas estimadas por BSR")
+    if configured():
+        with st.form("collect_form", border=False):
+            c1, c2 = st.columns([4, 1], vertical_alignment="bottom")
+            kw = c1.text_input("Recolectar un nicho ahora", placeholder="dog cooling mat",
+                               help="Busca en el catálogo de Amazon (SP-API) y guarda BSR, marca, precio y vendedores. "
+                                    "El recolector diario ya lo hace con las keywords de Competencia y los finalistas.")
+            if c2.form_submit_button("Recolectar", type="primary", width="stretch") and kw.strip():
+                collect_now(kw.strip().lower())
+
+    latest, history, est = _brand_data(catalog_stamp())
+    if latest.empty:
+        st.info("Todavía no hay fotos del catálogo. "
+                + ("Recolecta un nicho arriba o espera la corrida diaria." if configured() else
+                   "Conecta la SP-API (PRODUCCION.md) y corre `python -m scripts.collect_catalog`."))
+        return
+
+    summary = marcas.niche_summary(latest, history, est)
+    tab_niche, tab_all, tab_cross, tab_how = st.tabs(["Nicho", "Todos los nichos", "Marcas en varios nichos",
+                                                      "Cómo se estima"])
+    with tab_niche:
+        kw = st.selectbox("Nicho", summary["keyword"].tolist(),
+                          format_func=lambda k: f"{k} · ${summary.set_index('keyword').at[k, 'ingresos_mes_est'] or 0:,.0f}/mes")
+        df_kw = latest[latest["keyword"] == kw]
+        m = marcas.niche_metrics(df_kw)
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Ingresos est./mes", f"${m['ingresos_mes_est']:,.0f}" if m["ingresos_mes_est"] else "—",
+                  help="Suma de los listados capturados (búsqueda + top 10), no de toda la categoría.")
+        c2.metric("Marcas", m["marcas"], help=f"{m['listados']} listados")
+        c3.metric("Concentración", m["concentracion"], help=f"HHI {m['hhi']} (DOJ: <1,500 fragmentado, >2,500 concentrado)")
+        c4.metric("Marcas que hacen el 80%", m["marcas_80pct"] or "—")
+        if m["marca_lider"]:
+            st.caption(f"Líder: **{m['marca_lider']}** con {m['cuota_lider_pct']:.0f}% · top 3: {m['cuota_top3_pct']:.0f}% · "
+                       f"Amazon vende en {m['amazon_vende_listados']} listados · foto del {m['fecha']}")
+        brands_tbl = marcas.brands_in_niche(df_kw)
+        top = brands_tbl.dropna(subset=["cuota_pct"]).head(12)
+        if not top.empty:
+            fig = px.bar(top.iloc[::-1], x="cuota_pct", y="marca", orientation="h",
+                         labels={"cuota_pct": "Cuota de ingresos %", "marca": ""})
+            fig.update_layout(height=max(220, 28 * len(top) + 60), margin=dict(l=0, r=0, t=10, b=0))
+            st.plotly_chart(fig, width="stretch")
+        st.markdown(brand.pill("Marcas"), unsafe_allow_html=True)
+        st.dataframe(brand.pretty(brands_tbl), hide_index=True, width="stretch")
+        st.markdown(brand.pill("Listados"), unsafe_allow_html=True)
+        cols = ["asin", "titulo", "marca", "origen", "bsr_categoria", "categoria", "precio", "ventas_mes_est",
+                "ingresos_mes_est", "vendedores", "vendedores_fba", "amazon_vende"]
+        listing = df_kw[cols].sort_values("ingresos_mes_est", ascending=False).round(
+            {"ventas_mes_est": 0, "ingresos_mes_est": 0})
+        st.dataframe(brand.pretty(listing), hide_index=True, width="stretch")
+        trend = history[history["keyword"] == kw]
+        if trend["fecha"].nunique() >= 2:
+            daily = marcas.with_estimates(trend, est).groupby("fecha", as_index=False)["ingresos_mes_est"].sum()
+            st.plotly_chart(px.line(daily, x="fecha", y="ingresos_mes_est", title="Ingresos est. del nicho por día",
+                                    labels={"fecha": "", "ingresos_mes_est": "USD/mes"}), width="stretch")
+    with tab_all:
+        st.dataframe(brand.pretty(summary), hide_index=True, width="stretch")
+        st.caption("Ordenado por ingresos estimados. Cambio 30d compara con la foto más cercana a 30 días atrás "
+                   "(aparece cuando el recolector lleva un mes corriendo).")
+    with tab_cross:
+        cross = marcas.brands_across_niches(latest)
+        st.dataframe(brand.pretty(cross[cross["nichos"] >= 2] if (cross["nichos"] >= 2).any() else cross),
+                     hide_index=True, width="stretch")
+        st.caption("Marcas que aparecen en varios de tus nichos: competidores fuertes o proveedores a estudiar.")
+    with tab_how:
+        st.markdown("""
+- **Ventas/mes** = a × BSR^(−b) con el BSR de la categoría principal. Cada categoría parte de una curva supuesta
+  (`config.yaml` → `ventas_bsr`) y se **calibra sola** con los ASINs que tienen "X+ bought in past month" en Competencia.
+- **Fuente**: *calibrado* = curva ajustada con tus datos; *ajustado* = curva supuesta escalada con pocos datos;
+  *supuesto* = sin datos propios todavía (trátalo como orden de magnitud).
+- **Ingresos** = ventas estimadas × precio de la buy box (o el más bajo). Solo cuenta los listados capturados.
+- **Vendedores** sale de las ofertas que devuelve Amazon (máx. 20 por listado).
+""")
+        st.dataframe(brand.pretty(est.table(latest["categoria"])), hide_index=True, width="stretch")
+        st.caption(f"{len(est.pairs)} puntos de calibración (ASIN con BSR y 'bought in past month').")
+
+
 # ---------------------------------------------------------------- Navidad
 def page_xmas():
     page_title("Navidad", "Qué productos de regalo pasan los criterios y cuándo hay que pedirlos")
@@ -1225,6 +1337,7 @@ PAGES = {
     "pat": st.Page(page_pat, url_path="patrones", title="Patrones", icon=":material/insights:"),
     "trends": st.Page(page_trends, url_path="tendencias", title="Tendencias", icon=":material/trending_up:"),
     "comp": st.Page(page_comp, url_path="competencia", title="Competencia", icon=":material/storefront:"),
+    "brands": st.Page(page_brands, url_path="marcas", title="Marcas", icon=":material/donut_large:"),
     "spapi": st.Page(page_spapi, url_path="amazon-seller", title="Amazon Seller Central", icon=":material/verified:"),
     "keepa": st.Page(page_keepa, url_path="keepa", title="Amazon · Keepa", icon=":material/query_stats:"),
     "products": st.Page(page_products, url_path="productos", title="Productos y rentabilidad", icon=":material/payments:"),
@@ -1236,7 +1349,7 @@ st.logo(str(brand.LOGO_PATH), size="large", icon_image=str(brand.ICON_PATH))
 nav = st.navigation({
     "": [PAGES["home"], PAGES["decision"], PAGES["ungated"]],
     "Descubrir": [PAGES["funnel"], PAGES["next"], PAGES["xmas"], PAGES["alerts"], PAGES["disc"], PAGES["pat"], PAGES["trends"]],
-    "Mercado": [PAGES["comp"], PAGES["keepa"], PAGES["spapi"]],
+    "Mercado": [PAGES["comp"], PAGES["brands"], PAGES["keepa"], PAGES["spapi"]],
     "Plan": [PAGES["products"], PAGES["budget"]],
     "Configuración": [PAGES["settings"], PAGES["assumptions"]],
 }, expanded=True)  # show every section; otherwise Streamlit folds them behind "View N more"

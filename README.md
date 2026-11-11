@@ -35,6 +35,7 @@ Log: `data/discovery_log.txt`. Google Shopping (gprop=froogle) se probó y no de
 
 - **Tendencias**: consulta Google Trends (5 años, EE.UU.) o sube el CSV que descargas de trends.google.com. Si Google bloquea la consulta automática (error 429, pasa seguido), usa el CSV. Clasifica cada keyword como *Emergente*, *Estacional*, *Estacional en crecimiento*, *Moda pasajera*, *Estable* o *En declive*. Para las estacionales calcula **hasta qué fecha hay que hacer el pedido a fábrica**.
 - **Competencia**: top 10 orgánico de Amazon por keyword (reseñas, precio, "bought in past month", marca, anuncios) con resumen y veredicto Accesible / Media / Difícil. Guía de qué revisar dentro de la pestaña. Las capturas crudas van en `data/raw_search/*.json` y se cargan con `.venv/Scripts/python -m scripts.ingest_search`.
+- **Marcas**: base de datos propia del catálogo de Amazon (SP-API, gratis). Por nicho: ingresos estimados, cuota de cada marca, concentración (HHI), cuántas marcas hacen el 80 % de las ventas, vendedores y si vende Amazon; además, las marcas que aparecen en varios nichos. Las ventas salen del BSR con una curva por categoría (`config.yaml` → `ventas_bsr`) que se calibra sola con los "bought in past month" de Competencia. El historial crece con la foto diaria (`scripts.collect_catalog`, ver PRODUCCION.md).
 - **Amazon (Keepa)**: historial de BSR (ranking de ventas), precio, número de vendedores, reseñas y "comprado el mes pasado" de cualquier ASIN. Pega los 10 primeros ASINs de tu keyword (o búscalos por término) y mira si el mercado está acelerando (BSR bajando) o saturándose (más vendedores, precio cayendo).
 - **Productos y rentabilidad**: precio, costos y tarifas → ganancia neta, margen, ROI, precio de equilibrio y score. Si falta el costo, muestra el **costo máximo puesto en Amazon** que permite el margen objetivo (tope para negociar con proveedores).
 - **Presupuesto**: reparte el capital con reserva, tope por producto, MOQ y un máximo de N meses de ventas en la primera orden.
@@ -45,7 +46,7 @@ Log: `data/discovery_log.txt`. Google Shopping (gprop=froogle) se probó y no de
 - `config.yaml`: tarifas, supuestos, tiempos de entrega y reglas de presupuesto. Lo marcado `estimado: true` **no es un dato verificado**.
 - `data/candidates.csv`: tus productos candidatos (precio real de Amazon; costo pendiente hasta tener cotización).
 - `data/trends/`: series de Google Trends guardadas.
-- `fba_trends/`: `trends.py` (clasificación), `profit.py` (rentabilidad), `budget.py` (presupuesto), `scoring.py`, `collect.py`.
+- `fba_trends/`: `catalogo.py` (fotos SP-API), `ventas_bsr.py` (ventas por BSR), `marcas.py` (cuota por marca), `trends.py` (clasificación), `profit.py` (rentabilidad), `budget.py` (presupuesto), `scoring.py`, `collect.py`.
 
 ## Límites conocidos
 

@@ -10,6 +10,8 @@ __pycache__/
 # Datos de máquina / logs (se regeneran)
 data/keepa/
 data/discovery_log.txt
+data/catalog_log.txt
+data/catalog/
 data/examples_log.txt
 
 # Credenciales OIDC Streamlit

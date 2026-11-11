@@ -57,13 +57,16 @@ services:
       traefik.http.middlewares.weavers-fba-ratelimit.ratelimit.burst: "200"
       traefik.http.middlewares.weavers-fba-ratelimit.ratelimit.sourcecriterion.requestheadername: Cf-Connecting-Ip
 
-  # Daily scan (cron, deploy/discover.sh). Same image and data, no Traefik labels, never serves traffic.
+  # Daily jobs (cron, deploy/discover.sh and deploy/collect.sh). Same image and data, no Traefik labels, never serves traffic.
   worker:
     image: weaverslogistic-app
     profiles: [jobs]
     user: "1000:1000"
     environment:
       KEEPA_API_KEY: ${KEEPA_API_KEY:-}
+      SP_API_LWA_CLIENT_ID: ${SP_API_LWA_CLIENT_ID:-}
+      SP_API_LWA_CLIENT_SECRET: ${SP_API_LWA_CLIENT_SECRET:-}
+      SP_API_REFRESH_TOKEN: ${SP_API_REFRESH_TOKEN:-}
     volumes:
       - ${WEAVERS_DATA_PATH:-./data}:/app/data
     networks: [default]

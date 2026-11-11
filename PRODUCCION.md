@@ -91,6 +91,17 @@ docker run --rm -v "$PWD/requirements.txt:/r.txt:ro" python:3.14-slim \
   (Merchant Token). Con ellas la página **Vender sin permiso** verifica cada ASIN contra tu cuenta.
 - Sin estas claves el panel funciona con estimaciones y lo indica en cada página.
 
+### Recolector de catálogo (pestaña Marcas)
+
+- `deploy/collect.sh` (cron 15:30 UTC) corre `scripts.collect_catalog` en el `worker`: por cada keyword de
+  Competencia y cada finalista del ranking (máx. `recolector.max_keywords`) guarda BSR, marca, precio y vendedores
+  en `$WEAVERS_DATA_PATH/catalog/AAAA-MM.csv`. Log: `$WEAVERS_DATA_PATH/catalog_log.txt`.
+- Necesita el rol *Product Listing* (catálogo) y, para precio/vendedores, *Pricing*. Sin *Pricing* guarda solo el
+  catálogo y avisa en el log; pon `recolector.ofertas: false` para no intentarlo.
+- Cuota: ~2 consultas/s de catálogo y 1 lote de ofertas cada 10 s. 40 keywords ≈ 10 min.
+- Instalar en un servidor existente: `(crontab -l; grep collect deploy/crontab.txt) | crontab -`.
+- A mano: `docker compose -f docker-compose.traefik.yml --profile jobs run --rm worker python -m scripts.collect_catalog --keyword "dog cooling mat"`.
+
 ## Límites conocidos
 
 - Los CSV de datos se escriben de forma atómica y con bloqueo, pero si dos personas editan la misma tabla a la vez

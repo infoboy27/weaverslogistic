@@ -71,10 +71,11 @@ def test_report_has_upc_column():
 def test_spapi_find_by_code():
     session = Mock()
     session.post.return_value.json.return_value = {"access_token": "tok", "expires_in": 3600}
-    session.get.return_value.json.return_value = {"items": [{"asin": "B000000001"}]}
+    session.request.return_value.status_code = 200
+    session.request.return_value.json.return_value = {"items": [{"asin": "B000000001"}]}
     client = SPAPIClient(client_id="id", client_secret="s", refresh_token="r", session=session)
     assert client.find_by_code("036000291452")[0]["asin"] == "B000000001"
-    params = session.get.call_args.kwargs["params"]
+    params = session.request.call_args.kwargs["params"]
     assert params["identifiers"] == "036000291452" and params["identifiersType"] == "UPC"
     client.get_item("b000000001")
-    assert session.get.call_args.args[0].endswith("/catalog/2022-04-01/items/B000000001")
+    assert session.request.call_args.args[1].endswith("/catalog/2022-04-01/items/B000000001")
