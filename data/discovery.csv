@@ -2,11 +2,11 @@ termino,seed,categoria,subida_pct,breakout,descubierto,estado,motivo
 baby stroller review,baby essentials,bebé,46300.0,True,2026-10-15,filtrado,tienda/intención no-producto
 minimalist baby essentials,baby essentials,bebé,90.0,False,2026-10-15,escaneado,
 huggies skin essentials,baby essentials,bebé,70.0,False,2026-10-15,filtrado,marca
-new baby essentials,baby essentials,bebé,60.0,False,2026-10-15,pendiente,
+new baby essentials,baby essentials,bebé,60.0,False,2026-10-15,escaneado,
 clear bathroom organizer,bathroom organizer,hogar,80.0,False,2026-10-15,escaneado,
 bathroom wall organizer,bathroom organizer,hogar,80.0,False,2026-10-15,escaneado,
 vanity organizer,bathroom organizer,hogar,70.0,False,2026-10-15,escaneado,
-bathroom vanity,bathroom organizer,hogar,60.0,False,2026-10-15,pendiente,
+bathroom vanity,bathroom organizer,hogar,60.0,False,2026-10-15,escaneado,
 bathroom vanity organizer,bathroom organizer,hogar,50.0,False,2026-10-15,pendiente,
 organizer for bathroom,bathroom organizer,hogar,50.0,False,2026-10-15,pendiente,
 bathroom storage,bathroom organizer,hogar,40.0,False,2026-10-15,pendiente,
@@ -173,8 +173,8 @@ dog car harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
 front clip dog harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
 dog vest harness,dog harness,mascotas,80.0,False,2026-10-24,escaneado,
 ruffwear dog harness,dog harness,mascotas,80.0,False,2026-10-24,filtrado,marca
-easy walk harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
-pink dog harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
+easy walk harness,dog harness,mascotas,70.0,False,2026-10-24,escaneado,
+pink dog harness,dog harness,mascotas,70.0,False,2026-10-24,escaneado,
 easy walk dog harness,dog harness,mascotas,70.0,False,2026-10-24,pendiente,
 dog lift harness,dog harness,mascotas,60.0,False,2026-10-24,pendiente,
 large dog harness,dog harness,mascotas,50.0,False,2026-10-24,pendiente,
@@ -268,7 +268,7 @@ massage gun,massage tool,bienestar,60.0,False,2026-10-29,pendiente,
 neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
 nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,escaneado,
 baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,escaneado,
-zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,pendiente,
+zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,escaneado,
 zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,filtrado,no relacionado con la semilla
 magnesium for sleep,sleep aid,bienestar,50.0,False,2026-10-29,pendiente,
 kitchen gadget brand nyt,kitchen gadget,cocina,41450.0,True,2026-10-29,escaneado,
@@ -281,7 +281,7 @@ cleaner kitchen gadget,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 kitchen gadget brands,kitchen gadget,cocina,60.0,False,2026-10-29,pendiente,
 ikea nålblecka kitchen countertop organizer,kitchen organizer,cocina,38350.0,True,2026-10-29,filtrado,tienda/intención no-producto
 kitchen wall organizer,kitchen organizer,cocina,90.0,False,2026-10-29,escaneado,
-kitchen storage,kitchen organizer,cocina,70.0,False,2026-10-29,pendiente,
+kitchen storage,kitchen organizer,cocina,70.0,False,2026-10-29,escaneado,
 kitchen storage organizer,kitchen organizer,cocina,60.0,False,2026-10-29,pendiente,
 countertop organizer kitchen,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
 countertop organizer,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
@@ -324,7 +324,7 @@ pink desk accessories,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
 gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 ikea desk accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
-gaming desk,desk accessories,oficina,80.0,False,2026-10-30,pendiente,
+gaming desk,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 desk accessories for women,desk accessories,oficina,50.0,False,2026-10-30,pendiente,
 comcast business phone,phone accessories,tecnología,21500.0,True,2026-10-30,filtrado,tienda/intención no-producto
 dyson hair dryer accessories,phone accessories,tecnología,11500.0,True,2026-10-30,filtrado,marca
@@ -359,7 +359,7 @@ car accessories for women,car accessories,auto,120.0,False,2026-10-31,escaneado,
 custom car accessories,car accessories,auto,120.0,False,2026-10-31,escaneado,
 car accessories for men,car accessories,auto,80.0,False,2026-10-31,escaneado,
 car accessories shop,car accessories,auto,80.0,False,2026-10-31,filtrado,tienda/intención no-producto
-car wash accessories,car accessories,auto,70.0,False,2026-10-31,pendiente,
+car wash accessories,car accessories,auto,70.0,False,2026-10-31,escaneado,
 car interior accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
 pink car accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
 car parts and accessories,car accessories,auto,60.0,False,2026-10-31,pendiente,
@@ -438,8 +438,8 @@ silver hair accessories,hair accessories,belleza,110.0,False,2026-11-01,escanead
 red hair accessories,hair accessories,belleza,100.0,False,2026-11-01,escaneado,
 dyson hair accessories,hair accessories,belleza,90.0,False,2026-11-01,filtrado,marca
 hair accessories for kids,hair accessories,belleza,80.0,False,2026-11-01,filtrado,producto para niños
-hair accessories for long hair,hair accessories,belleza,70.0,False,2026-11-01,pendiente,
-gold hair accessories,hair accessories,belleza,70.0,False,2026-11-01,pendiente,
+hair accessories for long hair,hair accessories,belleza,70.0,False,2026-11-01,escaneado,
+gold hair accessories,hair accessories,belleza,70.0,False,2026-11-01,escaneado,
 hair accessories organizer,hair accessories,belleza,60.0,False,2026-11-01,pendiente,
 baby hair accessories,hair accessories,belleza,60.0,False,2026-11-01,pendiente,
 hair accessories for women,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
