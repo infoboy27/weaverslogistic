@@ -1,7 +1,7 @@
 {
  "seed_log": {
-  "baby essentials": "2026-10-15",
-  "bathroom organizer": "2026-10-15",
+  "baby essentials": "2026-11-14",
+  "bathroom organizer": "2026-11-14",
   "stocking stuffers": "2026-10-22",
   "dog christmas gifts": "2026-10-22",
   "christmas craft kit": "2026-10-22",
@@ -245,6 +245,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-11-14",
+   "semillas": 2,
+   "nuevos": 5,
+   "escaneados": 10,
+   "bloqueado": false,
+   "orden": "semillas primero"
   }
  ]
 }
