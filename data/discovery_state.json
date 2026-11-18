@@ -269,6 +269,14 @@
    "escaneados": 10,
    "bloqueado": false,
    "orden": "semillas primero"
+  },
+  {
+   "fecha": "2026-11-18",
+   "semillas": 0,
+   "nuevos": 0,
+   "escaneados": 5,
+   "bloqueado": true,
+   "orden": "semillas primero"
   }
  ]
 }
