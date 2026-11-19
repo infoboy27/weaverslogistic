@@ -265,12 +265,12 @@ deep tissue massage tool,massage tool,bienestar,80.0,False,2026-10-29,escaneado,
 shoulder massage tool,massage tool,bienestar,80.0,False,2026-10-29,escaneado,
 head massage tool,massage tool,bienestar,60.0,False,2026-10-29,escaneado,
 massage gun,massage tool,bienestar,60.0,False,2026-10-29,escaneado,
-neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,pendiente,
+neck massage tool,massage tool,bienestar,50.0,False,2026-10-29,escaneado,
 nighttime sleep aid,sleep aid,bienestar,150.0,False,2026-10-29,escaneado,
 baby sleep aid,sleep aid,bienestar,110.0,False,2026-10-29,escaneado,
 zzzquil sleep aid,sleep aid,bienestar,70.0,False,2026-10-29,escaneado,
 zzzquil,sleep aid,bienestar,70.0,False,2026-10-29,filtrado,no relacionado con la semilla
-magnesium for sleep,sleep aid,bienestar,50.0,False,2026-10-29,pendiente,
+magnesium for sleep,sleep aid,bienestar,50.0,False,2026-10-29,escaneado,
 kitchen gadget brand nyt,kitchen gadget,cocina,41450.0,True,2026-10-29,escaneado,
 canon gadget bag 2400,kitchen gadget,cocina,41050.0,True,2026-10-29,escaneado,
 kitchen gadget fashioned from pearl,kitchen gadget,cocina,36850.0,True,2026-10-29,escaneado,
@@ -301,8 +301,8 @@ closetmaid closet organizer,closet organizer,hogar,120.0,False,2026-10-30,filtra
 wood closet organizer,closet organizer,hogar,100.0,False,2026-10-30,escaneado,
 metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,escaneado,
 storage closet organizer,closet organizer,hogar,60.0,False,2026-10-30,escaneado,
-closet storage,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
-hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+closet storage,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
+hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
 organizer for closet,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
 closet organizer,closet organizer,hogar,40.0,False,2026-10-30,filtrado,igual a la semilla
@@ -325,7 +325,7 @@ gaming accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,no re
 gaming desk accessories,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
 ikea desk accessories,desk accessories,oficina,80.0,False,2026-10-30,filtrado,tienda/intención no-producto
 gaming desk,desk accessories,oficina,80.0,False,2026-10-30,escaneado,
-desk accessories for women,desk accessories,oficina,50.0,False,2026-10-30,pendiente,
+desk accessories for women,desk accessories,oficina,50.0,False,2026-10-30,escaneado,
 comcast business phone,phone accessories,tecnología,21500.0,True,2026-10-30,filtrado,tienda/intención no-producto
 dyson hair dryer accessories,phone accessories,tecnología,11500.0,True,2026-10-30,filtrado,marca
 miu miu accessories,phone accessories,tecnología,9450.0,True,2026-10-30,filtrado,marca
@@ -364,7 +364,7 @@ car interior accessories,car accessories,auto,60.0,False,2026-10-31,escaneado,
 pink car accessories,car accessories,auto,60.0,False,2026-10-31,escaneado,
 car parts and accessories,car accessories,auto,60.0,False,2026-10-31,escaneado,
 car accessories near me,car accessories,auto,50.0,False,2026-10-31,filtrado,tienda/intención no-producto
-car parts,car accessories,auto,50.0,False,2026-10-31,pendiente,
+car parts,car accessories,auto,50.0,False,2026-10-31,escaneado,
 running shoes,camping gear,outdoor,42200.0,True,2026-10-31,escaneado,
 python tutorial,camping gear,outdoor,40100.0,True,2026-10-31,escaneado,
 mortgage rates today,camping gear,outdoor,38550.0,True,2026-10-31,escaneado,
@@ -442,7 +442,7 @@ hair accessories for long hair,hair accessories,belleza,70.0,False,2026-11-01,es
 gold hair accessories,hair accessories,belleza,70.0,False,2026-11-01,escaneado,
 hair accessories organizer,hair accessories,belleza,60.0,False,2026-11-01,escaneado,
 baby hair accessories,hair accessories,belleza,60.0,False,2026-11-01,escaneado,
-hair accessories for women,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
+hair accessories for women,hair accessories,belleza,50.0,False,2026-11-01,escaneado,
 kids hair accessories,hair accessories,belleza,50.0,False,2026-11-01,filtrado,producto para niños
 pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
 hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
