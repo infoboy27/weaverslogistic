@@ -9,7 +9,7 @@ vanity organizer,bathroom organizer,hogar,70.0,False,2026-10-15,escaneado,
 bathroom vanity,bathroom organizer,hogar,60.0,False,2026-10-15,escaneado,
 bathroom vanity organizer,bathroom organizer,hogar,50.0,False,2026-10-15,escaneado,
 organizer for bathroom,bathroom organizer,hogar,50.0,False,2026-10-15,escaneado,
-bathroom storage,bathroom organizer,hogar,40.0,False,2026-10-15,pendiente,
+bathroom storage,bathroom organizer,hogar,40.0,False,2026-10-15,escaneado,
 dog grooming hammock,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 cat nail file scratcher,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
 herding ball for dogs,amazon: mascotas,mascotas,0.0,False,2026-10-15,escaneado,
@@ -109,7 +109,7 @@ small stocking stuffers,stocking stuffers,navidad,50.0,False,2026-10-22,escanead
 good stocking stuffers for women,stocking stuffers,navidad,50.0,False,2026-10-22,escaneado,
 stocking stuffers for 2 year olds,stocking stuffers,navidad,50.0,False,2026-10-22,filtrado,demasiado largo
 women's stocking stuffers,stocking stuffers,navidad,50.0,False,2026-10-22,escaneado,
-practical stocking stuffers,stocking stuffers,navidad,40.0,False,2026-10-22,pendiente,
+practical stocking stuffers,stocking stuffers,navidad,40.0,False,2026-10-22,escaneado,
 unique gifts for knitters,gifts for knitters,navidad,180.0,False,2026-10-22,filtrado,sin volumen en Google
 waterproof dog bed,dog bed,mascotas,450.0,False,2026-10-23,escaneado,
 memory foam dog bed,dog bed,mascotas,300.0,False,2026-10-23,escaneado,
@@ -138,9 +138,9 @@ interactive dog toy,dog toy,mascotas,120.0,False,2026-10-23,escaneado,
 kong dog toy,dog toy,mascotas,90.0,False,2026-10-23,filtrado,marca
 dog chew toy,dog toy,mascotas,50.0,False,2026-10-23,escaneado,
 robot dog,dog toy,mascotas,50.0,False,2026-10-23,filtrado,electrónica
-walking dog toy,dog toy,mascotas,40.0,False,2026-10-23,pendiente,
+walking dog toy,dog toy,mascotas,40.0,False,2026-10-23,escaneado,
 robot dog toy,dog toy,mascotas,40.0,False,2026-10-23,filtrado,electrónica
-dog rope toy,dog toy,mascotas,40.0,False,2026-10-23,pendiente,
+dog rope toy,dog toy,mascotas,40.0,False,2026-10-23,escaneado,
 meowscles cat toy,cat toy,mascotas,9300.0,True,2026-10-23,escaneado,
 lizzie the lizard cat toy,cat toy,mascotas,7900.0,True,2026-10-23,escaneado,
 bouncy tails cat toy,cat toy,mascotas,7750.0,True,2026-10-23,escaneado,
@@ -179,7 +179,7 @@ easy walk dog harness,dog harness,mascotas,70.0,False,2026-10-24,escaneado,
 dog lift harness,dog harness,mascotas,60.0,False,2026-10-24,escaneado,
 large dog harness,dog harness,mascotas,50.0,False,2026-10-24,escaneado,
 harness for dog,dog harness,mascotas,50.0,False,2026-10-24,escaneado,
-tactical dog harness,dog harness,mascotas,40.0,False,2026-10-24,pendiente,
+tactical dog harness,dog harness,mascotas,40.0,False,2026-10-24,escaneado,
 bark and mane pet grooming,pet grooming,mascotas,24350.0,True,2026-10-24,escaneado,
 bark and mane mobile pet grooming,pet grooming,mascotas,17400.0,True,2026-10-24,filtrado,tienda/intención no-producto
 pet parlor pet grooming llc,pet grooming,mascotas,9200.0,True,2026-10-24,escaneado,
@@ -198,7 +198,7 @@ pet grooming near me,pet grooming,mascotas,110.0,False,2026-10-24,filtrado,tiend
 pet grooming vacuum,pet grooming,mascotas,80.0,False,2026-10-24,filtrado,electrónica
 pet grooming insurance,pet grooming,mascotas,70.0,False,2026-10-24,filtrado,tienda/intención no-producto
 pet grooming service,pet grooming,mascotas,60.0,False,2026-10-24,filtrado,tienda/intención no-producto
-cat grooming,pet grooming,mascotas,40.0,False,2026-10-24,pendiente,
+cat grooming,pet grooming,mascotas,40.0,False,2026-10-24,escaneado,
 craft smart outdoor acrylic paint,craft kit,hobby,11850.0,True,2026-10-24,escaneado,
 diamond craft kit,craft kit,hobby,150.0,False,2026-10-24,escaneado,
 resin craft kit,craft kit,hobby,80.0,False,2026-10-24,escaneado,
@@ -283,8 +283,8 @@ ikea nålblecka kitchen countertop organizer,kitchen organizer,cocina,38350.0,Tr
 kitchen wall organizer,kitchen organizer,cocina,90.0,False,2026-10-29,escaneado,
 kitchen storage,kitchen organizer,cocina,70.0,False,2026-10-29,escaneado,
 kitchen storage organizer,kitchen organizer,cocina,60.0,False,2026-10-29,escaneado,
-countertop organizer kitchen,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
-countertop organizer,kitchen organizer,cocina,40.0,False,2026-10-29,pendiente,
+countertop organizer kitchen,kitchen organizer,cocina,40.0,False,2026-10-29,escaneado,
+countertop organizer,kitchen organizer,cocina,40.0,False,2026-10-29,escaneado,
 coffee shops nearby,coffee accessories,cocina,30450.0,True,2026-10-30,filtrado,tienda/intención no-producto
 gopro hero13 black accessories bundle,coffee accessories,cocina,18050.0,True,2026-10-30,filtrado,marca
 cuisinart 14 cup programmable coffee maker,coffee accessories,cocina,11050.0,True,2026-10-30,filtrado,demasiado largo
@@ -292,7 +292,7 @@ coffee table accessories,coffee accessories,cocina,110.0,False,2026-10-30,escane
 coffee table,coffee accessories,cocina,110.0,False,2026-10-30,escaneado,
 travel,coffee accessories,cocina,100.0,False,2026-10-30,filtrado,no relacionado con la semilla
 car accessories,coffee accessories,cocina,80.0,False,2026-10-30,filtrado,no relacionado con la semilla
-coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,pendiente,
+coffee accessories gift,coffee accessories,cocina,40.0,False,2026-10-30,escaneado,
 closetmaid shelftrack closet organizer kit,closet organizer,hogar,6150.0,True,2026-10-30,filtrado,marca
 portable closet organizer,closet organizer,hogar,250.0,False,2026-10-30,escaneado,
 stackable closet organizer,closet organizer,hogar,140.0,False,2026-10-30,escaneado,
@@ -303,8 +303,8 @@ metal closet organizer,closet organizer,hogar,100.0,False,2026-10-30,escaneado,
 storage closet organizer,closet organizer,hogar,60.0,False,2026-10-30,escaneado,
 closet storage,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
 hanging closet organizer,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
-organizer for closet,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
-closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,pendiente,
+organizer for closet,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
+closet rack organizer,closet organizer,hogar,50.0,False,2026-10-30,escaneado,
 closet organizer,closet organizer,hogar,40.0,False,2026-10-30,filtrado,igual a la semilla
 executive desk accessories,desk accessories,oficina,350.0,False,2026-10-30,escaneado,
 leather desk accessories,desk accessories,oficina,300.0,False,2026-10-30,escaneado,
@@ -344,7 +344,7 @@ mobile phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,fil
 phone accessories,phone accessories,tecnología,80.0,False,2026-10-30,filtrado,igual a la semilla
 apple accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
 apple phone accessories,phone accessories,tecnología,70.0,False,2026-10-30,filtrado,marca
-accessories for phone,phone accessories,tecnología,40.0,False,2026-10-30,pendiente,
+accessories for phone,phone accessories,tecnología,40.0,False,2026-10-30,escaneado,
 3d printed car accessories list,car accessories,auto,8150.0,True,2026-10-31,filtrado,tienda/intención no-producto
 dyson vacuum accessories,car accessories,auto,800.0,False,2026-10-31,filtrado,marca
 dyson accessories,car accessories,auto,500.0,False,2026-10-31,filtrado,marca
@@ -416,7 +416,7 @@ black plant pot,plant pot,jardín,150.0,False,2026-11-01,escaneado,
 ikea plant pot,plant pot,jardín,120.0,False,2026-11-01,filtrado,tienda/intención no-producto
 pink plant pot,plant pot,jardín,90.0,False,2026-11-01,escaneado,
 plant pot cover,plant pot,jardín,80.0,False,2026-11-01,escaneado,
-tall plant pot,plant pot,jardín,40.0,False,2026-11-01,pendiente,
+tall plant pot,plant pot,jardín,40.0,False,2026-11-01,escaneado,
 bagsmart blast travel backpack,travel accessories,viaje,17150.0,True,2026-11-01,filtrado,tienda/intención no-producto
 museums,travel accessories,viaje,14500.0,True,2026-11-01,filtrado,no relacionado con la semilla
 budget travel destinations,travel accessories,viaje,12450.0,True,2026-11-01,filtrado,tienda/intención no-producto
@@ -444,13 +444,18 @@ hair accessories organizer,hair accessories,belleza,60.0,False,2026-11-01,escane
 baby hair accessories,hair accessories,belleza,60.0,False,2026-11-01,escaneado,
 hair accessories for women,hair accessories,belleza,50.0,False,2026-11-01,escaneado,
 kids hair accessories,hair accessories,belleza,50.0,False,2026-11-01,filtrado,producto para niños
-pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,pendiente,
-hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
-long hair accessories,hair accessories,belleza,40.0,False,2026-11-01,pendiente,
+pearl hair accessories,hair accessories,belleza,50.0,False,2026-11-01,escaneado,
+hair accessories for short hair,hair accessories,belleza,40.0,False,2026-11-01,escaneado,
+long hair accessories,hair accessories,belleza,40.0,False,2026-11-01,escaneado,
 ice cream,skincare tool,belleza,120.0,False,2026-11-01,filtrado,no relacionado con la semilla
 skincare for oily skin,skincare tool,belleza,100.0,False,2026-11-01,escaneado,
 organizer in bathroom,bathroom organizer,hogar,90.0,False,2026-11-14,escaneado,
 bathroom tray organizer,bathroom organizer,hogar,60.0,False,2026-11-14,escaneado,
-bathroom storage organizer,bathroom organizer,hogar,50.0,False,2026-11-14,pendiente,
-bathroom rack organizer,bathroom organizer,hogar,40.0,False,2026-11-14,pendiente,
+bathroom storage organizer,bathroom organizer,hogar,50.0,False,2026-11-14,escaneado,
+bathroom rack organizer,bathroom organizer,hogar,40.0,False,2026-11-14,escaneado,
 aquaphor baby healing ointment,baby essentials,bebé,12650.0,True,2026-11-14,escaneado,
+teen boy stocking stuffers,stocking stuffers,navidad,10650.0,True,2026-11-21,pendiente,
+stocking stuffers for 12 year old boy,stocking stuffers,navidad,40.0,False,2026-11-21,filtrado,demasiado largo
+personalized dog gifts,dog christmas gifts,navidad,40.0,False,2026-11-21,pendiente,
+gifts for knitters and crocheters,gifts for knitters,navidad,539700.0,True,2026-11-21,pendiente,
+christmas gifts for knitters,gifts for knitters,navidad,70.0,False,2026-11-21,pendiente,
