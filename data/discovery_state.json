@@ -6,10 +6,10 @@
   "dog christmas gifts": "2026-11-21",
   "christmas craft kit": "2026-11-21",
   "gifts for knitters": "2026-11-21",
-  "cat christmas gifts": "2026-10-23",
-  "dog bed": "2026-10-23",
-  "dog toy": "2026-10-23",
-  "cat toy": "2026-10-23",
+  "cat christmas gifts": "2026-11-22",
+  "dog bed": "2026-11-22",
+  "dog toy": "2026-11-22",
+  "cat toy": "2026-11-22",
   "dog harness": "2026-10-24",
   "pet grooming": "2026-10-24",
   "craft kit": "2026-10-24",
@@ -301,6 +301,14 @@
    "escaneados": 8,
    "bloqueado": false,
    "orden": "cola primero"
+  },
+  {
+   "fecha": "2026-11-22",
+   "semillas": 4,
+   "nuevos": 8,
+   "escaneados": 9,
+   "bloqueado": false,
+   "orden": "semillas primero"
   }
  ]
 }
