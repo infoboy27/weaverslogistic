@@ -10,10 +10,10 @@
   "dog bed": "2026-11-22",
   "dog toy": "2026-11-22",
   "cat toy": "2026-11-22",
-  "dog harness": "2026-10-24",
-  "pet grooming": "2026-10-24",
-  "craft kit": "2026-10-24",
-  "knitting kit": "2026-10-24",
+  "dog harness": "2026-11-23",
+  "pet grooming": "2026-11-23",
+  "craft kit": "2026-11-23",
+  "knitting kit": "2026-11-23",
   "diy kit": "2026-10-26",
   "sticker": "2026-10-27",
   "yoga accessories": "2026-10-27",
@@ -309,6 +309,14 @@
    "escaneados": 9,
    "bloqueado": false,
    "orden": "semillas primero"
+  },
+  {
+   "fecha": "2026-11-23",
+   "semillas": 4,
+   "nuevos": 6,
+   "escaneados": 3,
+   "bloqueado": false,
+   "orden": "cola primero"
   }
  ]
 }
