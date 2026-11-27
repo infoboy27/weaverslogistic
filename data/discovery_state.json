@@ -15,10 +15,10 @@
   "craft kit": "2026-11-23",
   "knitting kit": "2026-11-23",
   "diy kit": "2026-11-25",
-  "sticker": "2026-10-27",
-  "yoga accessories": "2026-10-27",
-  "gym accessories": "2026-10-27",
-  "resistance bands": "2026-10-27",
+  "sticker": "2026-11-27",
+  "yoga accessories": "2026-11-27",
+  "gym accessories": "2026-11-27",
+  "resistance bands": "2026-11-27",
   "massage tool": "2026-10-29",
   "sleep aid": "2026-10-29",
   "kitchen gadget": "2026-10-29",
@@ -341,6 +341,14 @@
    "escaneados": 0,
    "bloqueado": true,
    "orden": "semillas primero"
+  },
+  {
+   "fecha": "2026-11-27",
+   "semillas": 4,
+   "nuevos": 4,
+   "escaneados": 2,
+   "bloqueado": false,
+   "orden": "cola primero"
   }
  ]
 }
